@@ -82,10 +82,14 @@
     <body class="flex flex-col min-h-screen">
 
     <!-- INTRO SCREEN FULLSCREEN (HALAMAN PENDAHULUAN) -->
-    <div id="intro-screen" class="fixed inset-0 w-full h-full z-[100] flex flex-col justify-center items-center transition-opacity duration-700 bg-slate-950" 
+    <div id="intro-screen" class="fixed inset-0 w-full h-full z-[100] flex flex-col justify-center items-center gap-4 px-4 transition-opacity duration-700 bg-slate-950" 
          style="background-image: url('https://lh3.googleusercontent.com/d/1W2OCeC0fpCwSclYJpY1yQ9rLKqYY8Wve'); background-size: cover; background-position: center; background-repeat: no-repeat;">
         <button onclick="enterWelcomeScreen()" class="px-10 py-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-lg sm:text-2xl shadow-[0_0_50px_rgba(245,158,11,0.8)] transition transform hover:scale-110 animate-bounce border-4 border-white/50 flex items-center gap-3">
             ENTER GAME <i class="fa-solid fa-rocket"></i>
+        </button>
+        <button onclick="openGuideModal('siswa')" class="px-6 py-3 rounded-full bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md text-sky-200 hover:text-amber-300 font-bold text-xs sm:text-sm border-2 border-sky-400/75 hover:border-amber-400 shadow-[0_0_25px_rgba(56,189,248,0.55)] transition transform hover:scale-105 flex items-center gap-2.5">
+            <i class="fa-solid fa-book-open text-amber-300 text-base"></i>
+            <span>PETUNJUK PENGGUNAAN (GURU &amp; SISWA)</span>
         </button>
     </div>
 
@@ -271,7 +275,7 @@
 
                 <!-- PLAYER SPACESHIP: ULTRA-REALISTIC 3D SPACE ROCKET ICON -->
                 <div id="player-spaceship" class="absolute z-30 pointer-events-none flex flex-col items-center -translate-x-1/2 -translate-y-1/2"
-                     style="left: 8%; top: 44%;">
+                     style="left: 12%; top: 60%;">
                     <div class="px-2 py-0.5 rounded-full bg-slate-950/85 text-amber-300 font-extrabold text-[9px] shadow-[0_0_10px_rgba(56,189,248,0.5)] -mb-1 whitespace-nowrap border border-sky-400/50 flex items-center gap-1 backdrop-blur-sm">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
                         <span id="spaceship-captain-tag">Kapten</span>
@@ -292,7 +296,7 @@
                     </div>
 
                     <!-- 3D Ringed Planet Canvas Container -->
-                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                    <div class="relative w-32 h-24 sm:w-36 sm:h-28 flex items-center justify-center overflow-visible">
                         <canvas id="planet-3d-canvas-1" class="w-full h-full block pointer-events-none"></canvas>
                     </div>
 
@@ -311,7 +315,7 @@
                         <div class="w-0.5 h-2 bg-cyan-300"></div>
                     </div>
 
-                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                    <div class="relative w-32 h-24 sm:w-36 sm:h-28 flex items-center justify-center overflow-visible">
                         <canvas id="planet-3d-canvas-2" class="w-full h-full block pointer-events-none"></canvas>
                     </div>
 
@@ -330,7 +334,7 @@
                         <div class="w-0.5 h-2.5 bg-orange-400"></div>
                     </div>
 
-                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                    <div class="relative w-32 h-24 sm:w-36 sm:h-28 flex items-center justify-center overflow-visible">
                         <canvas id="planet-3d-canvas-3" class="w-full h-full block pointer-events-none"></canvas>
                     </div>
 
@@ -349,7 +353,7 @@
                         <div class="w-0.5 h-2.5 bg-teal-300"></div>
                     </div>
 
-                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                    <div class="relative w-32 h-24 sm:w-36 sm:h-28 flex items-center justify-center overflow-visible">
                         <canvas id="planet-3d-canvas-4" class="w-full h-full block pointer-events-none"></canvas>
                     </div>
 
@@ -868,6 +872,169 @@
         </div>
     </div>
 
+    <!-- MODAL PETUNJUK PENGGUNAAN GAME (GURU & SISWA) -->
+    <div id="guide-modal" onclick="if(event.target === this) closeGuideModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[120] p-3 sm:p-5">
+        <div class="glass-card rounded-3xl max-w-3xl w-full p-5 sm:p-6 border-2 border-sky-400/80 shadow-[0_0_50px_rgba(56,189,248,0.35)] flex flex-col max-h-[90vh] space-y-4">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center text-white text-xl shadow-lg border border-sky-300/40">
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-game text-lg sm:text-xl font-bold text-amber-300 leading-tight">
+                            PETUNJUK PENGGUNAAN GAME
+                        </h3>
+                        <p class="text-[11px] text-slate-300">
+                            Panduan Lengkap English Space Battle — SMKN 4 Sinjai
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeGuideModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-600 transition" title="Tutup Panduan">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Tab Navigasi Siswa / Guru / Bantuan -->
+            <div class="grid grid-cols-3 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800">
+                <button id="tab-btn-siswa" onclick="switchGuideTab('siswa')" class="py-2.5 px-3 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow">
+                    <i class="fa-solid fa-user-astronaut"></i>
+                    <span>Untuk Siswa</span>
+                </button>
+                <button id="tab-btn-guru" onclick="switchGuideTab('guru')" class="py-2.5 px-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 text-slate-300 hover:bg-slate-800">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                    <span>Untuk Guru</span>
+                </button>
+                <button id="tab-btn-bantuan" onclick="switchGuideTab('bantuan')" class="py-2.5 px-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 text-slate-300 hover:bg-slate-800">
+                    <i class="fa-solid fa-wrench"></i>
+                    <span>Bantuan</span>
+                </button>
+            </div>
+
+            <!-- Konten Panduan (Scrollable) -->
+            <div class="overflow-y-auto pr-1 space-y-4 text-left text-xs sm:text-sm text-slate-200 flex-1">
+
+                <!-- TAB 1: PANDUAN SISWA -->
+                <div id="guide-content-siswa" class="space-y-3.5">
+                    <div class="p-3.5 rounded-2xl bg-sky-500/10 border border-sky-400/40">
+                        <h4 class="font-bold text-sky-300 mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-rocket text-amber-300"></i> 1. Langkah Memulai Permainan
+                        </h4>
+                        <ol class="list-decimal list-inside space-y-1 text-xs text-slate-200 leading-relaxed">
+                            <li>Klik tombol <b>ENTER GAME 🚀</b> pada layar awal untuk masuk ke form identitas.</li>
+                            <li>Isi <b>Nama Lengkap Peserta</b> dan <b>Kelas / Jurusan</b> dengan benar (contoh: <i>Andi Pratama - X Agribisnis Perikanan 1</i>).</li>
+                            <li>Klik <b>LUNCURKAN MISI ANTARIKSA</b> untuk membuka Peta Galaksi 3D.</li>
+                        </ol>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-700 space-y-2">
+                        <h4 class="font-bold text-amber-300 flex items-center gap-2">
+                            <i class="fa-solid fa-globe text-sky-400"></i> 2. Misi di 4 Planet Antariksa
+                        </h4>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs">
+                            <div class="p-2.5 rounded-xl bg-slate-950/80 border border-purple-500/40">
+                                <div class="font-extrabold text-purple-300">🟣 Planet 1: Millionaire Pre-Test</div>
+                                <p class="text-slate-300 mt-1">10 soal pilihan ganda (Pronouns &amp; To Be). Gunakan bantuan <b>50:50</b>, <b>Phone</b>, &amp; <b>Audience</b> (masing-masing 1x).</p>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-950/80 border border-cyan-500/40">
+                                <div class="font-extrabold text-cyan-300">☀️ Planet 2: Space Typing Challenge</div>
+                                <p class="text-slate-300 mt-1">Dengarkan audio, lalu klik/sentuh planet kata melayang atau ketik kalimatnya (+100 Poin/soal).</p>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-950/80 border border-orange-500/40">
+                                <div class="font-extrabold text-orange-300">🌙 Planet 3: Space Audio Radar</div>
+                                <p class="text-slate-300 mt-1">Putar audio perkenalan diri (bisa diulang) lalu pilih jawaban paling tepat (+100 Poin/soal).</p>
+                            </div>
+                            <div class="p-2.5 rounded-xl bg-slate-950/80 border border-teal-500/40">
+                                <div class="font-extrabold text-teal-300">⭐ Planet 4: Fisheries Reading</div>
+                                <p class="text-slate-300 mt-1">Baca atau dengarkan 5 teks Agribisnis Perikanan SMKN 4 Sinjai dan jawab soalnya (+100 Poin/soal).</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/50">
+                        <h4 class="font-bold text-amber-300 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-coins"></i> 3. Strategi Fitur "TAKE THE POINTS" &amp; Finish
+                        </h4>
+                        <p class="text-xs text-slate-200 leading-relaxed">
+                            Setelah mendapatkan poin pada suatu planet, kamu dapat menekan tombol <b>TAKE THE POINTS 💰</b> kapan saja untuk mengamankan skor dan kembali ke Peta Galaksi. Selesaikan seluruh Planet 1–4 secara berurutan agar pesawatmu berlabuh di <b>Orbital Space Station (FINISH)</b>!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TAB 2: PANDUAN GURU -->
+                <div id="guide-content-guru" class="hidden space-y-3.5">
+                    <div class="p-3.5 rounded-2xl bg-amber-500/10 border border-amber-400/50">
+                        <h4 class="font-bold text-amber-300 mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-shield-halved"></i> 1. Akses Keamanan Guru (PIN: <span class="px-2 py-0.5 rounded bg-amber-400 text-slate-950 font-mono font-extrabold">1234</span>)
+                        </h4>
+                        <ul class="list-disc list-inside space-y-1.5 text-xs text-slate-200 leading-relaxed">
+                            <li><b>Buka Kunci Semua Planet (Mode Demonstrasi):</b> Di Peta Galaksi bagian kanan atas, klik tombol <b>Mode Bertahap (PIN)</b> lalu masukkan PIN <b>1234</b> agar guru bebas membuka planet mana saja tanpa harus bermain urut.</li>
+                            <li><b>Pengaturan Cloud Google Sheet:</b> Di menu <b>Leaderboard</b>, klik <b>Pengaturan Cloud Sheet (PIN)</b> lalu masukkan PIN <b>1234</b> untuk menautkan Google Apps Script.</li>
+                        </ul>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-400/40">
+                        <h4 class="font-bold text-emerald-300 mb-1.5 flex items-center gap-2">
+                            <i class="fa-solid fa-table"></i> 2. Rekap Nilai Otomatis (Google Sheets &amp; CSV)
+                        </h4>
+                        <ol class="list-decimal list-inside space-y-1 text-xs text-slate-200 leading-relaxed">
+                            <li>Buka menu <b>Leaderboard</b> &rarr; masukkan PIN Guru pada <b>Pengaturan Cloud Sheet</b>.</li>
+                            <li>Klik <b>Salin Kode Apps Script</b>, tempel di Google Sheets (<i>Ekstensi &gt; Apps Script &gt; Deploy sebagai Aplikasi Web</i> dengan akses <i>Siapa saja</i>).</li>
+                            <li>Tempel URL Web App ke kolom pengaturan lalu klik <b>Simpan &amp; Hubungkan</b> agar skor siswa terekap otomatis.</li>
+                            <li>Untuk rekap cepat secara luring (offline), klik tombol <b>Unduh File Sheet (.CSV)</b> untuk menyimpan data peringkat ke Excel.</li>
+                        </ol>
+                    </div>
+
+                    <div class="p-3.5 rounded-2xl bg-sky-500/10 border border-sky-400/40">
+                        <h4 class="font-bold text-sky-300 mb-1 flex items-center gap-2">
+                            <i class="fa-solid fa-images"></i> 3. Mengganti Wallpaper Latar Belakang
+                        </h4>
+                        <p class="text-xs text-slate-200 leading-relaxed">
+                            Guru dapat mengganti gambar latar halaman depan melalui tombol <b>Ganti Wall</b> di bilah atas (<i>Header</i>) dan memilih gambar dari perangkat.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- TAB 3: BANTUAN / TROUBLESHOOTING -->
+                <div id="guide-content-bantuan" class="hidden space-y-3">
+                    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-700 space-y-2.5 text-xs">
+                        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                            <div class="font-bold text-amber-300">🔊 Audio / Suara Narasi Tidak Terdengar?</div>
+                            <p class="text-slate-300 mt-1">Pastikan ikon speaker di pojok kanan atas berwarna biru (tidak di-mute), volume perangkat aktif, dan fitur <i>Text-to-Speech</i> pada HP/Browser sudah diaktifkan.</p>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                            <div class="font-bold text-sky-300">📱 Tampilan Terlalu Sempit di Layar HP?</div>
+                            <p class="text-slate-300 mt-1">Gim sudah dirancang responsif. Jika layar terasa sempit saat melihat Peta Galaksi 3D, miringkan HP ke posisi <b>Landscape</b> (mendatar) untuk pengalaman terbaik.</p>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800">
+                            <div class="font-bold text-emerald-300">☁️ Skor Belum Masuk ke Google Sheet?</div>
+                            <p class="text-slate-300 mt-1">Pastikan koneksi internet stabil lalu klik tombol <b>Sync Sekarang</b> di Leaderboard, atau gunakan tombol <b>Unduh File Sheet (.CSV)</b> sebagai cadangan nilai offline.</p>
+                        </div>
+                    </div>
+                    <div class="text-center text-[11px] text-slate-400 pt-1">
+                        Pengembang Media: <strong class="text-amber-300">Irwan Elvin Kadir, S.Pd., Gr.</strong> — SMKN 4 Sinjai
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="flex flex-wrap justify-between items-center gap-2 pt-2 border-t border-slate-700">
+                <span class="text-[11px] text-slate-400">
+                    <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> Baca panduan singkat ini sebelum memulai misi.
+                </span>
+                <div class="flex gap-2">
+                    <button onclick="closeGuideModal()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600 transition">
+                        Tutup
+                    </button>
+                    <button onclick="closeGuideModal(); enterWelcomeScreen();" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                        MULAI ENTER GAME <i class="fa-solid fa-rocket"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         /* ==========================================================================
            GLOBAL STATE & SOUND ENGINE
@@ -912,6 +1079,44 @@
             }
         }
 
+        function openGuideModal(defaultTab = 'siswa') {
+            playTone(520, 0.12, 'sine');
+            switchGuideTab(defaultTab);
+            const modal = document.getElementById('guide-modal');
+            if (modal) {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            }
+        }
+
+        function closeGuideModal() {
+            const modal = document.getElementById('guide-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            }
+        }
+
+        function switchGuideTab(tabName) {
+            const tabs = ['siswa', 'guru', 'bantuan'];
+            tabs.forEach(t => {
+                const content = document.getElementById(`guide-content-${t}`);
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if (content) {
+                    if (t === tabName) content.classList.remove('hidden');
+                    else content.classList.add('hidden');
+                }
+                if (btn) {
+                    if (t === tabName) {
+                        btn.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow";
+                    } else {
+                        btn.className = "py-2.5 px-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 text-slate-300 hover:bg-slate-800";
+                    }
+                }
+            });
+            playTone(460, 0.08, 'triangle');
+        }
+
         function changeCoverImage(event) {
             const file = event.target.files[0];
             if (file) {
@@ -937,11 +1142,11 @@
         }
 
         const planetCoordinates = {
-            1: { left: '8%', top: '42%' },
-            2: { left: '27%', top: '18%' },
-            3: { left: '47%', top: '38%' },
-            4: { left: '67%', top: '16%' },
-            5: { left: '86%', top: '26%' }
+            1: { left: '12%', top: '60%' },
+            2: { left: '31%', top: '35%' },
+            3: { left: '51%', top: '56%' },
+            4: { left: '71%', top: '32%' },
+            5: { left: '89%', top: '44%' }
         };
 
         const planetMeta = {
@@ -1153,6 +1358,7 @@
                 initPlayerRocket3D();
                 initAll3DRingedPlanets();
                 resumeCosmosFromScreenSwitch();
+                requestAnimationFrame(() => moveSpaceshipToPlanet(currentSpaceshipPlanet, false));
             } else {
                 pauseCosmosForBackgroundScreen();
             }
@@ -1258,7 +1464,7 @@
             const ringTex = createPlanetRingsCanvasTexture(planetType);
 
             // Spherical Planet Mesh
-            const sphereGeo = new THREE.SphereGeometry(1.2, 48, 48);
+            const sphereGeo = new THREE.SphereGeometry(1.18, 48, 48);
             const sphereMat = new THREE.MeshStandardMaterial({
                 map: surfTex,
                 roughness: 0.65,
@@ -1267,22 +1473,37 @@
             const planetMesh = new THREE.Mesh(sphereGeo, sphereMat);
             group.add(planetMesh);
 
-            // Ring System Mesh (Tilted Saturn-style rings)
-            const ringGeo = new THREE.RingGeometry(1.55, 2.75, 64);
-            // Rotate UV or position so ring maps correctly
+            // Ring System Mesh (Tilted Saturn-style rings dengan pemetaan UV radial agar cincin melingkar halus)
+            const innerRadius = 1.52;
+            const outerRadius = 2.52;
+            const ringGeo = new THREE.RingGeometry(innerRadius, outerRadius, 64);
+            const pos = ringGeo.attributes.position;
+            const uv = ringGeo.attributes.uv;
+            for (let i = 0; i < pos.count; i++) {
+                const x = pos.getX(i);
+                const y = pos.getY(i);
+                const radius = Math.sqrt(x * x + y * y);
+                const u = (radius - innerRadius) / (outerRadius - innerRadius);
+                uv.setXY(i, u, 0.5);
+            }
+            uv.needsUpdate = true;
+
             const ringMat = new THREE.MeshStandardMaterial({
                 map: ringTex,
                 side: THREE.DoubleSide,
                 transparent: true,
+                depthWrite: false,
                 roughness: 0.4,
                 metalness: 0.2
             });
             const ringMesh = new THREE.Mesh(ringGeo, ringMat);
-            ringMesh.rotation.x = Math.PI / 2 + 0.35;
-            ringMesh.rotation.y = 0.2;
+            ringMesh.rotation.x = Math.PI / 2 + 0.32;
+            ringMesh.rotation.y = 0.18;
             group.add(ringMesh);
 
             group.scale.set(0.95, 0.95, 0.95);
+            group.userData.planetMesh = planetMesh;
+            group.userData.ringMesh = ringMesh;
             return group;
         }
 
@@ -1290,12 +1511,21 @@
             const canvas = document.getElementById(canvasId);
             if (!canvas || typeof THREE === 'undefined') return;
 
-            const w = canvas.clientWidth || 110;
-            const h = canvas.clientHeight || 110;
+            const w = canvas.clientWidth || 144;
+            const h = canvas.clientHeight || 112;
+
+            // Jika engine sudah ada, cukup perbarui ukuran kamera & renderer
+            if (ringedPlanetEngines[canvasId]) {
+                const existing = ringedPlanetEngines[canvasId];
+                existing.camera.aspect = w / h;
+                existing.camera.updateProjectionMatrix();
+                existing.renderer.setSize(w, h);
+                return;
+            }
 
             const scene = new THREE.Scene();
             const camera = new THREE.PerspectiveCamera(32, w / h, 0.1, 100);
-            camera.position.set(0, 1.2, 7.5);
+            camera.position.set(0, 1.4, 9.5);
             camera.lookAt(0, 0, 0);
 
             const renderer = new THREE.WebGLRenderer({
@@ -1331,7 +1561,13 @@
             const rotSpeed = (now / 1000) * 0.45;
             Object.values(ringedPlanetEngines).forEach(engine => {
                 if (engine && engine.planetGroup) {
-                    engine.planetGroup.rotation.y = rotSpeed;
+                    // Putar bola planet pada porosnya sementara kemiringan cincin tetap stabil agar tidak terpotong
+                    if (engine.planetGroup.userData.planetMesh) {
+                        engine.planetGroup.userData.planetMesh.rotation.y = rotSpeed;
+                    }
+                    if (engine.planetGroup.userData.ringMesh) {
+                        engine.planetGroup.userData.ringMesh.rotation.z = rotSpeed * 0.25;
+                    }
                     engine.renderer.render(engine.scene, engine.camera);
                 }
             });
@@ -2220,13 +2456,48 @@
         }
 
         function moveSpaceshipToPlanet(planetNum, playSound = true) {
+            currentSpaceshipPlanet = planetNum;
             const ship = document.getElementById('player-spaceship');
             const tilt = document.getElementById('player-rocket-tilt-wrapper');
-            const coords = planetCoordinates[planetNum];
-            if (ship && coords) { ship.style.left = coords.left; ship.style.top = coords.top; }
+            const arena = document.getElementById('galaxy-map-arena');
+            const targetCanvasId = planetNum === 5 ? 'space-station-3d-canvas' : `planet-3d-canvas-${planetNum}`;
+            const targetCanvas = document.getElementById(targetCanvasId);
+
+            if (ship && arena && targetCanvas) {
+                const arenaRect = arena.getBoundingClientRect();
+                const planetRect = targetCanvas.getBoundingClientRect();
+
+                if (arenaRect.width > 0 && arenaRect.height > 0 && planetRect.width > 0 && planetRect.height > 0) {
+                    // Hitung titik tepat di tepi kanan-atas bola planet agar roket tampak menyentuh permukaan planet
+                    const centerX = (planetRect.left - arenaRect.left) + (planetRect.width / 2);
+                    const centerY = (planetRect.top - arenaRect.top) + (planetRect.height / 2);
+                    const offsetX = planetRect.width * 0.22;
+                    const offsetY = -planetRect.height * 0.22;
+
+                    const leftPct = ((centerX + offsetX) / arenaRect.width) * 100;
+                    const topPct = ((centerY + offsetY) / arenaRect.height) * 100;
+
+                    ship.style.left = `${leftPct.toFixed(2)}%`;
+                    ship.style.top = `${topPct.toFixed(2)}%`;
+                } else {
+                    const coords = planetCoordinates[planetNum];
+                    if (coords) { ship.style.left = coords.left; ship.style.top = coords.top; }
+                }
+            } else if (ship) {
+                const coords = planetCoordinates[planetNum];
+                if (coords) { ship.style.left = coords.left; ship.style.top = coords.top; }
+            }
+
             if (tilt) tilt.style.transform = `rotate(40deg)`;
             if (playSound) playTone(587.33, 0.2, 'sine');
         }
+
+        window.addEventListener('resize', () => {
+            const mapScreen = document.getElementById('map-screen');
+            if (mapScreen && !mapScreen.classList.contains('hidden')) {
+                moveSpaceshipToPlanet(currentSpaceshipPlanet, false);
+            }
+        });
 
         function selectPlanetOnMap(planetNum) {
             if (!isPlanetUnlocked(planetNum)) { playErrorSound(); return; }
