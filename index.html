@@ -77,13 +77,83 @@
         #player-spaceship {
             transition: left 2.8s cubic-bezier(0.25, 1, 0.4, 1), top 2.8s cubic-bezier(0.25, 1, 0.4, 1), transform 0.8s ease;
         }
+
+        /* PERINTAH PUTAR LAYAR KE LANDSCAPE KHUSUS HP (PORTRAIT) */
+        #portrait-warning-overlay {
+            display: none;
+        }
+        @media screen and (max-width: 820px) and (orientation: portrait) {
+            #portrait-warning-overlay:not(.dismissed-portrait) {
+                display: flex;
+            }
+        }
+        @keyframes rotatePhonePrompt {
+            0%, 15% { transform: rotate(0deg); }
+            45%, 70% { transform: rotate(-90deg); }
+            90%, 100% { transform: rotate(0deg); }
+        }
+        .animate-rotate-phone {
+            animation: rotatePhonePrompt 2.4s ease-in-out infinite;
+        }
+
+        /* Penyesuaian ekstra agar nyaman saat HP sudah diputar ke posisi Landscape */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            #welcome-screen {
+                margin-top: 0 !important;
+                transform: scale(0.92);
+            }
+            #galaxy-map-arena {
+                height: 300px !important;
+            }
+        }
     </style>
 </head>
     <body class="flex flex-col min-h-screen">
 
+    <!-- OVERLAY PERINTAH PUTAR HP KE LANDSCAPE (OTOMATIS MUNCUL SAAT HP POSISI PORTRAIT) -->
+    <div id="portrait-warning-overlay" class="fixed inset-0 z-[200] bg-slate-950/95 backdrop-blur-xl flex-col items-center justify-center p-6 text-center select-none">
+        <div class="max-w-xs w-full bg-slate-900/90 border-2 border-sky-400/70 rounded-3xl p-6 shadow-[0_0_50px_rgba(56,189,248,0.35)] space-y-5">
+            <!-- Ikon HP Berputar Animasi -->
+            <div class="relative w-24 h-24 mx-auto flex items-center justify-center rounded-2xl bg-sky-500/15 border border-sky-400/40">
+                <i class="fa-solid fa-mobile-screen-button text-5xl text-amber-300 animate-rotate-phone drop-shadow-[0_0_12px_rgba(251,191,36,0.7)]"></i>
+                <i class="fa-solid fa-rotate text-sky-400 text-lg absolute -bottom-2 -right-2 bg-slate-950 p-1.5 rounded-full border border-sky-400/60"></i>
+            </div>
+
+            <div class="space-y-2">
+                <span class="inline-block px-3 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/60 text-amber-300 text-[10px] font-extrabold uppercase tracking-wider">
+                    🚀 MODE LAYAR OPTIMAL
+                </span>
+                <h2 class="font-game text-xl font-bold text-white leading-snug">
+                    Putar Posisi HP ke <span class="text-sky-300">Landscape</span>
+                </h2>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                    Miringkan ponsel Anda secara mendatar (<b>Landscape</b>) dan pastikan fitur <i>Rotasi Otomatis</i> HP aktif agar Peta Galaksi 3D serta kuis tampil penuh dan nyaman dimainkan.
+                </p>
+            </div>
+
+            <p id="landscape-hint-status" class="hidden text-[11px] text-amber-300 font-semibold bg-amber-500/10 border border-amber-400/40 rounded-xl p-2"></p>
+
+            <div class="space-y-2 pt-1">
+                <button onclick="tryLockLandscape()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-[0_0_20px_rgba(56,189,248,0.4)] transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-expand"></i>
+                    <span>AKTIFKAN LANDSCAPE &amp; LAYAR PENUH</span>
+                </button>
+                <button onclick="dismissPortraitWarning()" class="w-full py-2 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-[11px] border border-slate-700 transition">
+                    Tetap Lanjutkan Mode Portrait
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- INTRO SCREEN FULLSCREEN (HALAMAN PENDAHULUAN) -->
     <div id="intro-screen" class="fixed inset-0 w-full h-full z-[100] flex flex-col justify-center items-center gap-4 px-4 transition-opacity duration-700 bg-slate-950" 
          style="background-image: url('https://lh3.googleusercontent.com/d/1W2OCeC0fpCwSclYJpY1yQ9rLKqYY8Wve'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <!-- Tombol Kontrol Musik Khusus Layar Awal -->
+        <button id="intro-music-btn" onclick="toggleIntroMusic(event)" class="absolute top-4 right-4 px-4 py-2 rounded-full bg-slate-950/85 hover:bg-slate-900 backdrop-blur-md border-2 border-sky-400/70 hover:border-amber-400 text-sky-200 hover:text-amber-300 font-bold text-xs shadow-[0_0_20px_rgba(56,189,248,0.45)] transition flex items-center gap-2 z-10" title="Aktifkan / Matikan Musik Latar">
+            <i class="fa-solid fa-music text-amber-300 animate-pulse"></i>
+            <span id="intro-music-label">Musik: Ketuk untuk Aktif</span>
+        </button>
+
         <button onclick="enterWelcomeScreen()" class="px-10 py-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-lg sm:text-2xl shadow-[0_0_50px_rgba(245,158,11,0.8)] transition transform hover:scale-110 animate-bounce border-4 border-white/50 flex items-center gap-3">
             ENTER GAME <i class="fa-solid fa-rocket"></i>
         </button>
@@ -708,6 +778,9 @@
                     </span>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
+                    <a href="https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 border border-teal-400/60 text-teal-200 font-bold text-[11px] transition flex items-center gap-1">
+                        <i class="fa-solid fa-table"></i> Buka Google Sheet
+                    </a>
                     <button onclick="exportLeaderboardToCSV()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1">
                         <i class="fa-solid fa-file-csv"></i> Unduh File Sheet (.CSV)
                     </button>
@@ -725,7 +798,7 @@
                     <div>
                         <h4 class="font-bold text-sky-300 text-sm">🔗 Koneksi Otomatis Google Sheets (Apps Script)</h4>
                         <p class="text-[11px] text-slate-400 mt-0.5">
-                            Ikuti 3 langkah cepat ini agar skor siswa dari semua perangkat otomatis masuk ke Google Sheet Anda:
+                            Target Sheet sudah disetel ke Google Sheet Anda. Ikuti 3 langkah sekali pasang berikut agar skor langsung masuk otomatis:
                         </p>
                     </div>
                     <button onclick="toggleSheetSetupPanel()" class="text-slate-400 hover:text-white text-xs">Tutup ▲</button>
@@ -733,16 +806,16 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
                     <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 1: Buat Sheet Baru</span>
-                        Buka <b>sheets.new</b> di browser, lalu klik menu <b>Ekstensi &gt; Apps Script</b>.
+                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 1: Buka Sheet Anda</span>
+                        Buka <a href="https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-sky-300 underline font-bold">Google Sheet Tujuan</a>, lalu klik menu <b>Ekstensi &gt; Apps Script</b>.
                     </div>
                     <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 2: Tempel Kode Kita</span>
-                        Klik tombol <b>Salin Kode Otomatis</b> di bawah, tempelkan, lalu klik <b>Terapkan (Deploy) &gt; Deployment Baru &gt; Aplikasi Web</b> (Akses: <i>Siapa saja / Anyone</i>).
+                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 2: Tempel &amp; Deploy</span>
+                        Klik <b>Salin Kode Otomatis</b> di bawah, tempel di Apps Script, lalu klik <b>Terapkan (Deploy) &gt; Deployment Baru &gt; Aplikasi Web</b> (Akses: <i>Siapa saja / Anyone</i>).
                     </div>
                     <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
                         <span class="font-extrabold text-amber-300 block mb-1">Langkah 3: Tempel URL Web App</span>
-                        Salin URL Web App (`https://script.google.com/macros/s/.../exec`) ke kolom di bawah lalu klik <b>Simpan & Hubungkan</b>.
+                        Salin URL Web App (<code>https://script.google.com/macros/s/.../exec</code>) ke kolom di bawah lalu klik <b>Simpan &amp; Hubungkan</b>.
                     </div>
                 </div>
 
@@ -1048,6 +1121,8 @@
         let bgmGainNode = null;
         let bgmFilter = null;
         let bgmLfo = null;
+        let bgmSeqTimer = null;
+        let bgmStepIndex = 0;
         let isBgmPlaying = false;
         let selectedPlanetTarget = 1;
         let currentSpaceshipPlanet = 1;
@@ -1064,28 +1139,59 @@
 
         const COVER_STORAGE_KEY = 'english_space_battle_cover_v1';
 
-        // FUNGSI loadCustomCover() TELAH DIHAPUS BERSIH
-        // Agar tidak ada lagi pemblokiran keamanan (CORS) dari browser saat dibuka offline.
-        // Wallpaper kini 100% dikendalikan oleh CSS statis yang jauh lebih aman dan pasti muncul.
+        /* --- WEB AUDIO API SOUND EFFECTS ENGINE --- */
+        let sharedAudioCtx = null;
 
-        function enterWelcomeScreen() {
-            playSuccessSound();
-            const intro = document.getElementById('intro-screen');
-            if (intro) {
-                intro.style.opacity = '0';
-                setTimeout(() => {
-                    intro.classList.add('hidden');
-                }, 700); // Menunggu animasi transisi memudar selesai
+        function getAudioCtx() {
+            if (!sharedAudioCtx) {
+                const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                if (AudioCtx) {
+                    sharedAudioCtx = new AudioCtx();
+                }
             }
+            return sharedAudioCtx;
+        }
+
+        function playTone(freq, duration = 0.2, type = 'sine', volume = 0.2) {
+            if (isMuted) return;
+            try {
+                const ctx = getAudioCtx();
+                if (!ctx) return;
+                if (ctx.state === 'suspended') {
+                    ctx.resume().catch(() => {});
+                }
+                const now = ctx.currentTime;
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, now);
+                gain.gain.setValueAtTime(volume, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start(now);
+                osc.stop(now + duration + 0.02);
+            } catch (e) {}
+        }
+
+        function playSuccessSound() {
+            playTone(523.25, 0.14, 'triangle', 0.22); // C5
+            setTimeout(() => playTone(659.25, 0.14, 'triangle', 0.22), 90); // E5
+            setTimeout(() => playTone(783.99, 0.28, 'triangle', 0.25), 180); // G5
+        }
+
+        function playErrorSound() {
+            playTone(220.00, 0.18, 'sawtooth', 0.18); // A3
+            setTimeout(() => playTone(164.81, 0.30, 'sawtooth', 0.20), 130); // E3
         }
 
         function openGuideModal(defaultTab = 'siswa') {
-            playTone(520, 0.12, 'sine');
-            switchGuideTab(defaultTab);
             const modal = document.getElementById('guide-modal');
             if (modal) {
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
+                switchGuideTab(defaultTab);
+                playTone(587.33, 0.15, 'sine', 0.18);
             }
         }
 
@@ -1098,47 +1204,36 @@
         }
 
         function switchGuideTab(tabName) {
-            const tabs = ['siswa', 'guru', 'bantuan'];
-            tabs.forEach(t => {
-                const content = document.getElementById(`guide-content-${t}`);
-                const btn = document.getElementById(`tab-btn-${t}`);
-                if (content) {
-                    if (t === tabName) content.classList.remove('hidden');
-                    else content.classList.add('hidden');
+            ['siswa', 'guru', 'bantuan'].forEach(t => {
+                const contentEl = document.getElementById(`guide-content-${t}`);
+                const btnEl = document.getElementById(`tab-btn-${t}`);
+                if (contentEl) {
+                    if (t === tabName) contentEl.classList.remove('hidden');
+                    else contentEl.classList.add('hidden');
                 }
-                if (btn) {
+                if (btnEl) {
                     if (t === tabName) {
-                        btn.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow";
+                        btnEl.className = "py-2.5 px-3 rounded-xl font-extrabold text-xs transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow";
                     } else {
-                        btn.className = "py-2.5 px-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 text-slate-300 hover:bg-slate-800";
+                        btnEl.className = "py-2.5 px-3 rounded-xl font-bold text-xs transition flex items-center justify-center gap-1.5 text-slate-300 hover:bg-slate-800";
                     }
                 }
             });
-            playTone(460, 0.08, 'triangle');
         }
 
         function changeCoverImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const coverDiv = document.getElementById('welcome-custom-cover');
-                    if (coverDiv) {
-                        const imageData = e.target.result;
-                        coverDiv.style.setProperty('background-image', `url('${imageData}')`, 'important');
-                        coverDiv.classList.remove('hidden');
-                        playSuccessSound();
-                        
-                        // Simpan gambar ke Local Storage agar dipatenkan (permanen) di browser ini
-                        try {
-                            localStorage.setItem(COVER_STORAGE_KEY, imageData);
-                        } catch (err) {
-                            console.warn("Storage penuh/gambar terlalu besar, sampul hanya bertahan di sesi ini.");
-                        }
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
+            const file = event.target?.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const dataUrl = e.target.result;
+                const coverDiv = document.getElementById('welcome-custom-cover');
+                const introDiv = document.getElementById('intro-screen');
+                if (coverDiv) coverDiv.style.setProperty('background-image', `url('${dataUrl}')`, 'important');
+                if (introDiv) introDiv.style.backgroundImage = `url('${dataUrl}')`;
+                playSuccessSound();
+            };
+            reader.readAsDataURL(file);
         }
 
         const planetCoordinates = {
@@ -1146,170 +1241,264 @@
             2: { left: '31%', top: '35%' },
             3: { left: '51%', top: '56%' },
             4: { left: '71%', top: '32%' },
-            5: { left: '89%', top: '44%' }
+            5: { left: '88%', top: '44%' }
         };
 
         const planetMeta = {
             1: {
-                title: "PLANET 1: MILLIONAIRE PRE-TEST",
-                icon: "🟣",
-                desc: "Planet awal bertekstur ungu neon & cincin es! Uji kemampuan dasar Pronouns & To Be melalui 10 tantangan tangga hadiah jutawan!"
+                icon: '🟣',
+                title: 'PLANET 1: MILLIONAIRE PRE-TEST',
+                desc: 'Uji pemahaman dasar Pronouns & To Be dalam 10 soal tangga hadiah jutawan! Gunakan bantuan 50:50, Phone, & Audience, atau amankan skor kapan saja dengan tombol TAKE THE POINTS.'
             },
             2: {
-                title: "PLANET 2: BOUNCING WORD CHALLENGE",
-                icon: "☀️",
-                desc: "Planet es biru langit & cyan! Dengarkan audio kalimat dan tangkap planet kata yang melayang (+100 Poin/Soal)."
+                icon: '☀️',
+                title: 'PLANET 2: SPACE TYPING CHALLENGE',
+                desc: 'Dengarkan kalimat Bahasa Inggris dengan saksama, lalu ketuk/sentuh planet kata yang melayang untuk menyusun kalimat dengan tepat (+100 Poin per soal).'
             },
             3: {
-                title: "PLANET 3: SPACE AUDIO RADAR",
-                icon: "🌙",
-                desc: "Planet lava jingga, merah & emas (Tantangan Menengah)! Dengarkan audio perkenalan diri dan jawab 5 soal (+100 Poin/Soal)."
+                icon: '🌙',
+                title: 'PLANET 3: SPACE AUDIO RADAR',
+                desc: 'Putar rekaman audio perkenalan diri (Self Introduction) dan jawab 5 pertanyaan pemahaman menyimak (+100 Poin per soal).'
             },
             4: {
-                title: "PLANET 4: FISHERIES & GRAMMAR",
-                icon: "⭐",
-                desc: "Planet samudra turquoise! Baca 5 teks Agribisnis Perikanan SMKN 4 Sinjai dan raih skor tertinggi (+100 Poin/Soal)!"
-            },
-            5: {
-                title: "ORBITAL SPACE STATION — FINISH",
-                icon: "🛰️",
-                desc: "Stasiun Luar Angkasa Orbital Akhir! Tempat berlabuh para Kapten setelah menyelesaikan seluruh misi di 4 planet galaksi."
+                icon: '⭐',
+                title: 'PLANET 4: FISHERIES READING',
+                desc: 'Baca atau dengarkan 5 teks kontekstual jurusan Agribisnis Perikanan SMKN 4 Sinjai dan jawab kuis pemahamannya (+100 Poin per soal).'
             }
         };
 
-        // Web Audio Synthesizer
-        let audioCtx = null;
-        function getAudioCtx() {
-            if (!audioCtx) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (AudioContextClass) audioCtx = new AudioContextClass();
+        function enterWelcomeScreen() {
+            if (!isMuted && !isBgmPlaying) {
+                startBackgroundMusic();
             }
-            return audioCtx;
+            playSuccessSound();
+            const intro = document.getElementById('intro-screen');
+            if (intro) {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.classList.add('hidden');
+                }, 700); // Menunggu animasi transisi memudar selesai
+            }
+        }
+        /* --- BACKGROUND MUSIC ENGINE (Cinematic Space Odyssey Synth) --- */
+        function updateSoundButtonsUI() {
+            const headerBtn = document.getElementById('sound-btn');
+            if (headerBtn) {
+                headerBtn.innerHTML = isMuted
+                    ? '<i class="fa-solid fa-volume-xmark text-rose-400"></i>'
+                    : '<i class="fa-solid fa-volume-high text-sky-300"></i>';
+            }
+
+            const introBtn = document.getElementById('intro-music-btn');
+            if (introBtn) {
+                if (isMuted) {
+                    introBtn.innerHTML = '<i class="fa-solid fa-volume-xmark text-rose-400"></i><span id="intro-music-label">Musik: OFF</span>';
+                    introBtn.classList.remove('border-sky-400/70');
+                    introBtn.classList.add('border-rose-400/70');
+                } else if (isBgmPlaying) {
+                    introBtn.innerHTML = '<i class="fa-solid fa-music text-amber-300 animate-bounce"></i><span id="intro-music-label">Musik: ON</span>';
+                    introBtn.classList.remove('border-rose-400/70');
+                    introBtn.classList.add('border-sky-400/70');
+                } else {
+                    introBtn.innerHTML = '<i class="fa-solid fa-music text-amber-300 animate-pulse"></i><span id="intro-music-label">Musik: Ketuk untuk Aktif</span>';
+                    introBtn.classList.remove('border-rose-400/70');
+                    introBtn.classList.add('border-sky-400/70');
+                }
+            }
         }
 
-        function playTone(freq = 440, duration = 0.15, type = 'sine') {
-            if (isMuted) return;
-            try {
-                const ctx = getAudioCtx();
-                if (!ctx) return;
-                if (ctx.state === 'suspended') ctx.resume();
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.type = type;
-                osc.frequency.setValueAtTime(freq, ctx.currentTime);
-                gain.gain.setValueAtTime(0.12, ctx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-                osc.start();
-                osc.stop(ctx.currentTime + duration);
-            } catch (e) {}
+        function playSpaceArpNote(ctx, freq, duration, volume, waveType = 'triangle') {
+            if (!bgmGainNode || isMuted) return;
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const noteGain = ctx.createGain();
+            const noteFilter = ctx.createBiquadFilter();
+
+            osc.type = waveType;
+            osc.frequency.setValueAtTime(freq, now);
+
+            noteFilter.type = 'lowpass';
+            noteFilter.frequency.setValueAtTime(1400, now);
+            noteFilter.frequency.exponentialRampToValueAtTime(420, now + duration);
+
+            noteGain.gain.setValueAtTime(0.0001, now);
+            noteGain.gain.linearRampToValueAtTime(volume, now + 0.03);
+            noteGain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+
+            osc.connect(noteFilter);
+            noteFilter.connect(noteGain);
+            noteGain.connect(bgmGainNode);
+
+            osc.start(now);
+            osc.stop(now + duration + 0.05);
         }
 
-        function playSuccessSound() {
-            playTone(523.25, 0.12, 'triangle');
-            setTimeout(() => playTone(659.25, 0.12, 'triangle'), 110);
-            setTimeout(() => playTone(783.99, 0.22, 'triangle'), 220);
-        }
-
-        function playErrorSound() {
-            playTone(220, 0.2, 'sawtooth');
-            setTimeout(() => playTone(180, 0.25, 'sawtooth'), 160);
-        }
-
-        /* --- BACKGROUND MUSIC ENGINE (Space Ambient Drone) --- */
         function startBackgroundMusic() {
             if (isMuted || isBgmPlaying) return;
             try {
                 const ctx = getAudioCtx();
-                if (ctx.state === 'suspended') ctx.resume();
+                if (!ctx) return;
+                if (ctx.state === 'suspended') {
+                    ctx.resume().catch(() => {});
+                }
 
+                // Master gain untuk seluruh musik latar
                 bgmGainNode = ctx.createGain();
-                bgmGainNode.gain.setValueAtTime(0.01, ctx.currentTime);
-                // Fade in perlahan selama 3 detik
-                bgmGainNode.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 3);
+                bgmGainNode.gain.setValueAtTime(0.001, ctx.currentTime);
+                bgmGainNode.gain.linearRampToValueAtTime(0.16, ctx.currentTime + 2.0);
+                bgmGainNode.connect(ctx.destination);
 
-                // Lowpass filter untuk memberi efek "terendam" atau luar angkasa
+                // Warm Space Pad (Ambient Galaksi Berayun)
                 bgmFilter = ctx.createBiquadFilter();
                 bgmFilter.type = 'lowpass';
-                bgmFilter.frequency.value = 300;
-                bgmFilter.Q.value = 3;
+                bgmFilter.frequency.value = 340;
+                bgmFilter.Q.value = 2.2;
 
-                // LFO (Low Frequency Oscillator) untuk pergerakan suara berayun
                 bgmLfo = ctx.createOscillator();
                 bgmLfo.type = 'sine';
-                bgmLfo.frequency.value = 0.05; // Sangat lambat (20 detik per siklus)
+                bgmLfo.frequency.value = 0.08;
                 const lfoGain = ctx.createGain();
-                lfoGain.gain.value = 150;
+                lfoGain.gain.value = 140;
                 bgmLfo.connect(lfoGain);
                 lfoGain.connect(bgmFilter.frequency);
                 bgmLfo.start();
 
-                bgmFilter.connect(bgmGainNode);
-                bgmGainNode.connect(ctx.destination);
+                const padGain = ctx.createGain();
+                padGain.gain.value = 0.24;
+                bgmFilter.connect(padGain);
+                padGain.connect(bgmGainNode);
 
-                // Frekuensi kunci minor (A minor: A1, A2, E3, C4)
-                const freqs = [55.00, 110.00, 164.81, 261.63];
-                bgmOscillators = freqs.map(freq => {
+                // Drone dasar A minor kosmik (A1, E2, A2)
+                const padFreqs = [55.00, 82.41, 110.00];
+                bgmOscillators = padFreqs.map((freq, idx) => {
                     const osc = ctx.createOscillator();
-                    osc.type = 'triangle';
+                    osc.type = idx === 0 ? 'sine' : 'triangle';
                     osc.frequency.value = freq;
-                    // Detune sedikit untuk menciptakan efek paduan suara (chorus) yang tebal
-                    osc.detune.value = (Math.random() - 0.5) * 8; 
-                    
+                    osc.detune.value = (idx - 1) * 5;
                     const oscGain = ctx.createGain();
-                    oscGain.gain.value = 0.25;
-                    
+                    oscGain.gain.value = idx === 0 ? 0.45 : 0.25;
                     osc.connect(oscGain);
                     oscGain.connect(bgmFilter);
                     osc.start();
                     return osc;
                 });
 
+                // Progresi Akor Sci-Fi Heroik: Am -> F -> C -> G (masing-masing 8 ketukan)
+                const chordProgression = [
+                    { bass: 110.00, arp: [220.00, 261.63, 329.63, 392.00, 440.00, 392.00, 329.63, 261.63] }, // Am7
+                    { bass: 87.31,  arp: [174.61, 220.00, 261.63, 329.63, 349.23, 329.63, 261.63, 220.00] }, // Fmaj7
+                    { bass: 130.81, arp: [261.63, 329.63, 392.00, 493.88, 523.25, 493.88, 392.00, 329.63] }, // Cmaj7
+                    { bass: 98.00,  arp: [196.00, 246.94, 293.66, 392.00, 440.00, 392.00, 293.66, 246.94] }  // G6
+                ];
+
+                bgmStepIndex = 0;
+                const runStep = () => {
+                    if (!isBgmPlaying || isMuted || !bgmGainNode) return;
+                    if (ctx.state === 'suspended') return;
+
+                    const chordIdx = Math.floor(bgmStepIndex / 8) % chordProgression.length;
+                    const noteIdx = bgmStepIndex % 8;
+                    const chord = chordProgression[chordIdx];
+
+                    // Mainkan nada arpeggio bintang yang lembut
+                    playSpaceArpNote(ctx, chord.arp[noteIdx], 0.55, 0.22, 'triangle');
+
+                    // Tambahan nada kilau tinggi di ketukan tertentu
+                    if (noteIdx === 0 || noteIdx === 4) {
+                        playSpaceArpNote(ctx, chord.arp[noteIdx] * 2, 0.85, 0.08, 'sine');
+                    }
+
+                    // Denyut bass lembut di awal setiap birama & pertengahan
+                    if (noteIdx === 0 || noteIdx === 4) {
+                        playSpaceArpNote(ctx, chord.bass, 0.9, 0.26, 'sine');
+                    }
+
+                    bgmStepIndex = (bgmStepIndex + 1) % (chordProgression.length * 8);
+                };
+
                 isBgmPlaying = true;
-            } catch(e) {
+                runStep();
+                bgmSeqTimer = setInterval(runStep, 360);
+                updateSoundButtonsUI();
+            } catch (e) {
                 console.warn("BGM Terhenti:", e);
             }
         }
 
         function stopBackgroundMusic() {
-            if (!isBgmPlaying) return;
+            if (!isBgmPlaying) {
+                updateSoundButtonsUI();
+                return;
+            }
+            isBgmPlaying = false;
+            if (bgmSeqTimer) {
+                clearInterval(bgmSeqTimer);
+                bgmSeqTimer = null;
+            }
             try {
                 const ctx = getAudioCtx();
-                if (bgmGainNode) {
-                    // Fade out perlahan selama 2 detik
-                    bgmGainNode.gain.cancelScheduledValues(ctx.currentTime);
-                    bgmGainNode.gain.setValueAtTime(bgmGainNode.gain.value, ctx.currentTime);
-                    bgmGainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2);
+                const oldGain = bgmGainNode;
+                const oldOscs = bgmOscillators.slice();
+                const oldLfo = bgmLfo;
+                bgmOscillators = [];
+                bgmGainNode = null;
+                bgmFilter = null;
+                bgmLfo = null;
+
+                if (oldGain && ctx) {
+                    oldGain.gain.cancelScheduledValues(ctx.currentTime);
+                    oldGain.gain.setValueAtTime(Math.max(oldGain.gain.value, 0.001), ctx.currentTime);
+                    oldGain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.6);
                 }
                 setTimeout(() => {
-                    bgmOscillators.forEach(osc => { try { osc.stop(); osc.disconnect(); } catch(e){} });
-                    if (bgmLfo) { try { bgmLfo.stop(); bgmLfo.disconnect(); } catch(e){} }
-                    if (bgmGainNode) { try { bgmGainNode.disconnect(); } catch(e){} }
-                    bgmOscillators = [];
-                    bgmGainNode = null;
-                    bgmFilter = null;
-                    bgmLfo = null;
-                    isBgmPlaying = false;
-                }, 2100);
+                    oldOscs.forEach(osc => { try { osc.stop(); osc.disconnect(); } catch (e) {} });
+                    if (oldLfo) { try { oldLfo.stop(); oldLfo.disconnect(); } catch (e) {} }
+                    if (oldGain) { try { oldGain.disconnect(); } catch (e) {} }
+                }, 650);
             } catch (e) {}
+            updateSoundButtonsUI();
+        }
+
+        function toggleIntroMusic(event) {
+            if (event) event.stopPropagation();
+            if (!isMuted && !isBgmPlaying) {
+                startBackgroundMusic();
+            } else {
+                toggleMute();
+            }
         }
 
         function toggleMute() {
             isMuted = !isMuted;
-            const btn = document.getElementById('sound-btn');
-            if (btn) {
-                btn.innerHTML = isMuted
-                    ? '<i class="fa-solid fa-volume-xmark text-rose-400"></i>'
-                    : '<i class="fa-solid fa-volume-high text-sky-300"></i>';
-            }
-            
             if (isMuted) {
                 stopBackgroundMusic();
-            } else if (currentSessionId.startsWith("capt_")) {
-                // Hanya mainkan BGM jika pemain sudah masuk ke Peta Galaksi (misi dimulai)
+            } else {
                 startBackgroundMusic();
             }
+            updateSoundButtonsUI();
+        }
+
+        // Otomatis menyalakan musik pada tampilan awal begitu browser mengizinkan / saat sentuhan pertama
+        function initIntroAutoMusic() {
+            const unlockAndStart = () => {
+                if (!isMuted && !isBgmPlaying) {
+                    startBackgroundMusic();
+                }
+                document.removeEventListener('pointerdown', unlockAndStart);
+                document.removeEventListener('keydown', unlockAndStart);
+            };
+
+            document.addEventListener('pointerdown', unlockAndStart, { passive: true });
+            document.addEventListener('keydown', unlockAndStart);
+
+            // Coba mulai langsung saat halaman selesai dimuat (jika kebijakan browser mengizinkan)
+            try {
+                const ctx = getAudioCtx();
+                if (ctx && ctx.state === 'running' && !isMuted) {
+                    startBackgroundMusic();
+                }
+            } catch (e) {}
+            updateSoundButtonsUI();
         }
 
         function speakEnglishText(text) {
@@ -1319,6 +1508,21 @@
                 const utter = new SpeechSynthesisUtterance(text);
                 utter.lang = 'en-US';
                 utter.rate = 0.92;
+                // Pelankan musik latar sementara saat narasi Bahasa Inggris dibacakan
+                utter.onstart = () => {
+                    const ctx = getAudioCtx();
+                    if (bgmGainNode && ctx) {
+                        bgmGainNode.gain.setTargetAtTime(0.04, ctx.currentTime, 0.15);
+                    }
+                };
+                const restoreVolume = () => {
+                    const ctx = getAudioCtx();
+                    if (bgmGainNode && ctx && !isMuted) {
+                        bgmGainNode.gain.setTargetAtTime(0.16, ctx.currentTime, 0.25);
+                    }
+                };
+                utter.onend = restoreVolume;
+                utter.onerror = restoreVolume;
                 window.speechSynthesis.speak(utter);
             } catch (e) {}
         }
@@ -2387,7 +2591,6 @@
         }
 
         function backToWelcome() { 
-            stopBackgroundMusic();
             showScreen('welcome-screen'); 
         }
         function updateHeaderUI() {
@@ -3243,40 +3446,160 @@
         /* ==========================================================================
            LEADERBOARD & GOOGLE SHEETS
            ========================================================================== */
+        const TARGET_SPREADSHEET_ID = '1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw';
+        const TARGET_SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing';
+
         function loadLeaderboardFromStorage() {
             try {
                 const raw = localStorage.getItem(LEADERBOARD_STORAGE_KEY);
                 if (raw) leaderboardRecords = JSON.parse(raw);
                 const savedUrl = localStorage.getItem(GOOGLE_SHEET_URL_KEY);
-                if (savedUrl) { googleSheetWebAppUrl = savedUrl; document.getElementById('input-google-sheet-url').value = savedUrl; }
+                if (savedUrl) {
+                    googleSheetWebAppUrl = savedUrl;
+                    const urlInput = document.getElementById('input-google-sheet-url');
+                    if (urlInput) urlInput.value = savedUrl;
+                }
             } catch (e) {}
             updateSheetStatusUI();
         }
         function saveLeaderboardToStorage() { localStorage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(leaderboardRecords)); }
+
+        async function sendRecordToGoogleSheet(record) {
+            if (!googleSheetWebAppUrl || !googleSheetWebAppUrl.includes('script.google.com')) return false;
+            try {
+                const payload = {
+                    spreadsheetId: TARGET_SPREADSHEET_ID,
+                    id: record.id,
+                    name: record.name,
+                    className: record.className,
+                    score: record.score,
+                    planets: `${record.planets}/4`,
+                    timestamp: record.timestampText || new Date().toLocaleString('id-ID')
+                };
+                // Gunakan text/plain + no-cors agar lolos pembatasan CORS preflight Google Apps Script
+                await fetch(googleSheetWebAppUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify(payload)
+                });
+                record.synced = true;
+                saveLeaderboardToStorage();
+                return true;
+            } catch (err) {
+                console.warn('Gagal mengirim ke Google Sheet:', err);
+                return false;
+            }
+        }
+
+        async function syncAllToGoogleSheet(showNotice = false) {
+            const statusText = document.getElementById('sheet-sync-status-text');
+            if (!googleSheetWebAppUrl || !googleSheetWebAppUrl.includes('script.google.com')) {
+                if (statusText) {
+                    statusText.innerText = '⚠️ Tempel URL Web App Apps Script (/exec) pada Pengaturan Cloud Sheet (PIN: 1234) terlebih dahulu.';
+                    statusText.className = 'text-amber-300 text-[11px] font-bold';
+                }
+                if (showNotice) playErrorSound();
+                return;
+            }
+
+            if (leaderboardRecords.length === 0) {
+                if (statusText) {
+                    statusText.innerText = 'ℹ️ Belum ada data skor siswa untuk dikirim ke Google Sheet.';
+                    statusText.className = 'text-slate-300 text-[11px]';
+                }
+                return;
+            }
+
+            if (statusText) {
+                statusText.innerText = '⏳ Mengirim data Leaderboard ke Google Sheet...';
+                statusText.className = 'text-sky-300 text-[11px] font-bold';
+            }
+
+            let sentCount = 0;
+            for (const rec of leaderboardRecords) {
+                const ok = await sendRecordToGoogleSheet(rec);
+                if (ok) sentCount++;
+            }
+
+            renderLeaderboardTable();
+            if (statusText) {
+                statusText.innerText = `✅ Berhasil mengirim ${sentCount} data kapten langsung ke Google Sheet!`;
+                statusText.className = 'text-emerald-300 text-[11px] font-bold';
+            }
+            if (showNotice) playSuccessSound();
+        }
+
         function syncPlayerToLeaderboard() {
             if (!currentSessionId) return;
             const doneCount = Object.values(completedPlanets).filter(Boolean).length;
-            const entry = { id: currentSessionId, name: playerName, className: playerClass, score: totalGold, planets: doneCount, updatedAt: Date.now(), timestampText: new Date().toLocaleString('id-ID') };
+            const entry = {
+                id: currentSessionId,
+                name: playerName,
+                className: playerClass,
+                score: totalGold,
+                planets: doneCount,
+                updatedAt: Date.now(),
+                timestampText: new Date().toLocaleString('id-ID'),
+                synced: false
+            };
             const idx = leaderboardRecords.findIndex(r => r.id === currentSessionId);
             if (idx >= 0) leaderboardRecords[idx] = entry; else leaderboardRecords.push(entry);
             leaderboardRecords.sort((a, b) => b.score - a.score || b.planets - a.planets);
             saveLeaderboardToStorage();
+
+            // Kirim langsung ke Google Sheet jika URL Web App sudah terhubung
+            if (googleSheetWebAppUrl && googleSheetWebAppUrl.includes('script.google.com')) {
+                sendRecordToGoogleSheet(entry).then((ok) => {
+                    if (ok) {
+                        renderLeaderboardTable();
+                        const statusText = document.getElementById('sheet-sync-status-text');
+                        if (statusText) {
+                            statusText.innerText = `✅ Skor ${entry.name} (${entry.score.toLocaleString('id-ID')}) otomatis terkirim ke Google Sheet.`;
+                            statusText.className = 'text-emerald-300 text-[11px] font-bold';
+                        }
+                    }
+                });
+            }
         }
         function openLeaderboardModal() { loadLeaderboardFromStorage(); renderLeaderboardTable(); document.getElementById('leaderboard-modal').classList.remove('hidden'); document.getElementById('leaderboard-modal').classList.add('flex'); }
         function closeLeaderboardModal() { document.getElementById('leaderboard-modal')?.classList.add('hidden'); }
         function clearLeaderboardData() { leaderboardRecords = []; saveLeaderboardToStorage(); renderLeaderboardTable(); }
         function updateSheetStatusUI() {
             const badge = document.getElementById('sheet-sync-badge');
-            if (badge) badge.innerText = googleSheetWebAppUrl ? "☁️ TERHUBUNG KE GOOGLE SHEET" : "💾 PENYIMPANAN LOKAL + SIAP EKSPOR SHEET";
+            const statusText = document.getElementById('sheet-sync-status-text');
+            if (badge) {
+                badge.innerText = googleSheetWebAppUrl
+                    ? "☁️ TERHUBUNG KE GOOGLE SHEET"
+                    : "💾 LOKAL + SIAP HUBUNGKAN APPS SCRIPT";
+            }
+            if (statusText && !googleSheetWebAppUrl) {
+                statusText.innerText = "Data tersimpan lokal. Hubungkan URL Apps Script dari Google Sheet Anda agar terkirim otomatis.";
+                statusText.className = "text-slate-300 text-[11px]";
+            }
         }
         function toggleSheetSetupPanel(force = false) {
             const p = document.getElementById('sheet-setup-panel');
             if (p) { if (force) p.classList.remove('hidden'); else p.classList.toggle('hidden'); }
         }
         function saveGoogleSheetUrl() {
-            googleSheetWebAppUrl = document.getElementById('input-google-sheet-url').value.trim();
+            const rawUrl = (document.getElementById('input-google-sheet-url')?.value || '').trim();
+            const statusText = document.getElementById('sheet-sync-status-text');
+            if (rawUrl && !rawUrl.includes('script.google.com/macros/s/')) {
+                if (statusText) {
+                    statusText.innerText = '⚠️ Masukkan URL Web App Apps Script (berakhiran /exec), bukan tautan edit Spreadsheet.';
+                    statusText.className = 'text-rose-400 text-[11px] font-bold';
+                }
+                playErrorSound();
+                return;
+            }
+            googleSheetWebAppUrl = rawUrl;
             localStorage.setItem(GOOGLE_SHEET_URL_KEY, googleSheetWebAppUrl);
-            updateSheetStatusUI(); playSuccessSound();
+            updateSheetStatusUI();
+            playSuccessSound();
+            if (googleSheetWebAppUrl) {
+                syncAllToGoogleSheet(true);
+            }
         }
         function exportLeaderboardToCSV() {
             loadLeaderboardFromStorage();
@@ -3289,9 +3612,34 @@
             playSuccessSound();
         }
         function copyAppsScriptCode() {
-            const code = `function doPost(e){var sh=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();if(sh.getLastRow()===0){sh.appendRow(["ID","Nama","Kelas","Skor","Misi","Waktu"]);}var d=JSON.parse(e.postData.contents);sh.appendRow([d.id,d.name,d.className,d.score,d.planets,d.timestamp]);return ContentService.createTextOutput(JSON.stringify({status:"success"})).setMimeType(ContentService.MimeType.JSON);}`;
+            const code = `function doPost(e) {
+  var ss = SpreadsheetApp.openById("${TARGET_SPREADSHEET_ID}");
+  var sh = ss.getSheets()[0];
+  if (sh.getLastRow() === 0) {
+    sh.appendRow(["ID Sesi", "Nama Kapten", "Kelas / Jurusan", "Total Skor", "Misi Selesai", "Waktu Update"]);
+  }
+  var d = JSON.parse(e.postData.contents);
+  var data = sh.getDataRange().getValues();
+  var updated = false;
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][0]) === String(d.id)) {
+      sh.getRange(i + 1, 1, 1, 6).setValues([[d.id, d.name, d.className, d.score, d.planets, d.timestamp]]);
+      updated = true;
+      break;
+    }
+  }
+  if (!updated) {
+    sh.appendRow([d.id, d.name, d.className, d.score, d.planets, d.timestamp]);
+  }
+  return ContentService.createTextOutput(JSON.stringify({ status: "success" })).setMimeType(ContentService.MimeType.JSON);
+}`;
             const ta = document.createElement('textarea'); ta.value = code; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
-            document.getElementById('copy-script-feedback')?.classList.remove('hidden'); playSuccessSound();
+            const fb = document.getElementById('copy-script-feedback');
+            if (fb) {
+                fb.classList.remove('hidden');
+                setTimeout(() => fb.classList.add('hidden'), 3500);
+            }
+            playSuccessSound();
         }
         function renderLeaderboardTable() {
             const tb = document.getElementById('leaderboard-tbody');
@@ -3304,12 +3652,63 @@
                     <td class="py-2.5 px-3 text-amber-200">${r.className}</td>
                     <td class="py-2.5 px-3 text-center">${r.planets}/4</td>
                     <td class="py-2.5 px-3 text-right font-extrabold text-amber-300">${Number(r.score).toLocaleString('id-ID')}</td>
-                    <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 rounded bg-slate-800 text-[10px]">Lokal</span></td>
+                    <td class="py-2.5 px-3 text-center">${r.synced ? '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-bold">☁️ Terkirim</span>' : '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">Lokal</span>'}</td>
                 </tr>
             `).join('');
         }
 
         loadLeaderboardFromStorage();
+
+        /* ==========================================================================
+           DETEKSI & PERINTAH ORIENTASI LANDSCAPE KHUSUS HP
+           ========================================================================== */
+        async function tryLockLandscape() {
+            const statusEl = document.getElementById('landscape-hint-status');
+            try {
+                // Minta mode layar penuh (dibutuhkan browser HP agar kunci orientasi berfungsi)
+                const docEl = document.documentElement;
+                if (!document.fullscreenElement && docEl.requestFullscreen) {
+                    await docEl.requestFullscreen();
+                } else if (!document.webkitFullscreenElement && docEl.webkitRequestFullscreen) {
+                    await docEl.webkitRequestFullscreen();
+                }
+                if (screen.orientation && screen.orientation.lock) {
+                    await screen.orientation.lock('landscape');
+                    playSuccessSound();
+                    return;
+                }
+            } catch (err) {
+                // Beberapa browser (seperti iOS Safari) tidak mendukung kunci otomatis via JS
+            }
+            if (statusEl) {
+                statusEl.innerText = "Silakan aktifkan 'Rotasi Otomatis' di HP lalu miringkan ponsel Anda secara mendatar.";
+                statusEl.classList.remove('hidden');
+            }
+        }
+
+        function dismissPortraitWarning() {
+            const overlay = document.getElementById('portrait-warning-overlay');
+            if (overlay) overlay.classList.add('dismissed-portrait');
+        }
+
+        // Perbarui tata letak 3D & roket otomatis ketika HP diputar ke Landscape
+        function handleOrientationChange() {
+            const overlay = document.getElementById('portrait-warning-overlay');
+            if (overlay && window.innerWidth > window.innerHeight) {
+                overlay.classList.remove('dismissed-portrait');
+            }
+            setTimeout(() => {
+                if (typeof resizeLivingCosmos === 'function') resizeLivingCosmos();
+                const mapScreen = document.getElementById('map-screen');
+                if (mapScreen && !mapScreen.classList.contains('hidden')) {
+                    moveSpaceshipToPlanet(currentSpaceshipPlanet, false);
+                }
+            }, 250);
+        }
+
+        window.addEventListener('orientationchange', handleOrientationChange);
+        window.addEventListener('resize', handleOrientationChange);
+        window.addEventListener('load', initIntroAutoMusic);
     </script>
 </body>
 </html>
