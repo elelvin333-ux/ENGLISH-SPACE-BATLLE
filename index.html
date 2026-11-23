@@ -1,0 +1,3044 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>English Space Battle - Game Bahasa Inggris SMK Kelas 10</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle at top, #050814 0%, #010309 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        .font-game {
+            font-family: 'Fredoka', 'Trebuchet MS', 'Segoe UI', sans-serif;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+        }
+        .title-3d {
+            background: linear-gradient(180deg, #fffbeb 0%, #fde047 45%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 4px 0 #78350f) drop-shadow(0 8px 15px rgba(245, 158, 11, 0.4));
+        }
+        /* Custom background overlay - DIPERBAIKI: Menggunakan CDN lh3 Google User Content yang anti-blokir */
+        #welcome-custom-cover {
+            background-image: url('https://lh3.googleusercontent.com/d/1W2OCeC0fpCwSclYJpY1yQ9rLKqYY8Wve') !important;
+            background-size: cover !important;
+            background-position: center center !important;
+            background-repeat: no-repeat !important;
+            background-attachment: fixed !important;
+            opacity: 1 !important;
+            z-index: 0 !important; /* Memastikan posisinya di depan warna dasar hitam body */
+        }
+        .space-arena {
+            background: radial-gradient(circle at 50% 50%, #05091a 0%, #02040a 65%, #000104 100%);
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.9), 0 25px 60px rgba(0, 0, 0, 0.95);
+        }
+        #living-cosmos-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: 1;
+        }
+        @keyframes floatPlanetNode {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-7px); }
+        }
+        .planet-node {
+            animation: floatPlanetNode 5s ease-in-out infinite;
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .planet-node:hover {
+            transform: scale(1.06) translateY(-5px);
+            filter: drop-shadow(0 0 25px rgba(250, 204, 21, 0.85));
+        }
+        .orbit-path {
+            stroke-dasharray: 12 10;
+            animation: dashOrbit 25s linear infinite;
+        }
+        @keyframes dashOrbit {
+            to { stroke-dashoffset: -400; }
+        }
+        #player-spaceship {
+            transition: left 2.8s cubic-bezier(0.25, 1, 0.4, 1), top 2.8s cubic-bezier(0.25, 1, 0.4, 1), transform 0.8s ease;
+        }
+    </style>
+</head>
+    <body class="flex flex-col min-h-screen">
+
+    <!-- INTRO SCREEN FULLSCREEN (HALAMAN PENDAHULUAN) -->
+    <div id="intro-screen" class="fixed inset-0 w-full h-full z-[100] flex flex-col justify-center items-center transition-opacity duration-700 bg-slate-950" 
+         style="background-image: url('https://lh3.googleusercontent.com/d/1W2OCeC0fpCwSclYJpY1yQ9rLKqYY8Wve'); background-size: cover; background-position: center; background-repeat: no-repeat;">
+        <button onclick="enterWelcomeScreen()" class="px-10 py-4 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-lg sm:text-2xl shadow-[0_0_50px_rgba(245,158,11,0.8)] transition transform hover:scale-110 animate-bounce border-4 border-white/50 flex items-center gap-3">
+            ENTER GAME <i class="fa-solid fa-rocket"></i>
+        </button>
+    </div>
+
+    <!-- BACKGROUND COVER KHUSUS HALAMAN DEPAN (z-0 agar tidak tenggelam di belakang body) -->
+    <div id="welcome-custom-cover" class="fixed inset-0 w-full h-full z-0 transition-opacity duration-700 pointer-events-none"></div>
+
+    <!-- HEADER BAR -->
+    <header class="w-full px-4 py-3 bg-slate-950/90 border-b border-sky-500/30 sticky top-0 z-40 relative flex flex-wrap justify-between items-center gap-2">
+        <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center shadow-lg border border-sky-300/40">
+                <i class="fa-solid fa-user-astronaut text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="font-game text-base sm:text-lg font-bold tracking-wide text-sky-300 leading-tight">
+                    ENGLISH SPACE BATTLE
+                </h1>
+                <div class="flex items-center gap-2 mt-0.5">
+                    <p id="header-player-name" class="text-xs text-amber-300 font-semibold">
+                        Kapten: Siswa SMK
+                    </p>
+                    <button onclick="document.getElementById('cover-input').click()" class="px-1.5 py-0.5 rounded bg-sky-900/50 border border-sky-400/50 text-sky-200 text-[9px] font-bold hover:bg-sky-800 transition flex items-center gap-1 shadow-sm" title="Ganti Wallpaper">
+                        <i class="fa-solid fa-images"></i> Ganti Wall
+                    </button>
+                    <input type="file" id="cover-input" accept="image/*" class="hidden" onchange="changeCoverImage(event)">
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center flex-wrap gap-2">
+            <div class="bg-slate-900/90 border border-amber-500/40 px-3 py-1 rounded-xl flex items-center space-x-2">
+                <i class="fa-solid fa-coins text-amber-400"></i>
+                <span class="text-xs text-slate-300">Skor:</span>
+                <span id="global-gold" class="font-game font-bold text-amber-300 text-sm">0</span>
+            </div>
+            <div class="bg-slate-900/90 border border-sky-500/40 px-3 py-1 rounded-xl flex items-center space-x-2">
+                <i class="fa-solid fa-globe text-sky-400"></i>
+                <span id="planet-progress-text" class="text-xs font-bold text-sky-200">0/4 Planet</span>
+            </div>
+            <button onclick="openLeaderboardModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 flex items-center space-x-1.5 text-amber-300 font-bold text-xs transition shadow" title="Papan Peringkat & Google Sheet">
+                <i class="fa-solid fa-trophy"></i>
+                <span class="hidden sm:inline">Leaderboard</span>
+            </button>
+            <button onclick="toggleMute()" id="sound-btn" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 flex items-center justify-center text-sky-300 transition" title="Suara">
+                <i class="fa-solid fa-volume-high"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="flex-1 relative z-10 flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-6xl mx-auto">
+
+        <!-- 1. WELCOME SCREEN (POPUP GLASSMORPHISM DENGAN KONTRAS TEGAS TAPI TETAP TRANSPARAN) -->
+        <section id="welcome-screen" class="w-full max-w-sm bg-slate-950/80 backdrop-blur-md border-2 border-sky-400/80 rounded-3xl p-4 sm:p-5 text-center space-y-3 -mt-24 relative shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
+            <!-- Form Input Nama & Kelas -->
+            <div class="bg-slate-900/70 border border-sky-500/50 rounded-2xl p-4 text-left space-y-3 w-full mx-auto shadow-inner">
+                <div>
+                    <label class="block text-[11px] font-bold text-sky-300 uppercase mb-1">
+                        <i class="fa-solid fa-user-astronaut mr-1"></i> Nama Lengkap Peserta:
+                    </label>
+                    <input id="input-player-name" type="text" placeholder="Contoh: Andi Pratama"
+                           class="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-600 text-white text-xs sm:text-sm focus:outline-none focus:border-sky-400 shadow-inner">
+                </div>
+                <div>
+                    <label class="block text-[11px] font-bold text-amber-300 uppercase mb-1">
+                        <i class="fa-solid fa-graduation-cap mr-1"></i> Kelas / Jurusan:
+                    </label>
+                    <input id="input-player-class" type="text" placeholder="Contoh: X Agribisnis Perikanan 1"
+                           class="w-full px-4 py-2 rounded-xl bg-slate-950 border border-slate-600 text-white text-xs sm:text-sm focus:outline-none focus:border-amber-400 shadow-inner">
+                </div>
+                <p id="welcome-error" class="text-[11px] text-rose-400 font-bold hidden">
+                    ⚠️ Harap isi Nama Lengkap dan Kelas terlebih dahulu sebelum memulai misi!
+                </p>
+
+                <button onclick="startAdventure()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-extrabold text-xs sm:text-sm shadow-[0_0_15px_rgba(56,189,248,0.4)] transition transform hover:scale-[1.02]">
+                    LUNCURKAN MISI ANTARIKSA <i class="fa-solid fa-rocket ml-1"></i>
+                </button>
+
+                <div>
+                    <button onclick="openLeaderboardModal()" type="button" class="w-full py-2 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/50 text-amber-300 font-extrabold text-[10px] shadow transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-trophy"></i> LEADERBOARD & GOOGLE SHEET
+                    </button>
+                </div>
+            </div>
+
+            <!-- Developer Credit at Bottom Corner of Welcome Screen -->
+            <div class="pt-2 border-t border-slate-700 flex justify-center items-center text-[10px]">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 border border-sky-500/30 text-slate-300 shadow">
+                    <i class="fa-solid fa-code text-sky-400"></i>
+                    <span>Pengembang: <strong class="text-amber-300 font-extrabold">Irwan Elvin Kadir.S.Pd.,Gr.</strong></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. GALAXY MAP SCREEN -->
+        <section id="map-screen" class="w-full hidden flex-col space-y-4">
+            <!-- Top Map Header Banner -->
+            <div class="glass-card rounded-2xl p-4 border border-amber-400/40 flex flex-wrap justify-between items-center gap-3">
+                <div>
+                    <span class="text-[11px] font-extrabold text-amber-300 uppercase tracking-wider">🌌 LIVING COSMOS OBSERVATORY</span>
+                    <h2 class="font-game text-xl sm:text-2xl font-bold title-3d">PETA GALAKSI ANTARIKSA 3D</h2>
+                    <p class="text-xs text-slate-300">Pilih planet tujuanmu, selesaikan misi Bahasa Inggris, dan kumpulkan skor tertinggi!</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button id="lock-mode-btn" onclick="requestPinForAction('lockMode')" class="px-3 py-2 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-300 text-xs font-bold transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-lock"></i>
+                        <span>Mode Bertahap: Harus Urut Planet 1-4 (PIN)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Interactive 3D Space Map Container (LIVING COSMOS 3D SPIRAL GALAXY) -->
+            <!-- Ukuran tinggi dikurangi menjadi h-[400px] atau sm:h-[480px] agar lebih landscape dan pas di layar laptop -->
+            <div id="galaxy-map-arena" class="space-arena w-full h-[380px] sm:h-[460px] rounded-3xl border border-amber-200/25 relative select-none">
+
+                <!-- 3D WebGL Living Cosmos Spiral Galaxy Canvas -->
+                <canvas id="living-cosmos-canvas"></canvas>
+
+                <!-- Subtle Observatory HUD Controls (Top-Right Toggleable) -->
+                <div class="absolute top-3 right-3 z-30 flex flex-col items-end">
+                    <button onclick="toggleCosmosControls()" class="px-3 py-1.5 rounded-xl bg-slate-950/80 hover:bg-slate-900 border border-amber-300/30 text-amber-200/90 text-[11px] font-bold flex items-center gap-1.5 shadow-lg backdrop-blur-md transition">
+                        <i class="fa-solid fa-satellite-dish text-amber-300"></i>
+                        <span>Observatory 3D Controls</span>
+                    </button>
+
+                    <div id="cosmos-control-panel" class="hidden mt-2 w-72 p-3.5 rounded-2xl bg-slate-950/90 border border-amber-300/30 backdrop-blur-xl shadow-2xl text-[11px] text-slate-200 space-y-2.5">
+                        <div class="flex justify-between items-center border-b border-slate-800 pb-1.5">
+                            <span class="font-extrabold text-amber-300 tracking-wide">🌌 LIVING COSMOS 3D</span>
+                            <span id="cosmos-quality-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/30 text-[9px] font-bold">HIGH QUALITY</span>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <button id="btn-cosmos-pause" onclick="toggleCosmosPause()" class="py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-sky-300 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-pause"></i> <span>Pause</span>
+                            </button>
+                            <button onclick="resetCosmosView()" class="py-1.5 px-2 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-700 font-bold text-amber-300 flex items-center justify-center gap-1">
+                                <i class="fa-solid fa-rotate-left"></i> <span>Reset View</span>
+                            </button>
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Animation Speed</span>
+                                <span id="lbl-cosmos-speed" class="font-bold text-amber-200">1.0x</span>
+                            </div>
+                            <input id="rng-cosmos-speed" type="range" min="0.1" max="2.5" step="0.1" value="1.0" oninput="updateCosmosSpeed(this.value)" class="w-full accent-amber-400 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                        </div>
+
+                        <div class="space-y-1">
+                            <div class="flex justify-between">
+                                <span class="text-slate-400">Core & Starlight Brightness</span>
+                                <span id="lbl-cosmos-brightness" class="font-bold text-amber-200">100%</span>
+                            </div>
+                            <input id="rng-cosmos-brightness" type="range" min="0.4" max="1.8" step="0.05" value="1.0" oninput="updateCosmosBrightness(this.value)" class="w-full accent-amber-400 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                        </div>
+
+                        <div class="flex justify-between items-center pt-1 border-t border-slate-800/80">
+                            <button id="btn-cosmos-cam" onclick="toggleCosmosCameraMode()" class="px-2.5 py-1 rounded-lg bg-sky-500/20 border border-sky-400/40 text-sky-200 font-bold text-[10px]">
+                                🎥 Cam: 15s Loop Active
+                            </button>
+                            <button id="btn-cosmos-quality" onclick="toggleCosmosQualityMode()" class="px-2.5 py-1 rounded-lg bg-purple-500/20 border border-purple-400/40 text-purple-200 font-bold text-[10px]">
+                                ⚡ Mode: High
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SVG Glowing Orbit Path Between 4 Planets (Horizontal Dynamic Formation) -->
+                <svg class="absolute inset-0 w-full h-full pointer-events-none z-10" viewBox="0 0 1000 560" preserveAspectRatio="none">
+                    <defs>
+                        <linearGradient id="orbitGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#c084fc" stop-opacity="0.65" />
+                            <stop offset="28%" stop-color="#38bdf8" stop-opacity="0.65" />
+                            <stop offset="55%" stop-color="#fb923c" stop-opacity="0.65" />
+                            <stop offset="78%" stop-color="#2dd4bf" stop-opacity="0.65" />
+                            <stop offset="100%" stop-color="#fde047" stop-opacity="0.85" />
+                        </linearGradient>
+                    </defs>
+                    <path d="M 105 340 C 185 210, 235 200, 295 235 C 365 280, 425 385, 495 335 C 570 280, 620 205, 690 225 C 765 245, 825 315, 895 265"
+                          fill="none" stroke="rgba(253, 224, 71, 0.12)" stroke-width="6" stroke-linecap="round" />
+                    <path d="M 105 340 C 185 210, 235 200, 295 235 C 365 280, 425 385, 495 335 C 570 280, 620 205, 690 225 C 765 245, 825 315, 895 265"
+                          fill="none" stroke="url(#orbitGrad)" stroke-width="2.5" stroke-linecap="round" class="orbit-path" />
+                </svg>
+
+                <!-- PLAYER SPACESHIP: ULTRA-REALISTIC 3D SPACE ROCKET ICON -->
+                <div id="player-spaceship" class="absolute z-30 pointer-events-none flex flex-col items-center -translate-x-1/2 -translate-y-1/2"
+                     style="left: 8%; top: 44%;">
+                    <div class="px-2 py-0.5 rounded-full bg-slate-950/85 text-amber-300 font-extrabold text-[9px] shadow-[0_0_10px_rgba(56,189,248,0.5)] -mb-1 whitespace-nowrap border border-sky-400/50 flex items-center gap-1 backdrop-blur-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+                        <span id="spaceship-captain-tag">Kapten</span>
+                    </div>
+                    <div id="player-rocket-tilt-wrapper" class="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center overflow-visible transition-transform duration-700 ease-out"
+                         style="transform: rotate(40deg); filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));">
+                        <canvas id="player-rocket-3d-canvas" class="w-full h-full block pointer-events-none relative z-10"></canvas>
+                    </div>
+                </div>
+
+                <!-- PLANET 1: ULTRA-REALISTIC 3D RINGED PLANET (UNGU NEON / SATURN STYLE) -->
+                <div onclick="selectPlanetOnMap(1)" class="planet-node absolute left-[3%] sm:left-[4%] top-[48%] cursor-pointer flex flex-col items-center z-20 group">
+                    <div class="flex flex-col items-center mb-1">
+                        <div class="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white font-extrabold text-[10px] shadow-[0_0_12px_rgba(192,132,252,0.9)] border border-purple-200 flex items-center gap-1">
+                            <i class="fa-solid fa-flag text-purple-100"></i> <span>PLANET AWAL</span>
+                        </div>
+                        <div class="w-0.5 h-2.5 bg-purple-300"></div>
+                    </div>
+
+                    <!-- 3D Ringed Planet Canvas Container -->
+                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                        <canvas id="planet-3d-canvas-1" class="w-full h-full block pointer-events-none"></canvas>
+                    </div>
+
+                    <div class="mt-1 bg-slate-950/90 border border-purple-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
+                        <div class="font-bold text-[11px] text-purple-300">Planet 1: Pre-Test</div>
+                        <div id="status-planet-1" class="text-[9px] text-emerald-300 font-semibold">Planet Awal • Terbuka</div>
+                    </div>
+                </div>
+
+                <!-- PLANET 2: ULTRA-REALISTIC 3D RINGED PLANET (BIRU ES & CYAN) -->
+                <div onclick="selectPlanetOnMap(2)" class="planet-node absolute left-[22%] sm:left-[23%] top-[23%] cursor-pointer flex flex-col items-center z-20 group" style="animation-delay:0.7s">
+                    <div class="flex flex-col items-center mb-1">
+                        <div class="px-2.5 py-0.5 rounded-full bg-amber-400/20 border border-amber-300 text-amber-300 font-extrabold text-[10px] shadow-[0_0_15px_rgba(251,191,36,0.9)] flex items-center gap-1">
+                            <i class="fa-solid fa-sun text-amber-300 animate-spin" style="animation-duration:10s"></i> <span>ICE & SKY</span>
+                        </div>
+                        <div class="w-0.5 h-2 bg-cyan-300"></div>
+                    </div>
+
+                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                        <canvas id="planet-3d-canvas-2" class="w-full h-full block pointer-events-none"></canvas>
+                    </div>
+
+                    <div class="mt-1 bg-slate-950/90 border border-cyan-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
+                        <div class="font-bold text-[11px] text-cyan-300">Planet 2: Vocabulary</div>
+                        <div id="status-planet-2" class="text-[9px] text-sky-200 font-semibold">Level 2 • Terbuka</div>
+                    </div>
+                </div>
+
+                <!-- PLANET 3: ULTRA-REALISTIC 3D RINGED PLANET (JINGGA, MERAH & EMAS) -->
+                <div onclick="selectPlanetOnMap(3)" class="planet-node absolute left-[42%] sm:left-[43%] top-[44%] cursor-pointer flex flex-col items-center z-20 group" style="animation-delay:1.4s">
+                    <div class="flex flex-col items-center mb-1">
+                        <div class="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-orange-500 via-red-600 to-amber-500 text-white font-extrabold text-[10px] shadow-[0_0_14px_rgba(249,115,22,0.9)] border border-amber-200 flex items-center gap-1">
+                            <i class="fa-solid fa-moon text-amber-200"></i> <span>TANTANGAN MENENGAH</span>
+                        </div>
+                        <div class="w-0.5 h-2.5 bg-orange-400"></div>
+                    </div>
+
+                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                        <canvas id="planet-3d-canvas-3" class="w-full h-full block pointer-events-none"></canvas>
+                    </div>
+
+                    <div class="mt-1 bg-slate-950/90 border border-orange-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
+                        <div class="font-bold text-[11px] text-orange-300">Planet 3: Listening</div>
+                        <div id="status-planet-3" class="text-[9px] text-amber-200 font-semibold">Tantangan Menengah</div>
+                    </div>
+                </div>
+
+                <!-- PLANET 4: ULTRA-REALISTIC 3D RINGED PLANET (TURQUOISE & BIRU LAUT) -->
+                <div onclick="selectPlanetOnMap(4)" class="planet-node absolute left-[62%] sm:left-[63%] top-[20%] cursor-pointer flex flex-col items-center z-20 group" style="animation-delay:2.1s">
+                    <div class="flex flex-col items-center mb-1">
+                        <div class="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-teal-500 to-sky-600 text-white font-extrabold text-[10px] shadow-[0_0_14px_rgba(45,212,191,0.9)] border border-teal-200 flex items-center gap-1">
+                            <i class="fa-solid fa-star text-yellow-300"></i> <span>TATA BAHASA & BACAAN</span>
+                        </div>
+                        <div class="w-0.5 h-2.5 bg-teal-300"></div>
+                    </div>
+
+                    <div class="relative w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center overflow-visible">
+                        <canvas id="planet-3d-canvas-4" class="w-full h-full block pointer-events-none"></canvas>
+                    </div>
+
+                    <div class="mt-1 bg-slate-950/90 border border-teal-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
+                        <div class="font-bold text-[11px] text-teal-300">Planet 4: Fisheries</div>
+                        <div id="status-planet-4" class="text-[9px] text-teal-200 font-semibold">Planet Tata Bahasa</div>
+                    </div>
+                </div>
+
+                <!-- NODE 5 (FINISH): ULTRA-REALISTIC 3D ORBITAL SPACE STATION -->
+                <div onclick="selectPlanetOnMap(5)" class="planet-node absolute left-[80%] sm:left-[81%] top-[30%] cursor-pointer flex flex-col items-center z-20 group" style="animation-delay:1.1s">
+                    <div class="flex flex-col items-center mb-1">
+                        <div class="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-amber-400 via-yellow-300 to-sky-400 text-slate-950 font-extrabold text-[10px] shadow-[0_0_16px_rgba(250,204,21,0.95)] border border-white flex items-center gap-1">
+                            <i class="fa-solid fa-flag-checkered text-slate-950"></i> <span>FINISH • SPACE STATION</span>
+                        </div>
+                        <div class="w-0.5 h-2 bg-amber-300"></div>
+                    </div>
+
+                    <div class="relative w-28 h-28 sm:w-36 sm:h-36 rounded-full bg-radial from-sky-500/15 via-slate-950/70 to-black/90 border-2 border-amber-300/75 shadow-[0_0_45px_rgba(56,189,248,0.55),inset_0_0_25px_rgba(56,189,248,0.35)] flex items-center justify-center overflow-hidden">
+                        <div class="absolute -bottom-6 -right-4 w-24 h-14 rounded-full bg-sky-500/25 blur-md pointer-events-none"></div>
+                        <canvas id="space-station-3d-canvas" class="w-full h-full block pointer-events-none"></canvas>
+                    </div>
+
+                    <div class="mt-2 bg-slate-950/95 border border-amber-400/80 px-3 py-1 rounded-xl text-center shadow-xl">
+                        <div class="font-bold text-[11px] text-amber-300">Orbital Station: FINISH</div>
+                        <div id="status-planet-5" class="text-[9px] text-amber-200 font-semibold">Stasiun Akhir Misi</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation Bar -->
+            <div class="glass-card rounded-2xl p-3.5 border border-amber-400/40 flex flex-wrap justify-between items-center gap-3 text-xs">
+                <button onclick="backToWelcome()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 font-bold text-sky-300 flex items-center gap-2 transition">
+                    <i class="fa-solid fa-house"></i> Ganti Kapten / Menu Utama
+                </button>
+                <div class="flex flex-wrap items-center gap-4 text-slate-300">
+                    <span><i class="fa-solid fa-shuttle-space text-amber-300 mr-1"></i> Posisi Pesawat Aktif</span>
+                    <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Misi Selesai</span>
+                    <span><i class="fa-solid fa-ellipsis text-amber-300 mr-1"></i> Jalur Orbit Antariksa</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. PLANET 1 SCREEN: WHO WANTS TO BE AN ENGLISH MILLIONAIRE -->
+        <section id="planet1-screen" class="w-full hidden flex-col space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2 glass-card rounded-2xl p-4 border border-sky-400/40">
+                <div>
+                    <span class="text-xs font-extrabold text-sky-400 uppercase">🪐 PLANET 1 — PRE-TEST</span>
+                    <h3 class="font-game text-xl sm:text-2xl font-bold text-amber-300">Who Wants to Be an English Millionaire?</h3>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="btn-take-points" onclick="openTakePointsModal()" class="hidden px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-lg transition">
+                        💰 TAKE THE POINTS
+                    </button>
+                    <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-2 glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
+                    <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-700 pb-3">
+                        <span id="p1-question-counter" class="px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 text-xs font-bold">
+                            Soal 1 / 10
+                        </span>
+                        <div class="flex items-center gap-2">
+                            <button id="lifeline-5050" onclick="useLifeline5050()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow transition">
+                                50:50
+                            </button>
+                            <button id="lifeline-phone" onclick="useLifelinePhone()" class="px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-500 text-white text-xs font-bold shadow transition">
+                                <i class="fa-solid fa-phone mr-1"></i> Phone
+                            </button>
+                            <button id="lifeline-audience" onclick="useLifelineAudience()" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow transition">
+                                <i class="fa-solid fa-users mr-1"></i> Audience
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="p1-lifeline-hint" class="hidden p-3 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-xs font-semibold"></div>
+
+                    <div class="py-4">
+                        <p id="p1-question-text" class="text-base sm:text-xl font-bold text-white leading-relaxed"></p>
+                    </div>
+
+                    <div id="p1-options-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+
+                    <div id="p1-feedback-box" class="hidden p-3.5 rounded-2xl text-xs font-bold"></div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-4 border border-amber-400/40 flex flex-col justify-between">
+                    <div>
+                        <h4 class="font-game text-center text-sm font-bold text-amber-300 border-b border-slate-700 pb-2 mb-2">
+                            🏆 TANGGA HADIAH VIRTUAL
+                        </h4>
+                        <ul id="p1-prize-ladder" class="space-y-1 text-xs font-bold"></ul>
+                    </div>
+                    <div class="mt-3 p-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-[11px] text-slate-300 space-y-1">
+                        <div>💡 <b>Aturan Planet 1:</b></div>
+                        <div>• Jawaban benar menaikkan tangga hadiah.</div>
+                        <div>• Jawaban salah tetap lanjut ke soal berikutnya tanpa menambah hadiah.</div>
+                        <div>• Klik <b>TAKE THE POINTS</b> kapan saja setelah minimal 1 jawaban benar.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. PLANET 2 SCREEN: BOUNCING WORD CHALLENGE -->
+        <section id="planet2-screen" class="w-full hidden flex-col space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2 glass-card rounded-2xl p-4 border border-purple-400/40">
+                <div>
+                    <span class="text-xs font-extrabold text-purple-300 uppercase">🪐 PLANET 2 — DICTATION CHALLENGE</span>
+                    <h3 class="font-game text-xl sm:text-2xl font-bold text-amber-300">Space Typing Challenge</h3>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <span id="p2-round-badge" class="px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-400 text-purple-200 text-xs font-bold">
+                        Soal Audio 1 / 5
+                    </span>
+                    <button id="btn-take-points-p2" onclick="openTakePointsModal(2)" class="hidden px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-lg transition">
+                        💰 TAKE THE POINTS
+                    </button>
+                    <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-5 space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-900/90 p-3.5 rounded-2xl border border-slate-700">
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="playPlanet2SentenceAudio()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 hover:from-sky-300 hover:to-indigo-400 text-slate-950 font-extrabold text-xs shadow-lg flex items-center gap-2 transition">
+                            <i class="fa-solid fa-volume-high text-sm"></i> DENGARKAN AUDIO
+                        </button>
+                        <span id="p2-instruction-text" class="text-xs text-slate-300">
+                            Dengarkan audio, lalu klik/sentuh planet kata yang melayang untuk menyusun kalimat!
+                        </span>
+                    </div>
+                    <span id="p2-attempts-badge" class="px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-300 text-xs font-extrabold whitespace-nowrap">
+                        Kesempatan: 2x
+                    </span>
+                </div>
+
+                <!-- 3D Space Canvas for Bouncing Word Planets -->
+                <div class="w-full h-[270px] sm:h-[310px] rounded-2xl overflow-hidden border-2 border-purple-500/40 relative bg-slate-950 shadow-inner">
+                    <canvas id="balloon-canvas" class="w-full h-full block cursor-pointer touch-none"></canvas>
+                </div>
+
+                <!-- Typing & Touch Word Tray -->
+                <div class="bg-slate-900/90 border border-sky-500/30 rounded-2xl p-4 space-y-2.5">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <label id="p2-input-label" for="p2-typed-answer" class="text-xs text-sky-300 font-bold uppercase">
+                            <i class="fa-solid fa-hand-pointer mr-1 text-amber-300"></i> Sentuh/Klik Planet Kata di Atas atau Ketik Jawaban:
+                        </label>
+                        <div class="flex items-center gap-1.5">
+                            <button type="button" onclick="undoPlanet2Word()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 text-[11px] font-bold transition">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Hapus 1 Kata
+                            </button>
+                            <button type="button" onclick="resetPlanet2Words()" class="px-2.5 py-1 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-300 text-[11px] font-bold transition">
+                                <i class="fa-solid fa-trash-can mr-1"></i> Reset
+                            </button>
+                        </div>
+                    </div>
+                    <input type="text" id="p2-typed-answer" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-amber-200 font-bold text-sm sm:text-base focus:outline-none focus:border-purple-500" placeholder="Klik/sentuh planet kata yang melayang di atas..." autocomplete="off">
+                </div>
+
+                <div id="p2-feedback-box" class="hidden p-3 rounded-xl text-xs font-bold"></div>
+
+                <div class="flex flex-wrap justify-end items-center gap-2">
+                    <button onclick="checkPlanet2Answer()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg">
+                        <i class="fa-solid fa-check mr-1"></i> CHECK ANSWER (+100 Poin)
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. PLANET 3 SCREEN: LISTENING STUDIO -->
+        <section id="planet3-screen" class="w-full hidden flex-col space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2 glass-card rounded-2xl p-4 border border-emerald-400/40">
+                <div>
+                    <span class="text-xs font-extrabold text-emerald-300 uppercase">🪐 PLANET 3 — LISTENING COMPREHENSION</span>
+                    <h3 class="font-game text-xl sm:text-2xl font-bold text-amber-300">Space Audio Radar — Self Introduction</h3>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <span id="p3-counter" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold">
+                        Audio 1 / 5
+                    </span>
+                    <button id="btn-take-points-p3" onclick="openTakePointsModal(3)" class="hidden px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-lg transition">
+                        💰 TAKE THE POINTS
+                    </button>
+                    <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass-card rounded-3xl p-5 sm:p-6 space-y-5">
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-900/90 border border-emerald-500/40 rounded-2xl p-4">
+                    <div class="space-y-1 text-center sm:text-left">
+                        <span id="p3-topic-badge" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[11px] font-bold">
+                            Topic: Personal Information
+                        </span>
+                        <h4 class="text-sm sm:text-base font-bold text-white">
+                            Dengarkan rekaman suara perkenalan diri berikut, lalu jawab pertanyaannya!
+                        </h4>
+                        <p class="text-xs text-slate-400">Klik tombol Putar Audio (bisa didengarkan berulang kali).</p>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button onclick="playListeningAudio()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg flex items-center gap-2">
+                            <i class="fa-solid fa-volume-high text-base"></i> PUTAR AUDIO
+                        </button>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <p id="p3-question-text" class="text-base sm:text-lg font-extrabold text-amber-300"></p>
+                    <div id="p3-options-list" class="grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+                </div>
+
+                <div id="p3-feedback-box" class="hidden p-3.5 rounded-2xl text-xs font-bold"></div>
+            </div>
+        </section>
+
+        <!-- 6. PLANET 4 SCREEN: READING AGRIBISNIS PERIKANAN SMKN 4 SINJAI -->
+        <section id="planet4-screen" class="w-full hidden flex-col space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2 glass-card rounded-2xl p-4 border border-amber-400/40">
+                <div>
+                    <span class="text-xs font-extrabold text-amber-300 uppercase">🪐 PLANET 4 — READING COMPREHENSION</span>
+                    <h3 class="font-game text-xl sm:text-2xl font-bold text-sky-300">Agribisnis Perikanan SMKN 4 Sinjai</h3>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <span id="p4-counter" class="px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-xs font-bold">
+                        Teks 1 / 5
+                    </span>
+                    <button id="btn-take-points-p4" onclick="openTakePointsModal(4)" class="hidden px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-lg transition">
+                        💰 TAKE THE POINTS
+                    </button>
+                    <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                <div class="glass-card rounded-3xl p-5 border border-sky-400/40 space-y-3 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span id="p4-passage-tag" class="px-3 py-0.5 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 text-xs font-bold">
+                                Fisheries Reading Text
+                            </span>
+                            <button onclick="speakReadingPassage()" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold border border-slate-600">
+                                <i class="fa-solid fa-volume-high mr-1"></i> Dengarkan Teks
+                            </button>
+                        </div>
+                        <h4 id="p4-passage-title" class="font-game text-lg font-bold text-amber-300"></h4>
+                        <div id="p4-passage-body" class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 text-slate-200 text-sm leading-relaxed"></div>
+                    </div>
+                    <div class="text-[11px] text-slate-400 italic">
+                        🐟 Materi Kontekstual Jurusan Agribisnis Perikanan — SMKN 4 Sinjai (+100 Poin / Jawaban Benar).
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-5 border border-amber-400/40 flex flex-col justify-between space-y-4">
+                    <div class="space-y-3">
+                        <span class="text-xs font-bold text-amber-300 uppercase">Pertanyaan Pemahaman Bacaan:</span>
+                        <p id="p4-question-text" class="text-base sm:text-lg font-extrabold text-white"></p>
+                        <div id="p4-options-list" class="space-y-2.5"></div>
+                    </div>
+                    <div id="p4-feedback-box" class="hidden p-3.5 rounded-2xl text-xs font-bold"></div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- MODAL KONFIRMASI PLANET DARI PETA -->
+    <div id="planet-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-3xl max-w-md w-full p-6 border-2 border-amber-400 text-center space-y-4">
+            <div id="modal-planet-icon" class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-400 mx-auto flex items-center justify-center text-3xl text-amber-300">
+                🪐
+            </div>
+            <h3 id="modal-planet-title" class="font-game text-2xl font-bold text-amber-300">PLANET 1</h3>
+            <p id="modal-planet-desc" class="text-xs sm:text-sm text-slate-300 leading-relaxed"></p>
+            <div class="flex gap-2 pt-2">
+                <button onclick="closePlanetModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-600">
+                    Batal
+                </button>
+                <button onclick="launchSelectedPlanet()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg">
+                    MULAI MISI 🚀
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL TAKE THE POINTS -->
+    <div id="take-points-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-3xl max-w-md w-full p-6 border-2 border-amber-400 text-center space-y-4">
+            <h3 class="font-game text-2xl font-bold text-amber-300">ARE YOU SURE YOU WANT TO STOP?</h3>
+            <p class="text-sm text-slate-200">
+                You have secured <span id="secured-points-text" class="font-extrabold text-emerald-400">0</span> points.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-2 pt-2">
+                <button onclick="closeTakePointsModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-600">
+                    CONTINUE PLAYING
+                </button>
+                <button onclick="confirmTakePoints()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-extrabold text-xs shadow-lg">
+                    TAKE THE POINTS 💰
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL RINGKASAN HASIL MISI PLANET -->
+    <div id="summary-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-3xl max-w-lg w-full p-6 border-2 border-emerald-400 text-center space-y-4">
+            <div class="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 mx-auto flex items-center justify-center text-3xl">
+                🏆
+            </div>
+            <h3 id="summary-title" class="font-game text-2xl font-bold text-amber-300">MISI SELESAI!</h3>
+            <p id="summary-subtitle" class="text-xs sm:text-sm text-slate-200"></p>
+            <div id="summary-details" class="p-4 rounded-2xl bg-slate-900/90 border border-slate-700 text-left text-xs text-slate-300 space-y-1.5 max-h-52 overflow-y-auto"></div>
+            <button onclick="finishPlanetSummary()" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-extrabold text-xs shadow-lg">
+                KEMBALI KE PETA GALAKSI & LANJUTKAN <i class="fa-solid fa-shuttle-space ml-1"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL LEADERBOARD & GOOGLE SHEETS SYNC -->
+    <div id="leaderboard-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-3xl max-w-3xl w-full p-5 sm:p-6 border-2 border-amber-400 space-y-4 max-h-[92vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex items-center space-x-3">
+                    <div class="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-400 text-amber-300 flex items-center justify-center text-2xl shadow">
+                        <i class="fa-solid fa-trophy"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-game text-lg sm:text-xl font-bold text-amber-300 leading-tight">GALAXY LEADERBOARD & GOOGLE SHEETS</h3>
+                        <p class="text-[11px] text-slate-300">Papan Peringkat Kapten Antariksa — SMKN 4 Sinjai (Tersimpan Lokal & Cloud Sheet)</p>
+                    </div>
+                </div>
+                <button onclick="closeLeaderboardModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center border border-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-900/90 border border-emerald-500/40 rounded-2xl p-3 flex flex-wrap justify-between items-center gap-2 text-xs">
+                <div class="flex items-center gap-2">
+                    <span id="sheet-sync-badge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-extrabold text-[10px]">
+                        📊 MODE HYBRID (LOKAL + GOOGLE SHEET)
+                    </span>
+                    <span id="sheet-sync-status-text" class="text-slate-300 text-[11px]">
+                        Data otomatis tersimpan di perangkat & siap dikirim ke Google Sheet.
+                    </span>
+                </div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <button onclick="exportLeaderboardToCSV()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1">
+                        <i class="fa-solid fa-file-csv"></i> Unduh File Sheet (.CSV)
+                    </button>
+                    <button onclick="requestPinForAction('sheetSetup')" class="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-300 font-bold text-[11px] transition flex items-center gap-1">
+                        <i class="fa-solid fa-lock text-amber-300"></i> <i class="fa-solid fa-gear"></i> Pengaturan Cloud Sheet (PIN)
+                    </button>
+                    <button onclick="syncAllToGoogleSheet(true)" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 font-bold text-[11px] transition flex items-center gap-1">
+                        <i class="fa-solid fa-rotate"></i> Sync Sekarang
+                    </button>
+                </div>
+            </div>
+
+            <div id="sheet-setup-panel" class="hidden bg-slate-950 border border-sky-500/50 rounded-2xl p-4 space-y-3 text-left text-xs">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-bold text-sky-300 text-sm">🔗 Koneksi Otomatis Google Sheets (Apps Script)</h4>
+                        <p class="text-[11px] text-slate-400 mt-0.5">
+                            Ikuti 3 langkah cepat ini agar skor siswa dari semua perangkat otomatis masuk ke Google Sheet Anda:
+                        </p>
+                    </div>
+                    <button onclick="toggleSheetSetupPanel()" class="text-slate-400 hover:text-white text-xs">Tutup ▲</button>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
+                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 1: Buat Sheet Baru</span>
+                        Buka <b>sheets.new</b> di browser, lalu klik menu <b>Ekstensi &gt; Apps Script</b>.
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 2: Tempel Kode Kita</span>
+                        Klik tombol <b>Salin Kode Otomatis</b> di bawah, tempelkan, lalu klik <b>Terapkan (Deploy) &gt; Deployment Baru &gt; Aplikasi Web</b> (Akses: <i>Siapa saja / Anyone</i>).
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
+                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 3: Tempel URL Web App</span>
+                        Salin URL Web App (`https://script.google.com/macros/s/.../exec`) ke kolom di bawah lalu klik <b>Simpan & Hubungkan</b>.
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="copyAppsScriptCode()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow flex items-center gap-1.5">
+                        <i class="fa-solid fa-copy"></i> Salin Kode Apps Script Pembuat Sheet Otomatis
+                    </button>
+                    <span id="copy-script-feedback" class="text-[11px] font-bold text-emerald-400 hidden">✅ Kode berhasil disalin!</span>
+                </div>
+
+                <div class="pt-1 space-y-1.5">
+                    <label class="block text-[11px] font-bold text-sky-300">URL Google Apps Script Web App Anda:</label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input id="input-google-sheet-url" type="url" placeholder="https://script.google.com/macros/s/AKfycb.../exec"
+                               class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
+                        <button onclick="saveGoogleSheetUrl()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-extrabold text-xs shadow">
+                            Simpan & Hubungkan
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="overflow-y-auto max-h-[300px] rounded-2xl border border-slate-700 bg-slate-950/70">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="bg-slate-900 text-sky-300 border-b border-slate-700 uppercase text-[10px] tracking-wider">
+                            <th class="py-2.5 px-3 text-center">#</th>
+                            <th class="py-2.5 px-3">Nama Kapten</th>
+                            <th class="py-2.5 px-3">Kelas</th>
+                            <th class="py-2.5 px-3 text-center">Misi</th>
+                            <th class="py-2.5 px-3 text-right">Total Skor</th>
+                            <th class="py-2.5 px-3 text-center">Status Sheet</th>
+                        </tr>
+                    </thead>
+                    <tbody id="leaderboard-tbody" class="divide-y divide-slate-800/80 text-slate-200"></tbody>
+                </table>
+            </div>
+
+            <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
+                <span class="text-[11px] text-slate-400">
+                    <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> Skor tersimpan otomatis setiap menyelesaikan misi planet.
+                </span>
+                <div class="flex gap-2">
+                    <button onclick="clearLeaderboardData()" class="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-trash-can mr-1"></i> Reset Data Lokal
+                    </button>
+                    <button onclick="closeLeaderboardModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-600 text-white font-extrabold text-xs shadow">
+                        Tutup
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL FINISH: ORBITAL SPACE STATION GRAND FINALE -->
+    <div id="station-finale-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-3xl max-w-lg w-full p-6 border-2 border-amber-400 text-center space-y-4 shadow-[0_0_60px_rgba(250,204,21,0.35)] relative overflow-hidden">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-400/20 border border-amber-300 text-amber-300 text-[11px] font-extrabold">
+                <i class="fa-solid fa-satellite"></i> ORBITAL COMMAND STATION — MISSION COMPLETE
+            </div>
+
+            <div class="w-40 h-40 mx-auto rounded-full bg-slate-950/95 border-2 border-sky-400/60 shadow-[0_0_40px_rgba(56,189,248,0.5),inset_0_0_30px_rgba(56,189,248,0.3)] relative overflow-hidden flex items-center justify-center">
+                <div class="absolute -bottom-8 -right-4 w-28 h-16 rounded-full bg-sky-400/25 blur-md pointer-events-none"></div>
+                <canvas id="station-modal-3d-canvas" class="w-full h-full block"></canvas>
+            </div>
+
+            <div class="space-y-1">
+                <h3 class="font-game text-2xl sm:text-3xl font-bold title-3d">MISSION ACCOMPLISHED!</h3>
+                <p class="text-xs sm:text-sm text-slate-200">
+                    Selamat Kapten <span id="finale-captain-name" class="font-extrabold text-amber-300"></span> (<span id="finale-captain-class" class="text-sky-300 font-bold"></span>)!
+                </p>
+                <p class="text-xs text-slate-400">
+                    Pesawatmu telah berhasil berlabuh (*docking*) di Stasiun Luar Angkasa Orbital Akhir setelah menaklukkan seluruh planet misi Bahasa Inggris!
+                </p>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-slate-900/90 border border-amber-400/40 grid grid-cols-2 gap-3 text-center">
+                <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Total Skor Akhir</div>
+                    <div id="finale-total-score" class="font-game text-2xl font-bold text-amber-300 mt-0.5">0</div>
+                </div>
+                <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Status Misi Galaksi</div>
+                    <div id="finale-planets-status" class="font-game text-lg font-bold text-emerald-400 mt-1">4/4 Planet ⭐</div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
+                <button onclick="closeStationFinaleModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600">
+                    Kembali ke Peta
+                </button>
+                <button onclick="closeStationFinaleModal(); openLeaderboardModal();" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg">
+                    <i class="fa-solid fa-trophy mr-1"></i> LIHAT LEADERBOARD
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL VERIFIKASI PIN AKSES GURU / ADMIN -->
+    <div id="pin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[60] p-4">
+        <div class="glass-card rounded-3xl max-w-sm w-full p-6 border-2 border-amber-400 text-center space-y-4 shadow-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400 mx-auto flex items-center justify-center text-2xl text-amber-300">
+                <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="space-y-1">
+                <h3 class="font-game text-xl font-bold text-amber-300">VERIFIKASI AKSES GURU</h3>
+                <p id="pin-modal-desc" class="text-xs text-slate-300">
+                    Masukkan kode PIN Keamanan untuk mengakses fitur ini.
+                </p>
+            </div>
+            <div>
+                <input id="input-security-pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••"
+                       onkeydown="if(event.key==='Enter') verifySecurityPin()"
+                       class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-center font-game tracking-[0.5em] text-xl text-amber-300 focus:outline-none focus:border-amber-400">
+                <p id="pin-error-msg" class="text-xs text-rose-400 font-bold mt-2 hidden">
+                    ❌ Kode PIN salah! Akses ditolak.
+                </p>
+            </div>
+            <div class="flex gap-2 pt-1">
+                <button onclick="closePinModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-600">
+                    Batal
+                </button>
+                <button onclick="verifySecurityPin()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg">
+                    BUKA AKSES <i class="fa-solid fa-unlock ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================================================
+           GLOBAL STATE & SOUND ENGINE
+           ========================================================================== */
+        let playerName = "Siswa SMK";
+        let playerClass = "X Agribisnis Perikanan";
+        let currentSessionId = "sess_" + Date.now();
+        let totalGold = 0;
+        let isMuted = false;
+        let bgmOscillators = [];
+        let bgmGainNode = null;
+        let bgmFilter = null;
+        let bgmLfo = null;
+        let isBgmPlaying = false;
+        let selectedPlanetTarget = 1;
+        let currentSpaceshipPlanet = 1;
+        let activeTakePointsPlanet = 1;
+        let completedPlanets = { 1: false, 2: false, 3: false, 4: false };
+        let progressiveLockMode = true; // Default terkunci berurutan, butuh PIN 1234
+        const ADMIN_SECURITY_PIN = "1234";
+        let pendingPinAction = null;
+
+        let leaderboardRecords = [];
+        const LEADERBOARD_STORAGE_KEY = 'english_space_battle_leaderboard_v1';
+        const GOOGLE_SHEET_URL_KEY = 'english_space_battle_gsheet_url_v1';
+        let googleSheetWebAppUrl = '';
+
+        const COVER_STORAGE_KEY = 'english_space_battle_cover_v1';
+
+        // FUNGSI loadCustomCover() TELAH DIHAPUS BERSIH
+        // Agar tidak ada lagi pemblokiran keamanan (CORS) dari browser saat dibuka offline.
+        // Wallpaper kini 100% dikendalikan oleh CSS statis yang jauh lebih aman dan pasti muncul.
+
+        function enterWelcomeScreen() {
+            playSuccessSound();
+            const intro = document.getElementById('intro-screen');
+            if (intro) {
+                intro.style.opacity = '0';
+                setTimeout(() => {
+                    intro.classList.add('hidden');
+                }, 700); // Menunggu animasi transisi memudar selesai
+            }
+        }
+
+        function changeCoverImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const coverDiv = document.getElementById('welcome-custom-cover');
+                    if (coverDiv) {
+                        const imageData = e.target.result;
+                        coverDiv.style.setProperty('background-image', `url('${imageData}')`, 'important');
+                        coverDiv.classList.remove('hidden');
+                        playSuccessSound();
+                        
+                        // Simpan gambar ke Local Storage agar dipatenkan (permanen) di browser ini
+                        try {
+                            localStorage.setItem(COVER_STORAGE_KEY, imageData);
+                        } catch (err) {
+                            console.warn("Storage penuh/gambar terlalu besar, sampul hanya bertahan di sesi ini.");
+                        }
+                    }
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        const planetCoordinates = {
+            1: { left: '8%', top: '42%' },
+            2: { left: '27%', top: '18%' },
+            3: { left: '47%', top: '38%' },
+            4: { left: '67%', top: '16%' },
+            5: { left: '86%', top: '26%' }
+        };
+
+        const planetMeta = {
+            1: {
+                title: "PLANET 1: MILLIONAIRE PRE-TEST",
+                icon: "🟣",
+                desc: "Planet awal bertekstur ungu neon & cincin es! Uji kemampuan dasar Pronouns & To Be melalui 10 tantangan tangga hadiah jutawan!"
+            },
+            2: {
+                title: "PLANET 2: BOUNCING WORD CHALLENGE",
+                icon: "☀️",
+                desc: "Planet es biru langit & cyan! Dengarkan audio kalimat dan tangkap planet kata yang melayang (+100 Poin/Soal)."
+            },
+            3: {
+                title: "PLANET 3: SPACE AUDIO RADAR",
+                icon: "🌙",
+                desc: "Planet lava jingga, merah & emas (Tantangan Menengah)! Dengarkan audio perkenalan diri dan jawab 5 soal (+100 Poin/Soal)."
+            },
+            4: {
+                title: "PLANET 4: FISHERIES & GRAMMAR",
+                icon: "⭐",
+                desc: "Planet samudra turquoise! Baca 5 teks Agribisnis Perikanan SMKN 4 Sinjai dan raih skor tertinggi (+100 Poin/Soal)!"
+            },
+            5: {
+                title: "ORBITAL SPACE STATION — FINISH",
+                icon: "🛰️",
+                desc: "Stasiun Luar Angkasa Orbital Akhir! Tempat berlabuh para Kapten setelah menyelesaikan seluruh misi di 4 planet galaksi."
+            }
+        };
+
+        // Web Audio Synthesizer
+        let audioCtx = null;
+        function getAudioCtx() {
+            if (!audioCtx) {
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (AudioContextClass) audioCtx = new AudioContextClass();
+            }
+            return audioCtx;
+        }
+
+        function playTone(freq = 440, duration = 0.15, type = 'sine') {
+            if (isMuted) return;
+            try {
+                const ctx = getAudioCtx();
+                if (!ctx) return;
+                if (ctx.state === 'suspended') ctx.resume();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, ctx.currentTime);
+                gain.gain.setValueAtTime(0.12, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + duration);
+            } catch (e) {}
+        }
+
+        function playSuccessSound() {
+            playTone(523.25, 0.12, 'triangle');
+            setTimeout(() => playTone(659.25, 0.12, 'triangle'), 110);
+            setTimeout(() => playTone(783.99, 0.22, 'triangle'), 220);
+        }
+
+        function playErrorSound() {
+            playTone(220, 0.2, 'sawtooth');
+            setTimeout(() => playTone(180, 0.25, 'sawtooth'), 160);
+        }
+
+        /* --- BACKGROUND MUSIC ENGINE (Space Ambient Drone) --- */
+        function startBackgroundMusic() {
+            if (isMuted || isBgmPlaying) return;
+            try {
+                const ctx = getAudioCtx();
+                if (ctx.state === 'suspended') ctx.resume();
+
+                bgmGainNode = ctx.createGain();
+                bgmGainNode.gain.setValueAtTime(0.01, ctx.currentTime);
+                // Fade in perlahan selama 3 detik
+                bgmGainNode.gain.exponentialRampToValueAtTime(0.12, ctx.currentTime + 3);
+
+                // Lowpass filter untuk memberi efek "terendam" atau luar angkasa
+                bgmFilter = ctx.createBiquadFilter();
+                bgmFilter.type = 'lowpass';
+                bgmFilter.frequency.value = 300;
+                bgmFilter.Q.value = 3;
+
+                // LFO (Low Frequency Oscillator) untuk pergerakan suara berayun
+                bgmLfo = ctx.createOscillator();
+                bgmLfo.type = 'sine';
+                bgmLfo.frequency.value = 0.05; // Sangat lambat (20 detik per siklus)
+                const lfoGain = ctx.createGain();
+                lfoGain.gain.value = 150;
+                bgmLfo.connect(lfoGain);
+                lfoGain.connect(bgmFilter.frequency);
+                bgmLfo.start();
+
+                bgmFilter.connect(bgmGainNode);
+                bgmGainNode.connect(ctx.destination);
+
+                // Frekuensi kunci minor (A minor: A1, A2, E3, C4)
+                const freqs = [55.00, 110.00, 164.81, 261.63];
+                bgmOscillators = freqs.map(freq => {
+                    const osc = ctx.createOscillator();
+                    osc.type = 'triangle';
+                    osc.frequency.value = freq;
+                    // Detune sedikit untuk menciptakan efek paduan suara (chorus) yang tebal
+                    osc.detune.value = (Math.random() - 0.5) * 8; 
+                    
+                    const oscGain = ctx.createGain();
+                    oscGain.gain.value = 0.25;
+                    
+                    osc.connect(oscGain);
+                    oscGain.connect(bgmFilter);
+                    osc.start();
+                    return osc;
+                });
+
+                isBgmPlaying = true;
+            } catch(e) {
+                console.warn("BGM Terhenti:", e);
+            }
+        }
+
+        function stopBackgroundMusic() {
+            if (!isBgmPlaying) return;
+            try {
+                const ctx = getAudioCtx();
+                if (bgmGainNode) {
+                    // Fade out perlahan selama 2 detik
+                    bgmGainNode.gain.cancelScheduledValues(ctx.currentTime);
+                    bgmGainNode.gain.setValueAtTime(bgmGainNode.gain.value, ctx.currentTime);
+                    bgmGainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 2);
+                }
+                setTimeout(() => {
+                    bgmOscillators.forEach(osc => { try { osc.stop(); osc.disconnect(); } catch(e){} });
+                    if (bgmLfo) { try { bgmLfo.stop(); bgmLfo.disconnect(); } catch(e){} }
+                    if (bgmGainNode) { try { bgmGainNode.disconnect(); } catch(e){} }
+                    bgmOscillators = [];
+                    bgmGainNode = null;
+                    bgmFilter = null;
+                    bgmLfo = null;
+                    isBgmPlaying = false;
+                }, 2100);
+            } catch (e) {}
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const btn = document.getElementById('sound-btn');
+            if (btn) {
+                btn.innerHTML = isMuted
+                    ? '<i class="fa-solid fa-volume-xmark text-rose-400"></i>'
+                    : '<i class="fa-solid fa-volume-high text-sky-300"></i>';
+            }
+            
+            if (isMuted) {
+                stopBackgroundMusic();
+            } else if (currentSessionId.startsWith("capt_")) {
+                // Hanya mainkan BGM jika pemain sudah masuk ke Peta Galaksi (misi dimulai)
+                startBackgroundMusic();
+            }
+        }
+
+        function speakEnglishText(text) {
+            if (isMuted || !('speechSynthesis' in window)) return;
+            try {
+                window.speechSynthesis.cancel();
+                const utter = new SpeechSynthesisUtterance(text);
+                utter.lang = 'en-US';
+                utter.rate = 0.92;
+                window.speechSynthesis.speak(utter);
+            } catch (e) {}
+        }
+
+        /* ==========================================================================
+           NAVIGATION & SCREEN MANAGEMENT
+           ========================================================================== */
+        function showScreen(screenId) {
+            const screens = ['welcome-screen', 'map-screen', 'planet1-screen', 'planet2-screen', 'planet3-screen', 'planet4-screen'];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                }
+            });
+            const target = document.getElementById(screenId);
+            if (target) {
+                target.classList.remove('hidden');
+                if (screenId !== 'welcome-screen') target.classList.add('flex');
+            }
+
+            // Atur visibilitas custom cover background hanya untuk welcome-screen
+            const coverDiv = document.getElementById('welcome-custom-cover');
+            if (coverDiv) {
+                if (screenId === 'welcome-screen') {
+                    coverDiv.classList.remove('hidden');
+                } else {
+                    coverDiv.classList.add('hidden');
+                }
+            }
+
+            if (screenId === 'map-screen') {
+                updateMapUI();
+                initLivingCosmosGalaxy();
+                initOrbitalSpaceStation3D();
+                initPlayerRocket3D();
+                initAll3DRingedPlanets();
+                resumeCosmosFromScreenSwitch();
+            } else {
+                pauseCosmosForBackgroundScreen();
+            }
+        }
+
+        /* ==========================================================================
+           ULTRA-REALISTIC 3D RINGED PLANET ICON ENGINE (THREE.JS PBR)
+           ========================================================================== */
+        const ringedPlanetEngines = {};
+
+        function createPlanetSurfaceCanvasTexture(planetType) {
+            const c = document.createElement('canvas');
+            c.width = 512;
+            c.height = 256;
+            const ctx = c.getContext('2d');
+
+            let baseGrad = ctx.createLinearGradient(0, 0, 0, 256);
+            if (planetType === 1) { // Planet 1: Ungu Neon / Fuchsia
+                baseGrad.addColorStop(0, '#f0abfc');
+                baseGrad.addColorStop(0.3, '#c084fc');
+                baseGrad.addColorStop(0.7, '#9333ea');
+                baseGrad.addColorStop(1, '#581c87');
+            } else if (planetType === 2) { // Planet 2: Biru Es & Cyan
+                baseGrad.addColorStop(0, '#ffffff');
+                baseGrad.addColorStop(0.25, '#7dd3fc');
+                baseGrad.addColorStop(0.65, '#0284c7');
+                baseGrad.addColorStop(1, '#082f49');
+            } else if (planetType === 3) { // Planet 3: Jingga, Merah & Emas Lava
+                baseGrad.addColorStop(0, '#fde047');
+                baseGrad.addColorStop(0.35, '#fb923c');
+                baseGrad.addColorStop(0.7, '#dc2626');
+                baseGrad.addColorStop(1, '#450a0a');
+            } else { // Planet 4: Turquoise & Biru Laut
+                baseGrad.addColorStop(0, '#5eead4');
+                baseGrad.addColorStop(0.35, '#2dd4bf');
+                baseGrad.addColorStop(0.65, '#0284c7');
+                baseGrad.addColorStop(1, '#172554');
+            }
+            ctx.fillStyle = baseGrad;
+            ctx.fillRect(0, 0, 512, 256);
+
+            // Horizontal cloud bands & storm swirls
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
+            for (let y = 15; y < 256; y += 22) {
+                ctx.beginPath();
+                ctx.fillRect(0, y, 512, 6 + Math.random() * 8);
+                ctx.fill();
+            }
+
+            const tex = new THREE.CanvasTexture(c);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function createPlanetRingsCanvasTexture(planetType) {
+            const c = document.createElement('canvas');
+            c.width = 512;
+            c.height = 64;
+            const ctx = c.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 512, 0);
+            if (planetType === 1) {
+                grad.addColorStop(0.0, 'rgba(192, 132, 252, 0.0)');
+                grad.addColorStop(0.2, 'rgba(232, 121, 249, 0.85)');
+                grad.addColorStop(0.5, 'rgba(168, 85, 247, 0.45)');
+                grad.addColorStop(0.75, 'rgba(216, 180, 254, 0.92)');
+                grad.addColorStop(1.0, 'rgba(126, 34, 206, 0.0)');
+            } else if (planetType === 2) {
+                grad.addColorStop(0.0, 'rgba(56, 189, 248, 0.0)');
+                grad.addColorStop(0.25, 'rgba(125, 211, 252, 0.9)');
+                grad.addColorStop(0.5, 'rgba(14, 165, 233, 0.4)');
+                grad.addColorStop(0.8, 'rgba(224, 242, 254, 0.95)');
+                grad.addColorStop(1.0, 'rgba(3, 105, 161, 0.0)');
+            } else if (planetType === 3) {
+                grad.addColorStop(0.0, 'rgba(251, 146, 60, 0.0)');
+                grad.addColorStop(0.22, 'rgba(253, 224, 71, 0.9)');
+                grad.addColorStop(0.48, 'rgba(249, 115, 22, 0.5)');
+                grad.addColorStop(0.78, 'rgba(254, 215, 170, 0.95)');
+                grad.addColorStop(1.0, 'rgba(194, 65, 12, 0.0)');
+            } else {
+                grad.addColorStop(0.0, 'rgba(45, 212, 191, 0.0)');
+                grad.addColorStop(0.25, 'rgba(94, 234, 212, 0.9)');
+                grad.addColorStop(0.5, 'rgba(14, 165, 233, 0.45)');
+                grad.addColorStop(0.8, 'rgba(204, 251, 241, 0.95)');
+                grad.addColorStop(1.0, 'rgba(15, 118, 110, 0.0)');
+            }
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 512, 64);
+
+            // Concentric ring gaps
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+            [12, 28, 42].forEach(gx => ctx.fillRect(gx * 12, 0, 3, 64));
+
+            const tex = new THREE.CanvasTexture(c);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function buildRealisticRingedPlanetGroup(planetType) {
+            const group = new THREE.Group();
+
+            const surfTex = createPlanetSurfaceCanvasTexture(planetType);
+            const ringTex = createPlanetRingsCanvasTexture(planetType);
+
+            // Spherical Planet Mesh
+            const sphereGeo = new THREE.SphereGeometry(1.2, 48, 48);
+            const sphereMat = new THREE.MeshStandardMaterial({
+                map: surfTex,
+                roughness: 0.65,
+                metalness: 0.15
+            });
+            const planetMesh = new THREE.Mesh(sphereGeo, sphereMat);
+            group.add(planetMesh);
+
+            // Ring System Mesh (Tilted Saturn-style rings)
+            const ringGeo = new THREE.RingGeometry(1.55, 2.75, 64);
+            // Rotate UV or position so ring maps correctly
+            const ringMat = new THREE.MeshStandardMaterial({
+                map: ringTex,
+                side: THREE.DoubleSide,
+                transparent: true,
+                roughness: 0.4,
+                metalness: 0.2
+            });
+            const ringMesh = new THREE.Mesh(ringGeo, ringMat);
+            ringMesh.rotation.x = Math.PI / 2 + 0.35;
+            ringMesh.rotation.y = 0.2;
+            group.add(ringMesh);
+
+            group.scale.set(0.95, 0.95, 0.95);
+            return group;
+        }
+
+        function initSingle3DRingedPlanet(canvasId, planetType) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || typeof THREE === 'undefined') return;
+
+            const w = canvas.clientWidth || 110;
+            const h = canvas.clientHeight || 110;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(32, w / h, 0.1, 100);
+            camera.position.set(0, 1.2, 7.5);
+            camera.lookAt(0, 0, 0);
+
+            const renderer = new THREE.WebGLRenderer({
+                canvas: canvas,
+                alpha: true,
+                antialias: true
+            });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+            // Cinematic planetary lighting
+            const sunLight = new THREE.DirectionalLight(0xfffaed, 2.4);
+            sunLight.position.set(-6, 6, 5);
+            scene.add(sunLight);
+
+            const ambient = new THREE.AmbientLight(0x1e293b, 0.85);
+            scene.add(ambient);
+
+            const planetGroup = buildRealisticRingedPlanetGroup(planetType);
+            scene.add(planetGroup);
+
+            ringedPlanetEngines[canvasId] = { scene, camera, renderer, planetGroup };
+        }
+
+        function initAll3DRingedPlanets() {
+            initSingle3DRingedPlanet('planet-3d-canvas-1', 1);
+            initSingle3DRingedPlanet('planet-3d-canvas-2', 2);
+            initSingle3DRingedPlanet('planet-3d-canvas-3', 3);
+            initSingle3DRingedPlanet('planet-3d-canvas-4', 4);
+        }
+
+        function updateAll3DRingedPlanets(now) {
+            const rotSpeed = (now / 1000) * 0.45;
+            Object.values(ringedPlanetEngines).forEach(engine => {
+                if (engine && engine.planetGroup) {
+                    engine.planetGroup.rotation.y = rotSpeed;
+                    engine.renderer.render(engine.scene, engine.camera);
+                }
+            });
+        }
+
+        /* ==========================================================================
+           ULTRA-REALISTIC 3D SPACE ROCKET ICON ENGINE (PBR THREE.JS)
+           ========================================================================== */
+        let playerRocketEngine = null;
+
+        function createRocketCeramicHullTexture() {
+            const c = document.createElement('canvas');
+            c.width = 512;
+            c.height = 512;
+            const ctx = c.getContext('2d');
+
+            const baseGrad = ctx.createLinearGradient(0, 0, 512, 0);
+            baseGrad.addColorStop(0, '#e2e8f0');
+            baseGrad.addColorStop(0.35, '#f8fafc');
+            baseGrad.addColorStop(0.65, '#ffffff');
+            baseGrad.addColorStop(1, '#cbd5e1');
+            ctx.fillStyle = baseGrad;
+            ctx.fillRect(0, 0, 512, 512);
+
+            ctx.strokeStyle = 'rgba(71, 85, 105, 0.55)';
+            ctx.lineWidth = 2;
+            [64, 140, 220, 300, 380, 448].forEach(y => {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(512, y);
+                ctx.stroke();
+            });
+
+            ctx.strokeStyle = 'rgba(100, 116, 139, 0.4)';
+            ctx.lineWidth = 1.5;
+            for (let x = 64; x < 512; x += 64) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, 512);
+                ctx.stroke();
+            }
+
+            ctx.fillStyle = 'rgba(51, 65, 85, 0.65)';
+            [64, 140, 220, 300, 380, 448].forEach(y => {
+                for (let x = 8; x < 512; x += 16) {
+                    ctx.beginPath();
+                    ctx.arc(x, y - 5, 1.4, 0, Math.PI * 2);
+                    ctx.arc(x, y + 5, 1.4, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            const tex = new THREE.CanvasTexture(c);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function createNozzleBellTexture() {
+            const c = document.createElement('canvas');
+            c.width = 256;
+            c.height = 256;
+            const ctx = c.getContext('2d');
+
+            const grad = ctx.createLinearGradient(0, 0, 0, 256);
+            grad.addColorStop(0, '#334155');
+            grad.addColorStop(0.45, '#1e293b');
+            grad.addColorStop(0.8, '#0f172a');
+            grad.addColorStop(1, '#475569');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 256, 256);
+
+            const tex = new THREE.CanvasTexture(c);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function buildPhotorealisticRocketMesh() {
+            const rocketRoot = new THREE.Group();
+            const hullTex = createRocketCeramicHullTexture();
+            const nozzleTex = createNozzleBellTexture();
+
+            const matPearlCeramic = new THREE.MeshStandardMaterial({ color: 0xf8fafc, map: hullTex, metalness: 0.32, roughness: 0.24 });
+            const matBrushedTitanium = new THREE.MeshStandardMaterial({ color: 0xcbd5e1, map: hullTex, metalness: 0.85, roughness: 0.22 });
+            const matDarkMetallic = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.88, roughness: 0.28 });
+            const matEngineNozzle = new THREE.MeshStandardMaterial({ color: 0x475569, map: nozzleTex, metalness: 0.92, roughness: 0.25, side: THREE.DoubleSide });
+            const matGoldAccent = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.94, roughness: 0.18 });
+            const matNozzleInnerGlow = new THREE.MeshBasicMaterial({ color: 0x7dd3fc, side: THREE.BackSide });
+
+            const tipGeo = new THREE.ConeGeometry(0.14, 0.42, 36);
+            const noseTip = new THREE.Mesh(tipGeo, matBrushedTitanium);
+            noseTip.position.y = 2.86;
+            rocketRoot.add(noseTip);
+
+            const upperFairingGeo = new THREE.CylinderGeometry(0.14, 0.46, 0.92, 40);
+            const upperFairing = new THREE.Mesh(upperFairingGeo, matPearlCeramic);
+            upperFairing.position.y = 2.19;
+            rocketRoot.add(upperFairing);
+
+            const lowerFairingGeo = new THREE.CylinderGeometry(0.46, 0.44, 0.48, 40);
+            const lowerFairing = new THREE.Mesh(lowerFairingGeo, matPearlCeramic);
+            lowerFairing.position.y = 1.49;
+            rocketRoot.add(lowerFairing);
+
+            const upperCoreGeo = new THREE.CylinderGeometry(0.45, 0.45, 1.35, 44);
+            const upperCore = new THREE.Mesh(upperCoreGeo, matPearlCeramic);
+            upperCore.position.y = 0.31;
+            rocketRoot.add(upperCore);
+
+            const lowerCoreGeo = new THREE.CylinderGeometry(0.45, 0.47, 1.15, 44);
+            const lowerCore = new THREE.Mesh(lowerCoreGeo, matPearlCeramic);
+            lowerCore.position.y = -1.12;
+            rocketRoot.add(lowerCore);
+
+            for (let i = 0; i < 4; i++) {
+                const finAngle = (i * Math.PI) / 2;
+                const finHolder = new THREE.Group();
+                finHolder.rotation.y = finAngle;
+
+                const finShape = new THREE.Shape();
+                finShape.moveTo(0, 0.42);
+                finShape.lineTo(0.58, -0.25);
+                finShape.lineTo(0.62, -0.78);
+                finShape.lineTo(0.12, -0.68);
+                finShape.lineTo(0, -0.52);
+                finShape.closePath();
+
+                const finGeo = new THREE.ExtrudeGeometry(finShape, { steps: 1, depth: 0.045, bevelEnabled: true, bevelThickness: 0.016, bevelSize: 0.016, bevelSegments: 3 });
+                finGeo.center();
+
+                const finMesh = new THREE.Mesh(finGeo, i % 2 === 0 ? matBrushedTitanium : matDarkMetallic);
+                finMesh.position.set(0.66, -1.35, 0);
+                finHolder.add(finMesh);
+                rocketRoot.add(finHolder);
+            }
+
+            const thrustSkirtGeo = new THREE.CylinderGeometry(0.47, 0.52, 0.34, 44);
+            const thrustSkirt = new THREE.Mesh(thrustSkirtGeo, matDarkMetallic);
+            thrustSkirt.position.y = -1.86;
+            rocketRoot.add(thrustSkirt);
+
+            const flameMeshes = [];
+            [[0, 0, 1.08], [0.24, 0.24, 0.92], [-0.24, 0.24, 0.92], [0.24, -0.24, 0.92], [-0.24, -0.24, 0.92]].forEach(([nx, nz, scale]) => {
+                const engGroup = new THREE.Group();
+                engGroup.position.set(nx, -2.04, nz);
+                engGroup.scale.set(scale, scale, scale);
+
+                const bellGeo = new THREE.CylinderGeometry(0.095, 0.185, 0.38, 32, 4, true);
+                const bellOuter = new THREE.Mesh(bellGeo, matEngineNozzle);
+                bellOuter.position.y = -0.31;
+                engGroup.add(bellOuter);
+
+                const coreFlameGeo = new THREE.ConeGeometry(0.13, 0.42, 24);
+                coreFlameGeo.rotateX(Math.PI);
+                const coreFlame = new THREE.Mesh(coreFlameGeo, new THREE.MeshBasicMaterial({ color: 0xe0f2fe, transparent: true, opacity: 0.92 }));
+                coreFlame.position.y = -0.62;
+                engGroup.add(coreFlame);
+
+                const outerFlameGeo = new THREE.ConeGeometry(0.165, 0.68, 24);
+                outerFlameGeo.rotateX(Math.PI);
+                const outerFlame = new THREE.Mesh(outerFlameGeo, new THREE.MeshBasicMaterial({ color: 0x38bdf8, transparent: true, opacity: 0.55 }));
+                outerFlame.position.y = -0.74;
+                engGroup.add(outerFlame);
+
+                const warmTipGeo = new THREE.ConeGeometry(0.11, 0.38, 20);
+                warmTipGeo.rotateX(Math.PI);
+                const warmTip = new THREE.Mesh(warmTipGeo, new THREE.MeshBasicMaterial({ color: 0xf59e0b, transparent: true, opacity: 0.45 }));
+                warmTip.position.y = -0.88;
+                engGroup.add(warmTip);
+
+                flameMeshes.push({ coreFlame, outerFlame, warmTip });
+                rocketRoot.add(engGroup);
+            });
+
+            rocketRoot.position.y = -0.05;
+            rocketRoot.scale.set(0.68, 0.68, 0.68);
+            rocketRoot.userData.flameMeshes = flameMeshes;
+            return rocketRoot;
+        }
+
+        function initPlayerRocket3D() {
+            if (playerRocketEngine) return;
+            const canvas = document.getElementById('player-rocket-3d-canvas');
+            if (!canvas || typeof THREE === 'undefined') return;
+
+            const w = canvas.clientWidth || 80;
+            const h = canvas.clientHeight || 80;
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(24, w / h, 0.1, 100);
+            camera.position.set(0, 1.8, 14.5);
+            camera.lookAt(0, -0.1, 0);
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+            const keyLight = new THREE.DirectionalLight(0xffffff, 2.6);
+            keyLight.position.set(-6, 7, 8);
+            scene.add(keyLight);
+
+            const rimLight = new THREE.DirectionalLight(0x38bdf8, 1.85);
+            rimLight.position.set(7, 4, -6);
+            scene.add(rimLight);
+
+            const engineGlowLight = new THREE.PointLight(0xf59e0b, 1.9, 6.5);
+            engineGlowLight.position.set(0, -2.9, 1.2);
+            scene.add(engineGlowLight);
+
+            scene.add(new THREE.AmbientLight(0x1e293b, 0.95));
+
+            const rocketMesh = buildPhotorealisticRocketMesh();
+            scene.add(rocketMesh);
+
+            playerRocketEngine = { canvas, scene, camera, renderer, rocketMesh, engineGlowLight };
+        }
+
+        function updatePlayerRocket3DAnimation(now) {
+            if (!playerRocketEngine || !playerRocketEngine.rocketMesh) return;
+            const angularVelocity = (Math.PI * 2) / 14.0;
+            playerRocketEngine.rocketMesh.rotation.y = (now / 1000) * angularVelocity;
+            playerRocketEngine.renderer.render(playerRocketEngine.scene, playerRocketEngine.camera);
+        }
+
+        /* ==========================================================================
+           ULTRA-REALISTIC 3D ORBITAL SPACE STATION ICON ENGINE (PBR THREE.JS)
+           ========================================================================== */
+        let stationMapEngine = null;
+        let stationModalEngine = null;
+
+        function createPhotovoltaicSolarTexture() {
+            const c = document.createElement('canvas');
+            c.width = 256;
+            c.height = 512;
+            const ctx = c.getContext('2d');
+            const baseGrad = ctx.createLinearGradient(0, 0, 256, 512);
+            baseGrad.addColorStop(0, '#07132c');
+            baseGrad.addColorStop(0.5, '#0b224a');
+            baseGrad.addColorStop(1, '#040b1a');
+            ctx.fillStyle = baseGrad;
+            ctx.fillRect(0, 0, 256, 512);
+
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.28)';
+            ctx.lineWidth = 1;
+            for (let i = 1; i < 8; i++) {
+                const x = (256 / 8) * i;
+                ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 512); ctx.stroke();
+            }
+            for (let j = 1; j < 24; j++) {
+                const y = (512 / 24) * j;
+                ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(256, y); ctx.stroke();
+            }
+            const tex = new THREE.CanvasTexture(c);
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        function buildDetailedSpaceStationMesh() {
+            const stationRoot = new THREE.Group();
+            const solarTex = createPhotovoltaicSolarTexture();
+
+            const matTitanium = new THREE.MeshStandardMaterial({ color: 0xd8dee9, metalness: 0.78, roughness: 0.28 });
+            const matCeramicWhite = new THREE.MeshStandardMaterial({ color: 0xf8fafc, metalness: 0.25, roughness: 0.42 });
+            const matDarkGraphite = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85, roughness: 0.32 });
+            const matGoldFoil = new THREE.MeshStandardMaterial({ color: 0xf59e0b, metalness: 0.9, roughness: 0.22 });
+            const matSolarPanel = new THREE.MeshStandardMaterial({ map: solarTex, color: 0xffffff, metalness: 0.65, roughness: 0.18, emissive: 0x06152d, emissiveIntensity: 0.35 });
+            const matWindowGlow = new THREE.MeshBasicMaterial({ color: 0x7dd3fc });
+
+            const mainHabGeo = new THREE.CylinderGeometry(0.46, 0.46, 2.35, 32);
+            mainHabGeo.rotateX(Math.PI / 2);
+            stationRoot.add(new THREE.Mesh(mainHabGeo, matCeramicWhite));
+
+            const nodeGeo = new THREE.SphereGeometry(0.56, 32, 32);
+            stationRoot.add(new THREE.Mesh(nodeGeo, matTitanium));
+
+            const trussGeo = new THREE.BoxGeometry(5.6, 0.16, 0.16);
+            stationRoot.add(new THREE.Mesh(trussGeo, matDarkGraphite));
+
+            [-2.35, -1.55, 1.55, 2.35].forEach(xPos => {
+                [1, -1].forEach(dirY => {
+                    const wingGroup = new THREE.Group();
+                    wingGroup.position.set(xPos, dirY * 1.18, 0);
+                    const cellMesh = new THREE.Mesh(new THREE.BoxGeometry(0.56, 1.88, 0.032), matSolarPanel);
+                    wingGroup.add(cellMesh);
+                    wingGroup.rotation.x = 0.22;
+                    stationRoot.add(wingGroup);
+                });
+            });
+
+            stationRoot.scale.set(0.82, 0.82, 0.82);
+            return stationRoot;
+        }
+
+        function createSpaceStationViewer(canvasId) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas || typeof THREE === 'undefined') return null;
+            const w = canvas.clientWidth || 140;
+            const h = canvas.clientHeight || 140;
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(28, w / h, 0.1, 100);
+            camera.position.set(0, 3.6, 10.8);
+            camera.lookAt(0, 0, 0);
+
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+            renderer.setSize(w, h);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 2.4);
+            sunLight.position.set(-7, 8, 6);
+            scene.add(sunLight);
+            scene.add(new THREE.AmbientLight(0x1e293b, 0.85));
+
+            const stationMesh = buildDetailedSpaceStationMesh();
+            scene.add(stationMesh);
+            return { canvas, scene, camera, renderer, stationMesh };
+        }
+
+        function initOrbitalSpaceStation3D() {
+            if (!stationMapEngine) stationMapEngine = createSpaceStationViewer('space-station-3d-canvas');
+            if (!stationModalEngine) stationModalEngine = createSpaceStationViewer('station-modal-3d-canvas');
+        }
+
+        function updateOrbitalSpaceStationRotation(now) {
+            const angularVelocity = (Math.PI * 2) / 14.0;
+            const angle = (now / 1000) * angularVelocity;
+            if (stationMapEngine && stationMapEngine.stationMesh) {
+                stationMapEngine.stationMesh.rotation.y = angle;
+                stationMapEngine.renderer.render(stationMapEngine.scene, stationMapEngine.camera);
+            }
+            const finaleModal = document.getElementById('station-finale-modal');
+            if (stationModalEngine && finaleModal && !finaleModal.classList.contains('hidden')) {
+                stationModalEngine.stationMesh.rotation.y = angle;
+                stationModalEngine.renderer.render(stationModalEngine.scene, stationModalEngine.camera);
+            }
+        }
+
+        /* ==========================================================================
+           LIVING COSMOS — IMMERSIVE 3D SPIRAL GALAXY ENGINE (THREE.JS WEBGL)
+           ========================================================================== */
+        let cosmosInitialized = false;
+        let cosmosScene = null;
+        let cosmosCamera = null;
+        let cosmosRenderer = null;
+        let cosmosGalaxyGroup = null;
+        let cosmosSpiralStars = null;
+        let cosmosCoreGlowMesh = null;
+        let cosmosDustParticles = null;
+        let cosmosDeepStarField = null;
+        let cosmosForegroundStars = null;
+
+        let cosmosAnimId = null;
+        let cosmosIsPaused = false;
+        let cosmosScreenActive = false;
+        let cosmosSpeed = 1.0;
+        let cosmosBrightness = 1.0;
+        let cosmosCameraMovementEnabled = true;
+        let cosmosQualityMode = 'HIGH';
+        let cosmosElapsedTime = 0;
+        let cosmosLastFrameTime = performance.now();
+
+        let cosmosPointerX = 0;
+        let cosmosPointerY = 0;
+        let cosmosTargetPointerX = 0;
+        let cosmosTargetPointerY = 0;
+
+        const starVertexShader = `
+            attribute float aSize;
+            attribute float aPhase;
+            attribute float aTwinkleSpeed;
+            attribute float aTwinkleAmp;
+            attribute float aStarburst;
+            varying vec3 vColor;
+            varying float vAlpha;
+            varying float vStarburst;
+            uniform float uTime;
+            uniform float uBrightness;
+            uniform float uPixelRatio;
+
+            void main() {
+                vColor = color;
+                vStarburst = aStarburst;
+                float wave1 = sin(uTime * aTwinkleSpeed + aPhase);
+                float wave2 = cos(uTime * (aTwinkleSpeed * 0.63) + aPhase * 1.7);
+                float twinkle = 1.0 - aTwinkleAmp * 0.5 + aTwinkleAmp * 0.5 * (wave1 * 0.7 + wave2 * 0.3);
+                vAlpha = clamp(twinkle * uBrightness, 0.08, 1.0);
+                vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+                float dist = max(-mvPosition.z, 1.0);
+                float dynamicSize = aSize * (0.9 + 0.22 * twinkle);
+                gl_PointSize = clamp(dynamicSize * uPixelRatio * (260.0 / dist), 1.0, 26.0);
+                gl_Position = projectionMatrix * mvPosition;
+            }
+        `;
+
+        const starFragmentShader = `
+            varying vec3 vColor;
+            varying float vAlpha;
+            varying float vStarburst;
+
+            void main() {
+                vec2 uv = gl_PointCoord - vec2(0.5);
+                float d = length(uv) * 2.0;
+                if (d > 1.0) discard;
+                float core = exp(-d * d * 9.5);
+                float halo = exp(-d * d * 2.6) * 0.45;
+                float intensity = core + halo;
+                if (vStarburst > 0.5) {
+                    float spikeH = exp(-abs(uv.y) * 36.0) * exp(-abs(uv.x) * 4.5);
+                    float spikeV = exp(-abs(uv.x) * 36.0) * exp(-abs(uv.y) * 4.5);
+                    intensity += (spikeH + spikeV) * 0.55;
+                }
+                vec3 finalColor = mix(vColor, vec3(1.0, 0.99, 0.95), core * 0.55);
+                gl_FragColor = vec4(finalColor, clamp(intensity * vAlpha, 0.0, 1.0));
+            }
+        `;
+
+        function createCoreVolumetricTexture() {
+            const c = document.createElement('canvas');
+            c.width = 256; c.height = 256;
+            const ctx = c.getContext('2d');
+            const grad = ctx.createRadialGradient(128, 128, 2, 128, 128, 128);
+            grad.addColorStop(0.0, 'rgba(255, 253, 245, 1.0)');
+            grad.addColorStop(0.14, 'rgba(255, 244, 206, 0.92)');
+            grad.addColorStop(0.32, 'rgba(251, 211, 125, 0.52)');
+            grad.addColorStop(0.58, 'rgba(217, 155, 72, 0.16)');
+            grad.addColorStop(0.82, 'rgba(88, 110, 168, 0.04)');
+            grad.addColorStop(1.0, 'rgba(0, 0, 0, 0.0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 256, 256);
+            return new THREE.CanvasTexture(c);
+        }
+
+        function buildGalaxyGeometryData() {
+            if (!cosmosGalaxyGroup) return;
+            while (cosmosGalaxyGroup.children.length > 0) {
+                const obj = cosmosGalaxyGroup.children[0];
+                cosmosGalaxyGroup.remove(obj);
+                if (obj.geometry) obj.geometry.dispose();
+                if (obj.material) {
+                    if (obj.material.map) obj.material.map.dispose();
+                    obj.material.dispose();
+                }
+            }
+
+            const isHigh = cosmosQualityMode === 'HIGH';
+            const spiralCount = isHigh ? 28000 : 11000;
+            const dustCount = isHigh ? 3600 : 1400;
+            const deepBgCount = isHigh ? 6500 : 2500;
+            const fgParallaxCount = isHigh ? 900 : 400;
+            const pixelRatio = Math.min(window.devicePixelRatio || 1, isHigh ? 2 : 1.25);
+
+            const positions = new Float32Array(spiralCount * 3);
+            const colors = new Float32Array(spiralCount * 3);
+            const sizes = new Float32Array(spiralCount);
+            const phases = new Float32Array(spiralCount);
+            const speeds = new Float32Array(spiralCount);
+            const amps = new Float32Array(spiralCount);
+            const starbursts = new Float32Array(spiralCount);
+
+            const arms = 4;
+            const maxRadius = 155;
+            const spinFactor = 3.85;
+
+            const cCoreWhiteGold = new THREE.Color('#fff9e6');
+            const cCoreWarmGold = new THREE.Color('#f7d07a');
+            const cArmHotBlue = new THREE.Color('#b8dcff');
+            const cArmPureWhite = new THREE.Color('#f8fbff');
+            const cArmSoftGold = new THREE.Color('#ebd29b');
+            const cArmSubtleRose = new THREE.Color('#e8a9c8');
+            const cOuterDimBlue = new THREE.Color('#6984b8');
+            const tempColor = new THREE.Color();
+
+            for (let i = 0; i < spiralCount; i++) {
+                const i3 = i * 3;
+                const randPow = Math.pow(Math.random(), 1.65);
+                const r = randPow * maxRadius;
+                const normR = r / maxRadius;
+                const armIndex = i % arms;
+                const armOffset = (armIndex / arms) * Math.PI * 2;
+                const spurOffset = (i % 7 === 0) ? 0.32 : 0.0;
+                const spiralAngle = r * 0.068 * spinFactor + armOffset + spurOffset;
+                const spreadFactor = (0.18 + normR * 0.85) * (Math.random() < 0.18 ? 1.85 : 0.68);
+                const gaussAngle = (Math.random() - 0.5) * (Math.random() - 0.5) * 4.2 * spreadFactor;
+                const finalAngle = spiralAngle + gaussAngle;
+
+                const coreBulgeThickness = Math.exp(-r / 22.0) * 18.0;
+                const diskThickness = (1.0 - normR * 0.55) * 6.5;
+                const verticalSpread = (coreBulgeThickness + diskThickness) * (Math.random() - 0.5) * (Math.random() - 0.5) * 2.4;
+
+                positions[i3] = Math.cos(finalAngle) * r;
+                positions[i3 + 1] = verticalSpread + Math.sin(finalAngle * 2.0) * (normR * 2.2);
+                positions[i3 + 2] = Math.sin(finalAngle) * r;
+
+                if (normR < 0.16) {
+                    tempColor.lerpColors(cCoreWhiteGold, cCoreWarmGold, normR / 0.16);
+                } else if (normR < 0.68) {
+                    const roll = Math.random();
+                    if (roll < 0.46) tempColor.lerpColors(cArmPureWhite, cArmHotBlue, Math.random());
+                    else if (roll < 0.86) tempColor.lerpColors(cCoreWarmGold, cArmSoftGold, Math.random());
+                    else tempColor.lerpColors(cArmPureWhite, cArmSubtleRose, 0.55);
+                } else {
+                    tempColor.lerpColors(cArmSoftGold, cOuterDimBlue, (normR - 0.68) / 0.32);
+                    tempColor.multiplyScalar(0.75);
+                }
+
+                colors[i3] = tempColor.r; colors[i3 + 1] = tempColor.g; colors[i3 + 2] = tempColor.b;
+                const sizeRoll = Math.random();
+                if (sizeRoll > 0.996) { sizes[i] = 4.2 + Math.random() * 2.4; starbursts[i] = 1.0; }
+                else if (sizeRoll > 0.94) { sizes[i] = 2.1 + Math.random() * 1.4; starbursts[i] = 0.0; }
+                else { sizes[i] = 0.65 + Math.random() * 1.25 * (1.0 - normR * 0.35); starbursts[i] = 0.0; }
+
+                phases[i] = Math.random() * Math.PI * 2;
+                speeds[i] = 0.9 + Math.random() * 2.2;
+                amps[i] = Math.random() < 0.65 ? (0.08 + Math.random() * 0.18) : (0.28 + Math.random() * 0.45);
+            }
+
+            const spiralGeo = new THREE.BufferGeometry();
+            spiralGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            spiralGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            spiralGeo.setAttribute('aSize', new THREE.BufferAttribute(sizes, 1));
+            spiralGeo.setAttribute('aPhase', new THREE.BufferAttribute(phases, 1));
+            spiralGeo.setAttribute('aTwinkleSpeed', new THREE.BufferAttribute(speeds, 1));
+            spiralGeo.setAttribute('aTwinkleAmp', new THREE.BufferAttribute(amps, 1));
+            spiralGeo.setAttribute('aStarburst', new THREE.BufferAttribute(starbursts, 1));
+
+            cosmosSpiralStars = new THREE.Points(spiralGeo, new THREE.ShaderMaterial({
+                vertexShader: starVertexShader, fragmentShader: starFragmentShader,
+                uniforms: { uTime: { value: 0 }, uBrightness: { value: cosmosBrightness }, uPixelRatio: { value: pixelRatio } },
+                transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true
+            }));
+            cosmosGalaxyGroup.add(cosmosSpiralStars);
+
+            const coreTex = createCoreVolumetricTexture();
+            const coreGroup = new THREE.Group();
+            coreGroup.add(new THREE.Sprite(new THREE.SpriteMaterial({ map: coreTex, color: 0xfff8dc, transparent: true, opacity: 0.92, blending: THREE.AdditiveBlending, depthWrite: false })));
+            coreGroup.children[0].scale.set(52, 42, 1);
+            coreGroup.add(new THREE.Sprite(new THREE.SpriteMaterial({ map: coreTex, color: 0xf6c969, transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false })));
+            coreGroup.children[1].scale.set(115, 86, 1);
+            cosmosCoreGlowMesh = coreGroup;
+            cosmosGalaxyGroup.add(cosmosCoreGlowMesh);
+
+            const dustPos = new Float32Array(dustCount * 3);
+            const dustCol = new Float32Array(dustCount * 3);
+            const dustSizes = new Float32Array(dustCount);
+            const dustPhases = new Float32Array(dustCount);
+            const dustSpeeds = new Float32Array(dustCount);
+            const dustAmps = new Float32Array(dustCount);
+            const dustBurst = new Float32Array(dustCount);
+
+            for (let i = 0; i < dustCount; i++) {
+                const i3 = i * 3;
+                const r = Math.pow(Math.random(), 1.2) * (maxRadius * 1.05);
+                const angle = (i % arms) * (Math.PI * 2 / arms) + r * 0.068 * spinFactor + (Math.random() - 0.5) * 1.1;
+                dustPos[i3] = Math.cos(angle) * r;
+                dustPos[i3 + 1] = (Math.random() - 0.5) * 14.0 * (1.0 - r / (maxRadius * 1.2));
+                dustPos[i3 + 2] = Math.sin(angle) * r;
+                dustCol[i3] = 0.55; dustCol[i3 + 1] = 0.65; dustCol[i3 + 2] = 0.85;
+                dustSizes[i] = 2.6 + Math.random() * 3.8;
+                dustPhases[i] = Math.random() * Math.PI * 2;
+                dustSpeeds[i] = 0.45 + Math.random() * 0.65;
+                dustAmps[i] = 0.15 + Math.random() * 0.2;
+                dustBurst[i] = 0.0;
+            }
+
+            const dustGeo = new THREE.BufferGeometry();
+            dustGeo.setAttribute('position', new THREE.BufferAttribute(dustPos, 3));
+            dustGeo.setAttribute('color', new THREE.BufferAttribute(dustCol, 3));
+            dustGeo.setAttribute('aSize', new THREE.BufferAttribute(dustSizes, 1));
+            dustGeo.setAttribute('aPhase', new THREE.BufferAttribute(dustPhases, 1));
+            dustGeo.setAttribute('aTwinkleSpeed', new THREE.BufferAttribute(dustSpeeds, 1));
+            dustGeo.setAttribute('aTwinkleAmp', new THREE.BufferAttribute(dustAmps, 1));
+            dustGeo.setAttribute('aStarburst', new THREE.BufferAttribute(dustBurst, 1));
+
+            cosmosDustParticles = new THREE.Points(dustGeo, new THREE.ShaderMaterial({
+                vertexShader: starVertexShader, fragmentShader: starFragmentShader,
+                uniforms: { uTime: { value: 0 }, uBrightness: { value: cosmosBrightness * 0.65 }, uPixelRatio: { value: pixelRatio } },
+                transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true
+            }));
+            cosmosGalaxyGroup.add(cosmosDustParticles);
+
+            const bgPos = new Float32Array(deepBgCount * 3);
+            const bgCol = new Float32Array(deepBgCount * 3);
+            const bgSizes = new Float32Array(deepBgCount);
+            const bgPhases = new Float32Array(deepBgCount);
+            const bgSpeeds = new Float32Array(deepBgCount);
+            const bgAmps = new Float32Array(deepBgCount);
+            const bgBurst = new Float32Array(deepBgCount);
+
+            for (let i = 0; i < deepBgCount; i++) {
+                const i3 = i * 3;
+                bgPos[i3] = (Math.random() - 0.5) * 680;
+                bgPos[i3 + 1] = (Math.random() - 0.5) * 420;
+                bgPos[i3 + 2] = -140 - Math.random() * 260;
+                bgCol[i3] = 0.65; bgCol[i3 + 1] = 0.7; bgCol[i3 + 2] = 0.75;
+                bgSizes[i] = 0.55 + Math.random() * 1.1;
+                bgPhases[i] = Math.random() * Math.PI * 2;
+                bgSpeeds[i] = 0.8 + Math.random() * 1.8;
+                bgAmps[i] = 0.1 + Math.random() * 0.25;
+                bgBurst[i] = 0.0;
+            }
+
+            const bgGeo = new THREE.BufferGeometry();
+            bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+            bgGeo.setAttribute('color', new THREE.BufferAttribute(bgCol, 3));
+            bgGeo.setAttribute('aSize', new THREE.BufferAttribute(bgSizes, 1));
+            bgGeo.setAttribute('aPhase', new THREE.BufferAttribute(bgPhases, 1));
+            bgGeo.setAttribute('aTwinkleSpeed', new THREE.BufferAttribute(bgSpeeds, 1));
+            bgGeo.setAttribute('aTwinkleAmp', new THREE.BufferAttribute(bgAmps, 1));
+            bgGeo.setAttribute('aStarburst', new THREE.BufferAttribute(bgBurst, 1));
+
+            cosmosDeepStarField = new THREE.Points(bgGeo, new THREE.ShaderMaterial({
+                vertexShader: starVertexShader, fragmentShader: starFragmentShader,
+                uniforms: { uTime: { value: 0 }, uBrightness: { value: cosmosBrightness * 0.85 }, uPixelRatio: { value: pixelRatio } },
+                transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true
+            }));
+            cosmosScene.add(cosmosDeepStarField);
+
+            const fgPos = new Float32Array(fgParallaxCount * 3);
+            const fgCol = new Float32Array(fgParallaxCount * 3);
+            const fgSizes = new Float32Array(fgParallaxCount);
+            const fgPhases = new Float32Array(fgParallaxCount);
+            const fgSpeeds = new Float32Array(fgParallaxCount);
+            const fgAmps = new Float32Array(fgParallaxCount);
+            const fgBurst = new Float32Array(fgParallaxCount);
+
+            for (let i = 0; i < fgParallaxCount; i++) {
+                const i3 = i * 3;
+                fgPos[i3] = (Math.random() - 0.5) * 280;
+                fgPos[i3 + 1] = (Math.random() - 0.5) * 180;
+                fgPos[i3 + 2] = 25 + Math.random() * 145;
+                fgCol[i3] = 0.9; fgCol[i3 + 1] = 0.95; fgCol[i3 + 2] = 1.0;
+                const isBright = Math.random() > 0.96;
+                fgSizes[i] = isBright ? 4.0 : 1.5;
+                fgPhases[i] = Math.random() * Math.PI * 2;
+                fgSpeeds[i] = 1.0 + Math.random() * 2.1;
+                fgAmps[i] = 0.18 + Math.random() * 0.42;
+                fgBurst[i] = isBright ? 1.0 : 0.0;
+            }
+
+            const fgGeo = new THREE.BufferGeometry();
+            fgGeo.setAttribute('position', new THREE.BufferAttribute(fgPos, 3));
+            fgGeo.setAttribute('color', new THREE.BufferAttribute(fgCol, 3));
+            fgGeo.setAttribute('aSize', new THREE.BufferAttribute(fgSizes, 1));
+            fgGeo.setAttribute('aPhase', new THREE.BufferAttribute(fgPhases, 1));
+            fgGeo.setAttribute('aTwinkleSpeed', new THREE.BufferAttribute(fgSpeeds, 1));
+            fgGeo.setAttribute('aTwinkleAmp', new THREE.BufferAttribute(fgAmps, 1));
+            fgGeo.setAttribute('aStarburst', new THREE.BufferAttribute(fgBurst, 1));
+
+            cosmosForegroundStars = new THREE.Points(fgGeo, new THREE.ShaderMaterial({
+                vertexShader: starVertexShader, fragmentShader: starFragmentShader,
+                uniforms: { uTime: { value: 0 }, uBrightness: { value: cosmosBrightness }, uPixelRatio: { value: pixelRatio } },
+                transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, vertexColors: true
+            }));
+            cosmosScene.add(cosmosForegroundStars);
+        }
+
+        function initLivingCosmosGalaxy() {
+            const canvas = document.getElementById('living-cosmos-canvas');
+            const container = document.getElementById('galaxy-map-arena');
+            if (!canvas || !container || typeof THREE === 'undefined') return;
+
+            if (cosmosInitialized) {
+                resizeLivingCosmos();
+                return;
+            }
+            cosmosInitialized = true;
+
+            const w = container.clientWidth || 960;
+            const h = container.clientHeight || 560;
+
+            cosmosScene = new THREE.Scene();
+            cosmosScene.background = new THREE.Color('#02040a');
+
+            cosmosCamera = new THREE.PerspectiveCamera(50, w / h, 1, 1200);
+            cosmosCamera.position.set(0, 68, 185);
+            cosmosCamera.lookAt(0, 0, 0);
+
+            cosmosRenderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, powerPreference: 'high-performance' });
+            cosmosRenderer.setSize(w, h);
+            cosmosRenderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+
+            cosmosGalaxyGroup = new THREE.Group();
+            cosmosGalaxyGroup.rotation.x = 0.52;
+            cosmosGalaxyGroup.rotation.z = -0.18;
+            cosmosScene.add(cosmosGalaxyGroup);
+
+            buildGalaxyGeometryData();
+
+            container.addEventListener('mousemove', (e) => {
+                const rect = container.getBoundingClientRect();
+                cosmosTargetPointerX = (((e.clientX - rect.left) / rect.width) * 2 - 1) * 8.5;
+                cosmosTargetPointerY = -(((e.clientY - rect.top) / rect.height) * 2 - 1) * 5.5;
+            });
+
+            window.addEventListener('resize', resizeLivingCosmos);
+            cosmosLastFrameTime = performance.now();
+            cosmosScreenActive = true;
+            animateLivingCosmos();
+        }
+
+        function resizeLivingCosmos() {
+            if (!cosmosRenderer || !cosmosCamera) return;
+            const container = document.getElementById('galaxy-map-arena');
+            if (!container) return;
+            const w = container.clientWidth || 960;
+            const h = container.clientHeight || 560;
+            cosmosCamera.aspect = w / h;
+            cosmosCamera.updateProjectionMatrix();
+            cosmosRenderer.setSize(w, h);
+        }
+
+        function animateLivingCosmos() {
+            if (!cosmosScreenActive) return;
+            cosmosAnimId = requestAnimationFrame(animateLivingCosmos);
+
+            const now = performance.now();
+            const dt = Math.min((now - cosmosLastFrameTime) / 1000, 0.1);
+            cosmosLastFrameTime = now;
+
+            if (cosmosIsPaused) return;
+            cosmosElapsedTime += dt * cosmosSpeed;
+
+            [cosmosSpiralStars, cosmosDustParticles, cosmosDeepStarField, cosmosForegroundStars].forEach(p => {
+                if (p && p.material && p.material.uniforms) {
+                    p.material.uniforms.uTime.value = cosmosElapsedTime;
+                    p.material.uniforms.uBrightness.value = cosmosBrightness;
+                }
+            });
+
+            if (cosmosGalaxyGroup) cosmosGalaxyGroup.rotation.y = cosmosElapsedTime * 0.022;
+            if (cosmosDustParticles) cosmosDustParticles.rotation.y = cosmosElapsedTime * 0.009;
+
+            const loopPhase = (cosmosElapsedTime % 15.0) / 15.0;
+            const smoothCycle = 0.5 - 0.5 * Math.cos(loopPhase * Math.PI * 2.0);
+
+            if (cosmosCoreGlowMesh && cosmosCoreGlowMesh.children.length >= 2) {
+                const pulse = (0.88 + 0.14 * smoothCycle) * cosmosBrightness;
+                cosmosCoreGlowMesh.children[0].material.opacity = Math.min(1.0, 0.9 * pulse);
+                cosmosCoreGlowMesh.children[1].material.opacity = Math.min(0.85, 0.42 * pulse);
+            }
+
+            cosmosPointerX += (cosmosTargetPointerX - cosmosPointerX) * 0.04;
+            cosmosPointerY += (cosmosTargetPointerY - cosmosPointerY) * 0.04;
+
+            if (cosmosCamera) {
+                if (cosmosCameraMovementEnabled) {
+                    const forwardDolly = smoothCycle * 34.0;
+                    cosmosCamera.position.x = Math.sin(loopPhase * Math.PI * 2.0) * 14.0 + cosmosPointerX;
+                    cosmosCamera.position.y = 68 + Math.cos(loopPhase * Math.PI * 2.0) * 6.5 + cosmosPointerY;
+                    cosmosCamera.position.z = 185 - forwardDolly;
+                } else {
+                    cosmosCamera.position.x = cosmosPointerX;
+                    cosmosCamera.position.y = 68 + cosmosPointerY;
+                    cosmosCamera.position.z = 185;
+                }
+                cosmosCamera.lookAt(0, 0, 0);
+            }
+
+            if (cosmosRenderer && cosmosScene && cosmosCamera) {
+                cosmosRenderer.render(cosmosScene, cosmosCamera);
+            }
+
+            updateOrbitalSpaceStationRotation(now);
+            updatePlayerRocket3DAnimation(now);
+            updateAll3DRingedPlanets(now);
+        }
+
+        function pauseCosmosForBackgroundScreen() {
+            cosmosScreenActive = false;
+            if (cosmosAnimId) { cancelAnimationFrame(cosmosAnimId); cosmosAnimId = null; }
+        }
+
+        function resumeCosmosFromScreenSwitch() {
+            if (!cosmosInitialized) return;
+            if (!cosmosScreenActive) {
+                cosmosScreenActive = true;
+                cosmosLastFrameTime = performance.now();
+                resizeLivingCosmos();
+                animateLivingCosmos();
+            }
+        }
+
+        function toggleCosmosControls() { document.getElementById('cosmos-control-panel')?.classList.toggle('hidden'); }
+        function toggleCosmosPause() { cosmosIsPaused = !cosmosIsPaused; }
+        function updateCosmosSpeed(val) { cosmosSpeed = parseFloat(val) || 1.0; document.getElementById('lbl-cosmos-speed').innerText = `${cosmosSpeed.toFixed(1)}x`; }
+        function updateCosmosBrightness(val) { cosmosBrightness = parseFloat(val) || 1.0; document.getElementById('lbl-cosmos-brightness').innerText = `${Math.round(cosmosBrightness * 100)}%`; }
+        function toggleCosmosCameraMode() { cosmosCameraMovementEnabled = !cosmosCameraMovementEnabled; }
+        function toggleCosmosQualityMode() { cosmosQualityMode = cosmosQualityMode === 'HIGH' ? 'PERFORMANCE' : 'HIGH'; buildGalaxyGeometryData(); }
+        function resetCosmosView() { cosmosElapsedTime = 0; cosmosSpeed = 1.0; cosmosBrightness = 1.0; }
+
+        function startAdventure() {
+            const nVal = document.getElementById('input-player-name')?.value.trim() || '';
+            const cVal = document.getElementById('input-player-class')?.value.trim() || '';
+            const errEl = document.getElementById('welcome-error');
+
+            if (!nVal || !cVal) { errEl?.classList.remove('hidden'); playErrorSound(); return; }
+            errEl?.classList.add('hidden');
+
+            playerName = nVal; playerClass = cVal;
+            currentSessionId = "capt_" + Date.now();
+            totalGold = 0; completedPlanets = { 1: false, 2: false, 3: false, 4: false };
+            currentSpaceshipPlanet = 1;
+
+            // Reset semua progres planet untuk sesi permainan yang benar-benar baru
+            p1Index = 0; p1CorrectCount = 0; p1CurrentPrize = 0; p1Locked = false; p1Logs = [];
+            p1Lifelines = { fifty: false, phone: false, audience: false };
+            p2Round = 0; p2CorrectCount = 0; p2EarnedPoints = 0; bwAttempts = 0;
+            p3Index = 0; p3CorrectCount = 0; p3EarnedPoints = 0; p3Locked = false;
+            p4Index = 0; p4CorrectCount = 0; p4EarnedPoints = 0; p4Locked = false;
+
+            updateHeaderUI();
+            syncPlayerToLeaderboard();
+            playSuccessSound();
+            
+            // Mulai musik latar luar angkasa saat tombol ditekan
+            startBackgroundMusic();
+            
+            showScreen('map-screen');
+            moveSpaceshipToPlanet(1, false);
+        }
+
+        function backToWelcome() { 
+            stopBackgroundMusic();
+            showScreen('welcome-screen'); 
+        }
+        function updateHeaderUI() {
+            document.getElementById('header-player-name').innerText = `${playerName} — ${playerClass}`;
+            document.getElementById('spaceship-captain-tag').innerText = playerName;
+            document.getElementById('global-gold').innerText = totalGold.toLocaleString('id-ID');
+            const doneCount = Object.values(completedPlanets).filter(Boolean).length;
+            document.getElementById('planet-progress-text').innerText = `${doneCount}/4 Planet`;
+        }
+        function addGold(points) { totalGold += Number(points) || 0; updateHeaderUI(); syncPlayerToLeaderboard(); }
+
+        function requestPinForAction(actionType) {
+            if (actionType === 'sheetSetup') {
+                const panel = document.getElementById('sheet-setup-panel');
+                if (panel && !panel.classList.contains('hidden')) { panel.classList.add('hidden'); return; }
+            }
+            pendingPinAction = actionType;
+            document.getElementById('pin-modal-desc').innerText = actionType === 'lockMode' ? 'Masukkan PIN Guru untuk mengubah Mode Kunci Planet.' : 'Masukkan PIN Guru untuk membuka Pengaturan Cloud Sheet.';
+            document.getElementById('input-security-pin').value = '';
+            document.getElementById('pin-error-msg').classList.add('hidden');
+            const modal = document.getElementById('pin-modal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            setTimeout(() => document.getElementById('input-security-pin')?.focus(), 80);
+        }
+
+        function closePinModal() { document.getElementById('pin-modal')?.classList.add('hidden'); pendingPinAction = null; }
+        function verifySecurityPin() {
+            if (document.getElementById('input-security-pin').value.trim() === ADMIN_SECURITY_PIN) {
+                const action = pendingPinAction; closePinModal(); playSuccessSound();
+                if (action === 'lockMode') toggleLockMode();
+                else if (action === 'sheetSetup') toggleSheetSetupPanel(true);
+            } else { document.getElementById('pin-error-msg').classList.remove('hidden'); playErrorSound(); }
+        }
+
+        function toggleLockMode() {
+            progressiveLockMode = !progressiveLockMode;
+            const btn = document.getElementById('lock-mode-btn');
+            if (btn) {
+                btn.innerHTML = progressiveLockMode ? '<i class="fa-solid fa-lock"></i> <span>Mode Bertahap: Urut 1-4 (PIN)</span>' : '<i class="fa-solid fa-lock-open"></i> <span>Mode Uji Coba: Semua Terbuka (PIN)</span>';
+            }
+            updateMapUI();
+        }
+
+        function isPlanetUnlocked(planetNum) {
+            if (!progressiveLockMode) return true;
+            if (planetNum === 1) return true;
+            if (planetNum === 5) return completedPlanets[1] && completedPlanets[2] && completedPlanets[3] && completedPlanets[4];
+            return completedPlanets[planetNum - 1] === true;
+        }
+
+        function updateMapUI() {
+            updateHeaderUI();
+            const subtitles = { 1: "Planet Awal • Terbuka", 2: "Level 2 • Terbuka", 3: "Tantangan Menengah", 4: "Planet Tata Bahasa" };
+            for (let i = 1; i <= 4; i++) {
+                const st = document.getElementById(`status-planet-${i}`);
+                if (!st) continue;
+                if (completedPlanets[i]) { st.innerText = "⭐ MISI SELESAI"; st.className = "text-[9px] text-amber-300 font-extrabold"; }
+                else if (isPlanetUnlocked(i)) { st.innerText = subtitles[i]; st.className = "text-[9px] text-emerald-300 font-semibold"; }
+                else { st.innerText = "🔒 Terkunci"; st.className = "text-[9px] text-rose-400 font-semibold"; }
+            }
+            const st5 = document.getElementById('status-planet-5');
+            if (st5) {
+                const allDone = completedPlanets[1] && completedPlanets[2] && completedPlanets[3] && completedPlanets[4];
+                st5.innerText = allDone ? "🏁 SIAP DOCKING (FINISH)" : isPlanetUnlocked(5) ? "🔓 Terbuka" : "🔒 Selesaikan Planet 1–4";
+            }
+        }
+
+        function moveSpaceshipToPlanet(planetNum, playSound = true) {
+            const ship = document.getElementById('player-spaceship');
+            const tilt = document.getElementById('player-rocket-tilt-wrapper');
+            const coords = planetCoordinates[planetNum];
+            if (ship && coords) { ship.style.left = coords.left; ship.style.top = coords.top; }
+            if (tilt) tilt.style.transform = `rotate(40deg)`;
+            if (playSound) playTone(587.33, 0.2, 'sine');
+        }
+
+        function selectPlanetOnMap(planetNum) {
+            if (!isPlanetUnlocked(planetNum)) { playErrorSound(); return; }
+            selectedPlanetTarget = planetNum;
+            moveSpaceshipToPlanet(planetNum, true);
+            if (planetNum === 5) { openStationFinaleModal(); return; }
+            const meta = planetMeta[planetNum];
+            document.getElementById('modal-planet-icon').innerText = meta.icon;
+            document.getElementById('modal-planet-title').innerText = meta.title;
+            document.getElementById('modal-planet-desc').innerText = meta.desc;
+            const m = document.getElementById('planet-modal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+        }
+
+        function openStationFinaleModal() {
+            initOrbitalSpaceStation3D();
+            const doneCount = Object.values(completedPlanets).filter(Boolean).length;
+            document.getElementById('finale-captain-name').innerText = playerName;
+            document.getElementById('finale-captain-class').innerText = playerClass;
+            document.getElementById('finale-total-score').innerText = `${totalGold.toLocaleString('id-ID')} Poin`;
+            document.getElementById('finale-planets-status').innerText = `${doneCount}/4 Planet ⭐`;
+            const m = document.getElementById('station-finale-modal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            playSuccessSound();
+        }
+
+        function closeStationFinaleModal() { document.getElementById('station-finale-modal')?.classList.add('hidden'); }
+        function closePlanetModal() { document.getElementById('planet-modal')?.classList.add('hidden'); }
+        function launchSelectedPlanet() {
+            closePlanetModal();
+            if (selectedPlanetTarget === 1) initPlanet1();
+            if (selectedPlanetTarget === 2) initPlanet2();
+            if (selectedPlanetTarget === 3) initPlanet3();
+            if (selectedPlanetTarget === 4) initPlanet4();
+        }
+
+        function showSummaryModal(title, subtitle, detailsHtml, completedPlanetNum) {
+            completedPlanets[completedPlanetNum] = true;
+            syncPlayerToLeaderboard();
+            updateHeaderUI();
+            document.getElementById('summary-title').innerText = title;
+            document.getElementById('summary-subtitle').innerText = subtitle;
+            document.getElementById('summary-details').innerHTML = detailsHtml;
+            const m = document.getElementById('summary-modal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+            currentSpaceshipPlanet = completedPlanetNum < 4 ? completedPlanetNum + 1 : 5;
+        }
+
+        function finishPlanetSummary() {
+            document.getElementById('summary-modal')?.classList.add('hidden');
+            showScreen('map-screen');
+            moveSpaceshipToPlanet(currentSpaceshipPlanet, true);
+            
+            // Otomatis membuka stasiun akhir (Planet 5) jika semua misi telah selesai
+            if (currentSpaceshipPlanet === 5) {
+                const allDone = completedPlanets[1] && completedPlanets[2] && completedPlanets[3] && completedPlanets[4];
+                if (allDone) {
+                    setTimeout(() => {
+                        selectPlanetOnMap(5);
+                    }, 2500); // Menunggu 2.5 detik selama animasi pesawat terbang ke Planet 5
+                }
+            }
+        }
+
+        /* ==========================================================================
+           PLANET 1: MILLIONAIRE PRE-TEST
+           ========================================================================== */
+        const millionaireLadder = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 1000000];
+        const millionaireQuestions = [
+            { q: "Hello! ___ name is Dika. I am a new student at SMKN 4 Sinjai.", options: ["My", "Me", "I", "Mine"], answer: 0, exp: "'My' adalah Possessive Adjective." },
+            { q: "Rina and Sari are from Sinjai. ___ study in the Fisheries Department.", options: ["Them", "They", "Their", "Theirs"], answer: 1, exp: "'They' adalah Subject Pronoun." },
+            { q: "Mr. Ahmad is our productive teacher. ___ teaches fish cultivation patiently.", options: ["He", "Him", "His", "She"], answer: 0, exp: "'He' adalah Subject Pronoun tunggal." },
+            { q: "I have a catfish pond. The pond ___ behind the school laboratory.", options: ["am", "is", "are", "be"], answer: 1, exp: "Subjek tunggal 'The pond' menggunakan 'is'." },
+            { q: "We ___ very proud to be students of Agribisnis Perikanan.", options: ["is", "am", "are", "was"], answer: 2, exp: "Subjek 'We' menggunakan 'are'." },
+            { q: "This water quality tester belongs to Budi. It is ___ tester.", options: ["he", "him", "his", "himself"], answer: 2, exp: "'His' menunjukkan kepemilikan." },
+            { q: "The Tilapia fish are hungry. Please feed ___ right now!", options: ["they", "them", "their", "theirs"], answer: 1, exp: "'Them' adalah Object Pronoun." },
+            { q: "___ you in class X Agribisnis Perikanan 1?", options: ["Am", "Is", "Are", "Be"], answer: 2, exp: "Subjek 'you' menggunakan 'Are'." },
+            { q: "My friends and I love aquaculture. This hatchery project is ___.", options: ["our", "ours", "us", "we"], answer: 1, exp: "'Ours' adalah Possessive Pronoun." },
+            { q: "Siti: 'How do you do, Captain?' — Andi: '___'", options: ["I am doing homework.", "How do you do?", "No, thank you.", "See you yesterday."], answer: 1, exp: "Sapaan formal dijawab dengan 'How do you do?'." }
+        ];
+
+        let p1Index = 0, p1CorrectCount = 0, p1CurrentPrize = 0, p1Locked = false, p1Logs = [];
+        let p1Lifelines = { fifty: false, phone: false, audience: false }; // Melacak penggunaan bantuan
+
+        function initPlanet1() {
+            p1Locked = false;
+            
+            // Pertahankan status bantuan (lifeline) jika sebelumnya sudah dipakai
+            const b50 = document.getElementById('lifeline-5050');
+            if (b50) { b50.disabled = p1Lifelines.fifty; if (p1Lifelines.fifty) b50.classList.add('opacity-40'); else b50.classList.remove('opacity-40'); }
+            
+            const bp = document.getElementById('lifeline-phone');
+            if (bp) { bp.disabled = p1Lifelines.phone; if (p1Lifelines.phone) bp.classList.add('opacity-40'); else bp.classList.remove('opacity-40'); }
+            
+            const ba = document.getElementById('lifeline-audience');
+            if (ba) { ba.disabled = p1Lifelines.audience; if (p1Lifelines.audience) ba.classList.add('opacity-40'); else ba.classList.remove('opacity-40'); }
+
+            showScreen('planet1-screen');
+            renderPlanet1Question();
+        }
+
+        function renderPlanet1Ladder() {
+            const ul = document.getElementById('p1-prize-ladder');
+            if (!ul) return;
+            let html = '';
+            for (let i = millionaireLadder.length - 1; i >= 0; i--) {
+                const stepNum = i + 1, pts = millionaireLadder[i];
+                const isReached = p1CorrectCount === stepNum, isPassed = p1CorrectCount > stepNum;
+                html += `<li class="px-3 py-1 rounded-lg flex justify-between items-center ${isReached ? 'bg-amber-400 text-slate-950 font-extrabold shadow' : isPassed ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-900/60 text-slate-400'}"><span>Level ${stepNum}</span><span>${pts.toLocaleString('id-ID')} Poin</span></li>`;
+            }
+            ul.innerHTML = html;
+            const takeBtn = document.getElementById('btn-take-points');
+            if (takeBtn) { if (p1CorrectCount > 0 && !p1Locked) takeBtn.classList.remove('hidden'); else takeBtn.classList.add('hidden'); }
+        }
+
+        function renderPlanet1Question() {
+            p1Locked = false;
+            renderPlanet1Ladder();
+            const item = millionaireQuestions[p1Index];
+            document.getElementById('p1-question-counter').innerText = `Soal ${p1Index + 1} / ${millionaireQuestions.length}`;
+            document.getElementById('p1-question-text').innerText = item.q;
+            document.getElementById('p1-lifeline-hint').classList.add('hidden');
+            document.getElementById('p1-feedback-box').classList.add('hidden');
+
+            const grid = document.getElementById('p1-options-grid');
+            const labels = ['A', 'B', 'C', 'D'];
+            grid.innerHTML = item.options.map((opt, idx) => `
+                <button id="p1-opt-${idx}" onclick="submitPlanet1Answer(${idx})" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-sky-950 border-2 border-sky-500/40 hover:border-amber-400 text-left font-bold text-sm text-white transition flex items-center gap-3">
+                    <span class="w-7 h-7 rounded-lg bg-sky-500/20 border border-sky-400 text-amber-300 flex items-center justify-center text-xs font-extrabold">${labels[idx]}</span>
+                    <span>${opt}</span>
+                </button>
+            `).join('');
+        }
+
+        function submitPlanet1Answer(choiceIdx) {
+            if (p1Locked) return;
+            p1Locked = true;
+            const item = millionaireQuestions[p1Index];
+            const fb = document.getElementById('p1-feedback-box');
+            fb.classList.remove('hidden');
+
+            if (choiceIdx === item.answer) {
+                p1CorrectCount++;
+                p1CurrentPrize = millionaireLadder[p1CorrectCount - 1];
+                document.getElementById(`p1-opt-${choiceIdx}`).className = "p-3.5 rounded-2xl bg-emerald-600 border-2 border-emerald-300 text-left font-bold text-sm text-white flex items-center gap-3";
+                fb.className = "p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
+                fb.innerHTML = `✅ BENAR! Hadiah terkunci: <b>${p1CurrentPrize.toLocaleString('id-ID')} Poin</b>.`;
+                p1Logs.push(`<div>✅ Soal ${p1Index + 1}: Benar</div>`);
+                playSuccessSound();
+            } else {
+                document.getElementById(`p1-opt-${choiceIdx}`).className = "p-3.5 rounded-2xl bg-rose-700 border-2 border-rose-300 text-left font-bold text-sm text-white flex items-center gap-3";
+                document.getElementById(`p1-opt-${item.answer}`).className = "p-3.5 rounded-2xl bg-emerald-700 border-2 border-emerald-300 text-left font-bold text-sm text-white flex items-center gap-3";
+                fb.className = "p-3.5 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
+                fb.innerHTML = `❌ SALAH! Poin tetap di <b>${p1CurrentPrize.toLocaleString('id-ID')} Poin</b>.`;
+                p1Logs.push(`<div>❌ Soal ${p1Index + 1}: Salah</div>`);
+                playErrorSound();
+            }
+            renderPlanet1Ladder();
+            setTimeout(() => {
+                p1Index++;
+                if (p1Index < millionaireQuestions.length) renderPlanet1Question();
+                else finishPlanet1Game("COMPLETED ALL 10 QUESTIONS!");
+            }, 2200);
+        }
+
+        function useLifeline5050() {
+            if (p1Locked) return;
+            p1Lifelines.fifty = true;
+            document.getElementById('lifeline-5050').disabled = true;
+            document.getElementById('lifeline-5050').classList.add('opacity-40');
+            const item = millionaireQuestions[p1Index];
+            [0, 1, 2, 3].filter(i => i !== item.answer).slice(0, 2).forEach(idx => {
+                const b = document.getElementById(`p1-opt-${idx}`);
+                if (b) { b.disabled = true; b.classList.add('opacity-25', 'pointer-events-none'); }
+            });
+        }
+        function useLifelinePhone() {
+            if (p1Locked) return;
+            p1Lifelines.phone = true;
+            document.getElementById('lifeline-phone').disabled = true;
+            document.getElementById('lifeline-phone').classList.add('opacity-40');
+            const item = millionaireQuestions[p1Index];
+            const h = document.getElementById('p1-lifeline-hint');
+            h.classList.remove('hidden'); h.innerHTML = `📞 Saran Instruktur: Jawabannya adalah opsi <b>${['A','B','C','D'][item.answer]}</b>.`;
+        }
+        function useLifelineAudience() {
+            if (p1Locked) return;
+            p1Lifelines.audience = true;
+            document.getElementById('lifeline-audience').disabled = true;
+            document.getElementById('lifeline-audience').classList.add('opacity-40');
+            const item = millionaireQuestions[p1Index];
+            const h = document.getElementById('p1-lifeline-hint');
+            h.classList.remove('hidden'); h.innerHTML = `📊 Polling Penonton: 82% memilih opsi <b>${['A','B','C','D'][item.answer]}</b>.`;
+        }
+
+        function openTakePointsModal(planetNum = 1) {
+            activeTakePointsPlanet = planetNum;
+            let secured = planetNum === 1 ? p1CurrentPrize : planetNum === 2 ? p2EarnedPoints : planetNum === 3 ? p3EarnedPoints : p4EarnedPoints;
+            document.getElementById('secured-points-text').innerText = secured.toLocaleString('id-ID');
+            const m = document.getElementById('take-points-modal');
+            m.classList.remove('hidden'); m.classList.add('flex');
+        }
+        function closeTakePointsModal() { document.getElementById('take-points-modal')?.classList.add('hidden'); }
+        function confirmTakePoints() {
+            closeTakePointsModal();
+            if (activeTakePointsPlanet === 1) finishPlanet1Game("TAKE THE POINTS SUCCESS!");
+            else if (activeTakePointsPlanet === 2) { if (balloonAnimId) cancelAnimationFrame(balloonAnimId); showSummaryModal("TAKE THE POINTS PLANET 2!", `Poin: +${p2EarnedPoints}`, "", 2); }
+            else if (activeTakePointsPlanet === 3) showSummaryModal("TAKE THE POINTS PLANET 3!", `Poin: +${p3EarnedPoints}`, "", 3);
+            else if (activeTakePointsPlanet === 4) showSummaryModal("TAKE THE POINTS PLANET 4!", `Poin: +${p4EarnedPoints}`, "", 4);
+        }
+        function finishPlanet1Game(reason) {
+            addGold(p1CurrentPrize);
+            showSummaryModal(reason, `Hadiah Akhir: +${p1CurrentPrize.toLocaleString('id-ID')} Poin`, p1Logs.join(''), 1);
+        }
+
+        /* ==========================================================================
+           PLANET 2: BOUNCING SPACE WORD CHALLENGE
+           ========================================================================== */
+        const dictationSentences = [
+            { text: "Good morning my teacher", showWordHints: true },
+            { text: "Hello my name is Andi", showWordHints: true },
+            { text: "I am from Sinjai", showWordHints: true },
+            { text: "Nice to meet you", showWordHints: false },
+            { text: "I love big fish", showWordHints: false }
+        ];
+
+        let p2Round = 0, p2CorrectCount = 0, p2EarnedPoints = 0, bwAttempts = 0;
+        let balloons = [], p2PickedPlanetIndices = [], balloonAnimId = null, p2CanvasListenerAdded = false;
+        let p2BgStars = [], p2CosmicDust = [], p2Asteroids = [], p2ShootingStars = [], p2Rockets = [];
+
+        function initPlanet2() {
+            document.getElementById('btn-take-points-p2')?.classList.add('hidden');
+            showScreen('planet2-screen');
+            setTimeout(() => { initPlanet2CanvasClick(); setupBalloonRound(); startBalloonLoop(); }, 100);
+        }
+
+        function handlePlanet2CanvasInteract(clientX, clientY) {
+            const canvas = document.getElementById('balloon-canvas');
+            const inputField = document.getElementById('p2-typed-answer');
+            if (!canvas || !inputField || inputField.disabled) return;
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width, scaleY = canvas.height / rect.height;
+            const clickX = (clientX - rect.left) * scaleX, clickY = (clientY - rect.top) * scaleY;
+
+            for (let i = balloons.length - 1; i >= 0; i--) {
+                const b = balloons[i];
+                if (b.picked || !b.word) continue;
+                if (Math.hypot(clickX - b.x, clickY - b.y) <= b.r + 14) {
+                    b.picked = true; p2PickedPlanetIndices.push(i);
+                    const cur = inputField.value.trim();
+                    inputField.value = cur ? `${cur} ${b.word}` : b.word;
+                    playTone(620, 0.1, 'triangle');
+                    break;
+                }
+            }
+        }
+
+        function initPlanet2CanvasClick() {
+            const canvas = document.getElementById('balloon-canvas');
+            if (!canvas || p2CanvasListenerAdded) return;
+            p2CanvasListenerAdded = true;
+            canvas.addEventListener('click', (e) => handlePlanet2CanvasInteract(e.clientX, e.clientY));
+            canvas.addEventListener('touchstart', (e) => {
+                if (e.touches && e.touches.length > 0) { e.preventDefault(); handlePlanet2CanvasInteract(e.touches[0].clientX, e.touches[0].clientY); }
+            }, { passive: false });
+        }
+
+        function undoPlanet2Word() {
+            const inputField = document.getElementById('p2-typed-answer');
+            if (!inputField || inputField.disabled) return;
+            if (p2PickedPlanetIndices.length > 0) {
+                const last = p2PickedPlanetIndices.pop();
+                if (balloons[last]) balloons[last].picked = false;
+            }
+            const parts = inputField.value.trim().split(/\s+/).filter(Boolean);
+            parts.pop(); inputField.value = parts.join(' ');
+            playTone(360, 0.08, 'sine');
+        }
+
+        function resetPlanet2Words() {
+            const inputField = document.getElementById('p2-typed-answer');
+            if (!inputField || inputField.disabled) return;
+            balloons.forEach(b => b.picked = false);
+            p2PickedPlanetIndices = []; inputField.value = '';
+            playTone(300, 0.1, 'sine');
+        }
+
+        function playPlanet2SentenceAudio() {
+            const item = dictationSentences[p2Round];
+            if (item) speakEnglishText(item.text);
+        }
+
+        function setupBalloonRound() {
+            if (!document.getElementById('balloon-canvas')) return;
+            bwAttempts = 0; p2PickedPlanetIndices = [];
+            const item = dictationSentences[p2Round];
+
+            document.getElementById('p2-round-badge').innerText = item.showWordHints ? `Soal ${p2Round + 1}/5 (Petunjuk Kata)` : `Soal ${p2Round + 1}/5 (Pure Dictation)`;
+            document.getElementById('p2-instruction-text').innerText = item.showWordHints ? `Dengarkan audio, lalu klik planet kata yang melayang!` : `Dengarkan audio, lalu ketik kalimat yang kamu dengar!`;
+            document.getElementById('p2-attempts-badge').innerText = `Kesempatan: 2x`;
+            document.getElementById('p2-feedback-box').classList.add('hidden');
+
+            const takeBtn = document.getElementById('btn-take-points-p2');
+            if (takeBtn) { if (p2EarnedPoints > 0) takeBtn.classList.remove('hidden'); else takeBtn.classList.add('hidden'); }
+
+            const inputField = document.getElementById('p2-typed-answer');
+            if (inputField) { inputField.value = ''; inputField.disabled = false; }
+
+            const canvas = document.getElementById('balloon-canvas');
+            if (!canvas) return;
+            canvas.width = canvas.clientWidth || 680;
+            canvas.height = canvas.clientHeight || 300;
+
+            p2BgStars = Array.from({ length: 42 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: 0.6 + Math.random() * 1.4, phase: Math.random() * Math.PI * 2, speed: 0.02 + Math.random() * 0.04 }));
+            p2CosmicDust = Array.from({ length: 18 }, () => ({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, r: 1.2 + Math.random() * 2.2, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, color: 'rgba(56,189,248,0.45)' }));
+
+            // Inisialisasi Bintang Jatuh
+            p2ShootingStars = Array.from({ length: 3 }, () => ({
+                x: Math.random() * canvas.width, y: Math.random() * canvas.height,
+                len: 40 + Math.random() * 60, speed: 7 + Math.random() * 5,
+                angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2,
+                opacity: 0, state: 'wait'
+            }));
+
+            // Inisialisasi Roket 3D Melintas
+            p2Rockets = [{
+                x: -150, y: Math.random() * canvas.height, 
+                vx: 1.2 + Math.random() * 1.5, vy: (Math.random() - 0.5) * 0.6, 
+                scale: 0.5 + Math.random() * 0.3
+            }];
+
+            let words = [];
+            if (item.showWordHints) { words = item.text.split(' ').slice(); words.sort(() => Math.random() - 0.5); }
+            const total = item.showWordHints ? words.length : 5;
+
+            // Variasi Tema Warna Planet 3D
+            const colorThemes = [
+                { highlight: '#fef08a', mid: '#f59e0b', dark: '#92400e', core: '#1c0a02', ringBright: '#fde047', ringMid: '#f59e0b', ringDark: 'rgba(180, 140, 90, 0.35)', rim: 'rgba(253, 224, 71, 0.35)' }, // Emas
+                { highlight: '#e0f2fe', mid: '#38bdf8', dark: '#0369a1', core: '#082f49', ringBright: '#7dd3fc', ringMid: '#0284c7', ringDark: 'rgba(90, 140, 180, 0.35)', rim: 'rgba(125, 211, 252, 0.35)' }, // Biru Es
+                { highlight: '#fee2e2', mid: '#f87171', dark: '#991b1b', core: '#450a0a', ringBright: '#fca5a5', ringMid: '#dc2626', ringDark: 'rgba(180, 90, 90, 0.35)', rim: 'rgba(252, 165, 165, 0.35)' }, // Merah Lava
+                { highlight: '#ecfccb', mid: '#a3e635', dark: '#4d7c0f', core: '#14532d', ringBright: '#bef264', ringMid: '#65a30d', ringDark: 'rgba(140, 180, 90, 0.35)', rim: 'rgba(190, 242, 100, 0.35)' }, // Hijau Toska
+                { highlight: '#fae8ff', mid: '#e879f9', dark: '#86198f', core: '#4a044e', ringBright: '#f0abfc', ringMid: '#c026d3', ringDark: 'rgba(160, 90, 180, 0.35)', rim: 'rgba(240, 171, 252, 0.35)' }  // Ungu Kristal
+            ];
+
+            balloons = Array.from({ length: total }).map((_, idx) => ({
+                x: 70 + idx * 90 + (Math.random() - 0.5) * 20,
+                y: 80 + (idx % 2) * 120,
+                vx: (Math.random() < 0.5 ? -1 : 1) * (0.45 + Math.random() * 0.35),
+                vy: (Math.random() < 0.5 ? -1 : 1) * (0.35 + Math.random() * 0.35),
+                r: item.showWordHints ? 30 : 26, // Jari-jari inti planet
+                word: item.showWordHints ? words[idx] : "",
+                picked: false,
+                theme: colorThemes[idx % colorThemes.length] // Terapkan tema warna secara bergiliran
+            }));
+        }
+
+        function startBalloonLoop() {
+            if (balloonAnimId) cancelAnimationFrame(balloonAnimId);
+            const canvas = document.getElementById('balloon-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            let dashOffset = 0; // Untuk animasi garis orbit yang berjalan
+
+            function animate() {
+                const w = canvas.width, h = canvas.height;
+                
+                // 1. Cinematic Deep Space Background
+                const skyGrad = ctx.createLinearGradient(0, 0, w, h);
+                skyGrad.addColorStop(0, '#01030a'); 
+                skyGrad.addColorStop(1, '#050914');
+                ctx.fillStyle = skyGrad; ctx.fillRect(0, 0, w, h);
+
+                // Subtle blue cosmic haze
+                const hazeGrad = ctx.createRadialGradient(w/2, h/2, 50, w/2, h/2, w);
+                hazeGrad.addColorStop(0, 'rgba(14, 165, 233, 0.08)'); 
+                hazeGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+                ctx.fillStyle = hazeGrad; ctx.fillRect(0, 0, w, h);
+
+                // Background Stars
+                p2BgStars.forEach(s => {
+                    s.phase += s.speed;
+                    ctx.fillStyle = `rgba(255,255,255,${0.2 + 0.8 * Math.abs(Math.sin(s.phase))})`;
+                    ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2); ctx.fill();
+                });
+
+                // Shooting Stars (Bintang Jatuh)
+                p2ShootingStars.forEach(s => {
+                    if (s.state === 'wait') {
+                        if (Math.random() < 0.006) {
+                            s.x = Math.random() * w * 0.8; s.y = Math.random() * h * 0.5;
+                            s.state = 'fadeIn'; s.opacity = 0;
+                        }
+                    } else {
+                        s.x += Math.cos(s.angle) * s.speed; s.y += Math.sin(s.angle) * s.speed;
+                        if (s.state === 'fadeIn') { s.opacity += 0.08; if (s.opacity >= 1) { s.opacity = 1; s.state = 'fadeOut'; } }
+                        else if (s.state === 'fadeOut') { s.opacity -= 0.015; if (s.opacity <= 0) s.state = 'wait'; }
+                        if (s.x > w || s.y > h) s.state = 'wait';
+                        
+                        ctx.save();
+                        ctx.globalAlpha = Math.max(0, s.opacity);
+                        const grad = ctx.createLinearGradient(s.x, s.y, s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len);
+                        grad.addColorStop(0, '#ffffff'); grad.addColorStop(0.1, '#38bdf8'); grad.addColorStop(1, 'rgba(56,189,248,0)');
+                        ctx.strokeStyle = grad; ctx.lineWidth = 1.5;
+                        ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(s.x - Math.cos(s.angle) * s.len, s.y - Math.sin(s.angle) * s.len); ctx.stroke();
+                        ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(s.x, s.y, 1.2, 0, Math.PI*2); ctx.fill();
+                        ctx.restore();
+                    }
+                });
+
+                // Roket Kecil Melintas (Faux-3D)
+                p2Rockets.forEach(r => {
+                    r.x += r.vx; r.y += r.vy;
+                    // Reset posisi jika sudah melewati layar
+                    if (r.x > w + 150) { 
+                        r.x = -150; 
+                        r.y = 50 + Math.random() * (h - 100); 
+                        r.vy = (Math.random() - 0.5) * 0.6;
+                        r.scale = 0.5 + Math.random() * 0.3;
+                    }
+                    
+                    ctx.save();
+                    ctx.translate(r.x, r.y);
+                    ctx.rotate(Math.atan2(r.vy, r.vx));
+                    ctx.scale(r.scale, r.scale);
+                    
+                    // Api Roket Beranimasi
+                    const time = performance.now() / 1000;
+                    const fireLen = 25 + Math.sin(time * 30) * 8;
+                    const fGrad = ctx.createLinearGradient(0, 0, -fireLen - 15, 0);
+                    fGrad.addColorStop(0, '#fef08a'); fGrad.addColorStop(0.4, '#f97316'); fGrad.addColorStop(1, 'rgba(239, 68, 68, 0)');
+                    ctx.fillStyle = fGrad; 
+                    ctx.beginPath(); ctx.moveTo(-15, 4); ctx.lineTo(-15 - fireLen, 0); ctx.lineTo(-15, -4); ctx.fill();
+                    
+                    // Badan Roket (Gradien 3D)
+                    const bGrad = ctx.createLinearGradient(0, -8, 0, 8);
+                    bGrad.addColorStop(0, '#94a3b8'); bGrad.addColorStop(0.4, '#ffffff'); bGrad.addColorStop(1, '#334155');
+                    ctx.fillStyle = bGrad; 
+                    ctx.beginPath(); ctx.moveTo(25, 0); ctx.lineTo(10, -6); ctx.lineTo(-15, -6); ctx.lineTo(-15, 6); ctx.lineTo(10, 6); ctx.closePath(); ctx.fill();
+                    
+                    // Sayap Roket
+                    ctx.fillStyle = '#dc2626';
+                    ctx.beginPath(); ctx.moveTo(-5, -6); ctx.lineTo(-18, -14); ctx.lineTo(-15, -6); ctx.fill();
+                    ctx.beginPath(); ctx.moveTo(-5, 6); ctx.lineTo(-18, 14); ctx.lineTo(-15, 6); ctx.fill();
+                    
+                    // Jendela Kaca
+                    ctx.fillStyle = '#7dd3fc'; ctx.strokeStyle = '#0284c7'; ctx.lineWidth = 1;
+                    ctx.beginPath(); ctx.arc(5, 0, 2.5, 0, Math.PI*2); ctx.fill(); ctx.stroke();
+                    
+                    ctx.restore();
+                });
+
+                const unpicked = balloons.filter(b => !b.picked);
+                const time = performance.now() / 1000;
+
+                // 2. GARIS PENGHUBUNG JALUR ORBIT (Saling Bergerak Dinamis)
+                dashOffset -= 0.6; // Kecepatan aliran garis
+                if (unpicked.length > 1) {
+                    ctx.save();
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeStyle = 'rgba(253, 224, 71, 0.35)'; // Emas transparan
+                    ctx.shadowColor = '#f59e0b';
+                    ctx.shadowBlur = 8;
+                    ctx.setLineDash([8, 8]); // Pola putus-putus
+                    ctx.lineDashOffset = dashOffset;
+                    ctx.beginPath();
+                    // Buat jaring-jaring konstelasi antar planet
+                    for (let i = 0; i < unpicked.length; i++) {
+                        for (let j = i + 1; j < unpicked.length; j++) {
+                            ctx.moveTo(unpicked[i].x, unpicked[i].y);
+                            ctx.lineTo(unpicked[j].x, unpicked[j].y);
+                        }
+                    }
+                    ctx.stroke();
+                    ctx.restore();
+                }
+
+                // 3. RENDER ULTRA-REALISTIC 3D RINGED PLANETS
+                balloons.forEach(b => {
+                    if (b.picked) return;
+                    
+                    // Fisika Pantulan (Margin diperbesar karena cincin lebih lebar dari bola)
+                    b.x += b.vx; b.y += b.vy;
+                    if (b.x < b.r + 35 || b.x > w - b.r - 35) b.vx *= -1;
+                    if (b.y < b.r + 35 || b.y > h - b.r - 35) b.vy *= -1;
+
+                    ctx.save();
+                    ctx.translate(b.x, b.y);
+
+                    const tilt = 0.35; // Kemiringan Cincin Saturnus
+                    const ringRadiusX = b.r * 2.5;
+                    const ringRadiusY = b.r * 0.7;
+                    const rotOffset = (time * 20 + b.x) % 100; // Offset putaran permukaan planet
+                    const th = b.theme; // Tema warna planet ini
+
+                    // --- A. Cincin Belakang (Bayangan) ---
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, ringRadiusX, ringRadiusY, tilt, Math.PI, Math.PI * 2);
+                    ctx.lineWidth = b.r * 0.45;
+                    ctx.strokeStyle = th.ringDark; 
+                    ctx.stroke();
+
+                    // --- B. Bola Planet Utama ---
+                    ctx.beginPath();
+                    ctx.arc(0, 0, b.r, 0, Math.PI * 2);
+                    ctx.clip(); // Masking tekstur agar tetap bulat
+
+                    // Gradien Pencahayaan Sinematik 3D
+                    const pGrad = ctx.createRadialGradient(-b.r*0.4, -b.r*0.4, b.r*0.1, 0, 0, b.r*1.1);
+                    pGrad.addColorStop(0, th.highlight); 
+                    pGrad.addColorStop(0.35, th.mid); 
+                    pGrad.addColorStop(0.7, th.dark); 
+                    pGrad.addColorStop(1, th.core);   
+                    ctx.fillStyle = pGrad;
+                    ctx.fill();
+
+                    // Tekstur Pita Awan (Banded Atmosphere) yang bergerak melingkar
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+                    for (let i = -b.r; i < b.r; i += 6) {
+                        const wave = Math.sin((i + rotOffset) * 0.15) * 4;
+                        ctx.fillRect(-b.r, i + wave, b.r * 2, 2.5);
+                    }
+                    ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+                    for (let i = -b.r + 3; i < b.r; i += 12) {
+                        const wave = Math.sin((i + rotOffset) * 0.2) * 5;
+                        ctx.fillRect(-b.r, i + wave, b.r * 2, 3);
+                    }
+
+                    // Rim Light Atmosferik di Tepi
+                    const rimGrad = ctx.createRadialGradient(0, 0, b.r*0.75, 0, 0, b.r);
+                    rimGrad.addColorStop(0, 'rgba(0,0,0,0)');
+                    rimGrad.addColorStop(1, th.rim);
+                    ctx.fillStyle = rimGrad;
+                    ctx.beginPath(); ctx.arc(0, 0, b.r, 0, Math.PI * 2); ctx.fill();
+
+                    ctx.restore(); // Lepas kliping
+                    
+                    ctx.save();
+                    ctx.translate(b.x, b.y);
+
+                    // --- C. Cincin Depan (Berkilau) ---
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, ringRadiusX, ringRadiusY, tilt, 0, Math.PI);
+                    
+                    const ringGrad = ctx.createLinearGradient(-ringRadiusX, 0, ringRadiusX, 0);
+                    ringGrad.addColorStop(0.0, 'rgba(255, 255, 255, 0.05)');
+                    ringGrad.addColorStop(0.2, th.ringBright);
+                    ringGrad.addColorStop(0.5, th.ringMid);
+                    ringGrad.addColorStop(0.8, th.ringBright);
+                    ringGrad.addColorStop(1.0, 'rgba(255, 255, 255, 0.05)');
+                    
+                    ctx.lineWidth = b.r * 0.5;
+                    ctx.strokeStyle = ringGrad;
+                    ctx.shadowColor = th.ringBright;
+                    ctx.shadowBlur = 12; // Glow debu kosmik
+                    ctx.stroke();
+
+                    // Celah Gelap Cincin (Cassini Division Simulator)
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, ringRadiusX * 0.82, ringRadiusY * 0.82, tilt, 0, Math.PI);
+                    ctx.lineWidth = 1.5;
+                    ctx.strokeStyle = 'rgba(2, 4, 10, 0.65)';
+                    ctx.shadowBlur = 0;
+                    ctx.stroke();
+
+                    // --- D. Label Teks Kata ---
+                    if (b.word) {
+                        ctx.font = '900 13px "Plus Jakarta Sans", sans-serif';
+                        const tw = ctx.measureText(b.word).width + 16;
+                        ctx.fillStyle = 'rgba(2, 6, 23, 0.85)'; 
+                        ctx.strokeStyle = th.ringBright; 
+                        ctx.lineWidth = 1.5;
+                        
+                        const labelY = -(b.r + 20); // Jarak label ke atas cincin
+                        ctx.beginPath(); 
+                        ctx.roundRect(-tw/2, labelY - 13, tw, 26, 8); 
+                        ctx.fill(); 
+                        ctx.stroke();
+                        
+                        ctx.fillStyle = '#fffbeb'; 
+                        ctx.textAlign = 'center'; 
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(b.word, 0, labelY);
+                    }
+                    ctx.restore();
+                });
+                balloonAnimId = requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        function checkPlanet2Answer() {
+            const item = dictationSentences[p2Round];
+            const inputField = document.getElementById('p2-typed-answer');
+            const cleanTarget = item.text.toLowerCase().replace(/[^a-z0-9]/g, '');
+            const cleanUser = inputField.value.trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+            const fb = document.getElementById('p2-feedback-box');
+            fb.classList.remove('hidden');
+
+            if (cleanUser === cleanTarget) {
+                p2CorrectCount++; p2EarnedPoints += 100; addGold(100);
+                inputField.disabled = true;
+                document.getElementById('btn-take-points-p2')?.classList.remove('hidden');
+                fb.className = "p-3 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
+                fb.innerHTML = `✅ SEMPURNA! (+100 Poin)`;
+                playSuccessSound(); speakEnglishText(item.text);
+                setTimeout(() => nextBalloonRound(), 2500);
+            } else {
+                bwAttempts++; playErrorSound();
+                if (bwAttempts < 2) {
+                    resetPlanet2Words();
+                    fb.className = "p-3 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-xs font-bold";
+                    fb.innerHTML = `⚠️ Belum tepat! Sisa 1 kesempatan lagi.`;
+                } else {
+                    inputField.disabled = true;
+                    fb.className = "p-3 rounded-xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
+                    fb.innerHTML = `❌ Kesempatan habis! Kalimat benar: <b>"${item.text}"</b>`;
+                    speakEnglishText(item.text);
+                    setTimeout(() => nextBalloonRound(), 3200);
+                }
+            }
+        }
+
+        function nextBalloonRound() {
+            p2Round++;
+            if (p2Round < dictationSentences.length) setupBalloonRound();
+            else {
+                if (balloonAnimId) cancelAnimationFrame(balloonAnimId);
+                showSummaryModal("PLANET 2 SELESAI!", `Benar: ${p2CorrectCount}/5 | Poin: +${p2EarnedPoints}`, "", 2);
+            }
+        }
+
+        /* ==========================================================================
+           PLANET 3: LISTENING STUDIO
+           ========================================================================== */
+        const listeningQuestions = [
+            { topic: "Question 1: Personal Information", script: "Hello, my name is Andi. I am seventeen years old. I live in Sinjai with my parents. I am a student at a vocational high school. My favorite hobby is playing football.", question: "How old is Andi?", options: ["A. Fifteen years old", "B. Sixteen years old", "C. Seventeen years old", "D. Eighteen years old"], answer: 2 },
+            { topic: "Question 2: Hometown", script: "Good morning, friends. My name is Siti. I come from Bone, but now I live in Makassar. I am in the eleventh grade. I enjoy reading books and listening to music.", question: "Where does Siti live now?", options: ["A. Bone", "B. Sinjai", "C. Makassar", "D. Bulukumba"], answer: 2 },
+            { topic: "Question 3: Hobbies", script: "Hi, everyone. My name is Budi. I am sixteen years old, and I study at a vocational school. In my free time, I like playing badminton and watching movies. My favorite subject is English.", question: "What does Budi like doing in his free time?", options: ["A. Cooking and swimming", "B. Playing badminton and watching movies", "C. Reading and singing", "D. Playing football and dancing"], answer: 1 },
+            { topic: "Question 4: School and Major", script: "Let me introduce myself. My name is Rina. I am a student in the fisheries department. I enjoy learning about fish cultivation. In the future, I want to become a successful fish farmer.", question: "What does Rina want to become in the future?", options: ["A. A teacher", "B. A doctor", "C. A fish farmer", "D. A police officer"], answer: 2 },
+            { topic: "Question 5: Future Plans", script: "Hello, my name is Fajar. I am seventeen years old. I live in South Sulawesi. My favorite subject is English because I want to speak with people from other countries. I hope to work in an international company someday.", question: "Why does Fajar like English?", options: ["A. Because he wants to travel every day.", "B. Because he wants to speak with people from other countries.", "C. Because he wants to become a football player.", "D. Because he wants to study mathematics."], answer: 1 }
+        ];
+
+        let p3Index = 0, p3CorrectCount = 0, p3EarnedPoints = 0, p3Locked = false;
+        function initPlanet3() {
+            p3Locked = false;
+            document.getElementById('btn-take-points-p3')?.classList.add('hidden');
+            showScreen('planet3-screen');
+            renderPlanet3Question();
+        }
+        function renderPlanet3Question() {
+            p3Locked = false;
+            const item = listeningQuestions[p3Index];
+            document.getElementById('p3-counter').innerText = `Audio ${p3Index + 1} / 5`;
+            document.getElementById('p3-topic-badge').innerText = item.topic;
+            document.getElementById('p3-question-text').innerText = item.question;
+            document.getElementById('p3-feedback-box').classList.add('hidden');
+            
+            const takeBtn = document.getElementById('btn-take-points-p3');
+            if (takeBtn) { if (p3EarnedPoints > 0) takeBtn.classList.remove('hidden'); else takeBtn.classList.add('hidden'); }
+
+            document.getElementById('p3-options-list').innerHTML = item.options.map((opt, idx) => `
+                <button onclick="submitPlanet3Answer(${idx})" class="p-3.5 rounded-2xl bg-slate-900 hover:bg-emerald-950 border-2 border-emerald-500/40 text-left font-bold text-xs sm:text-sm text-white transition">${opt}</button>
+            `).join('');
+        }
+        function playListeningAudio() { speakEnglishText(listeningQuestions[p3Index].script); }
+        function submitPlanet3Answer(choiceIdx) {
+            if (p3Locked) return; p3Locked = true;
+            const item = listeningQuestions[p3Index];
+            const fb = document.getElementById('p3-feedback-box');
+            fb.classList.remove('hidden');
+            if (choiceIdx === item.answer) {
+                p3CorrectCount++; p3EarnedPoints += 100; addGold(100);
+                fb.className = "p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
+                fb.innerHTML = `✅ BENAR! (+100 Poin)`; playSuccessSound();
+            } else {
+                fb.className = "p-3.5 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
+                fb.innerHTML = `❌ SALAH! Jawaban: <b>${item.options[item.answer]}</b>`; playErrorSound();
+            }
+            setTimeout(() => {
+                p3Index++;
+                if (p3Index < listeningQuestions.length) renderPlanet3Question();
+                else showSummaryModal("PLANET 3 SELESAI!", `Benar: ${p3CorrectCount}/5 | Poin: +${p3EarnedPoints}`, "", 3);
+            }, 2200);
+        }
+
+        /* ==========================================================================
+           PLANET 4: READING AGRIBISNIS PERIKANAN SMKN 4 SINJAI
+           ========================================================================== */
+        const readingPassages = [
+            { tag: "Text 1", title: "Fisheries Department at SMKN 4 Sinjai", body: "Hello! My name is Rahmat. I am a tenth-grade student in the Fisheries Agribusiness Department at SMKN 4 Sinjai. Every morning, my classmates and I practice in the school hatchery and fish ponds. We learn how to breed Tilapia and Catfish.", question: "Where do Rahmat and his classmates practice?", options: ["A. Library", "B. Hatchery and fish ponds", "C. Computer shop", "D. Stadium"], answer: 1 },
+            { tag: "Text 2", title: "Biosecurity Rules", body: "Before entering the fish hatchery at SMKN 4 Sinjai, all students must follow biosecurity procedures. First, wash hands and dip boots into the disinfectant footbath. Second, sterilize fish nets to prevent diseases.", question: "Why must students follow biosecurity procedures?", options: ["A. To swim faster", "B. To prevent fish diseases", "C. To sell nets", "D. To warm water"], answer: 1 },
+            { tag: "Text 3", title: "Water Quality Management", body: "Good water quality is very important for fish cultivation. Every Tuesday, students measure temperature, pH level, and dissolved oxygen (DO).", question: "What do students measure every Tuesday?", options: ["A. Water temperature, pH, and DO", "B. Fish weight", "C. Pond depth", "D. Feed prices"], answer: 0 },
+            { tag: "Text 4", title: "Fish Feeding Schedule", body: "We feed the fish twice a day: at 8:00 AM and 4:00 PM using high-protein floating pellets. We must not overfeed to keep water clean.", question: "When do students feed the fish?", options: ["A. Once a week", "B. Twice a day", "C. At midnight", "D. Never"], answer: 1 },
+            { tag: "Text 5", title: "Harvesting Day in Sinjai", body: "After 3-4 months, we harvest the fish, grade them by size, and pack them in oxygenated plastic bags for buyers in Sinjai.", question: "How are live fish packed for delivery?", options: ["A. Paper boxes", "B. Oxygenated plastic bags", "C. Backpacks", "D. Buckets"], answer: 1 }
+        ];
+
+        let p4Index = 0, p4CorrectCount = 0, p4EarnedPoints = 0, p4Locked = false;
+        function initPlanet4() {
+            p4Locked = false;
+            document.getElementById('btn-take-points-p4')?.classList.add('hidden');
+            showScreen('planet4-screen');
+            renderPlanet4Question();
+        }
+        function renderPlanet4Question() {
+            p4Locked = false;
+            const item = readingPassages[p4Index];
+            document.getElementById('p4-counter').innerText = `Teks ${p4Index + 1} / 5`;
+            document.getElementById('p4-passage-tag').innerText = item.tag;
+            document.getElementById('p4-passage-title').innerText = item.title;
+            document.getElementById('p4-passage-body').innerText = item.body;
+            document.getElementById('p4-question-text').innerText = item.question;
+            document.getElementById('p4-feedback-box').classList.add('hidden');
+            
+            const takeBtn = document.getElementById('btn-take-points-p4');
+            if (takeBtn) { if (p4EarnedPoints > 0) takeBtn.classList.remove('hidden'); else takeBtn.classList.add('hidden'); }
+
+            document.getElementById('p4-options-list').innerHTML = item.options.map((opt, idx) => `
+                <button onclick="submitPlanet4Answer(${idx})" class="w-full p-3.5 rounded-2xl bg-slate-900 hover:bg-amber-950/60 border-2 border-amber-500/40 text-left font-bold text-xs sm:text-sm text-white transition">${opt}</button>
+            `).join('');
+        }
+        function speakReadingPassage() { speakEnglishText(readingPassages[p4Index].title + ". " + readingPassages[p4Index].body); }
+        function submitPlanet4Answer(choiceIdx) {
+            if (p4Locked) return; p4Locked = true;
+            const item = readingPassages[p4Index];
+            const fb = document.getElementById('p4-feedback-box');
+            fb.classList.remove('hidden');
+            if (choiceIdx === item.answer) {
+                p4CorrectCount++; p4EarnedPoints += 100; addGold(100);
+                fb.className = "p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
+                fb.innerHTML = `✅ BENAR! (+100 Poin)`; playSuccessSound();
+            } else {
+                fb.className = "p-3.5 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
+                fb.innerHTML = `❌ SALAH! Jawaban: <b>${item.options[item.answer]}</b>`; playErrorSound();
+            }
+            setTimeout(() => {
+                p4Index++;
+                if (p4Index < readingPassages.length) renderPlanet4Question();
+                else showSummaryModal("🎉 SEMUA MISI SELESAI!", `Kapten ${playerName} telah menyelesaikan seluruh planet!`, "", 4);
+            }, 2300);
+        }
+
+        /* ==========================================================================
+           LEADERBOARD & GOOGLE SHEETS
+           ========================================================================== */
+        function loadLeaderboardFromStorage() {
+            try {
+                const raw = localStorage.getItem(LEADERBOARD_STORAGE_KEY);
+                if (raw) leaderboardRecords = JSON.parse(raw);
+                const savedUrl = localStorage.getItem(GOOGLE_SHEET_URL_KEY);
+                if (savedUrl) { googleSheetWebAppUrl = savedUrl; document.getElementById('input-google-sheet-url').value = savedUrl; }
+            } catch (e) {}
+            updateSheetStatusUI();
+        }
+        function saveLeaderboardToStorage() { localStorage.setItem(LEADERBOARD_STORAGE_KEY, JSON.stringify(leaderboardRecords)); }
+        function syncPlayerToLeaderboard() {
+            if (!currentSessionId) return;
+            const doneCount = Object.values(completedPlanets).filter(Boolean).length;
+            const entry = { id: currentSessionId, name: playerName, className: playerClass, score: totalGold, planets: doneCount, updatedAt: Date.now(), timestampText: new Date().toLocaleString('id-ID') };
+            const idx = leaderboardRecords.findIndex(r => r.id === currentSessionId);
+            if (idx >= 0) leaderboardRecords[idx] = entry; else leaderboardRecords.push(entry);
+            leaderboardRecords.sort((a, b) => b.score - a.score || b.planets - a.planets);
+            saveLeaderboardToStorage();
+        }
+        function openLeaderboardModal() { loadLeaderboardFromStorage(); renderLeaderboardTable(); document.getElementById('leaderboard-modal').classList.remove('hidden'); document.getElementById('leaderboard-modal').classList.add('flex'); }
+        function closeLeaderboardModal() { document.getElementById('leaderboard-modal')?.classList.add('hidden'); }
+        function clearLeaderboardData() { leaderboardRecords = []; saveLeaderboardToStorage(); renderLeaderboardTable(); }
+        function updateSheetStatusUI() {
+            const badge = document.getElementById('sheet-sync-badge');
+            if (badge) badge.innerText = googleSheetWebAppUrl ? "☁️ TERHUBUNG KE GOOGLE SHEET" : "💾 PENYIMPANAN LOKAL + SIAP EKSPOR SHEET";
+        }
+        function toggleSheetSetupPanel(force = false) {
+            const p = document.getElementById('sheet-setup-panel');
+            if (p) { if (force) p.classList.remove('hidden'); else p.classList.toggle('hidden'); }
+        }
+        function saveGoogleSheetUrl() {
+            googleSheetWebAppUrl = document.getElementById('input-google-sheet-url').value.trim();
+            localStorage.setItem(GOOGLE_SHEET_URL_KEY, googleSheetWebAppUrl);
+            updateSheetStatusUI(); playSuccessSound();
+        }
+        function exportLeaderboardToCSV() {
+            loadLeaderboardFromStorage();
+            let csv = "\uFEFFPeringkat,Nama Kapten,Kelas,Planet,Skor,Waktu\n";
+            leaderboardRecords.forEach((r, i) => csv += `${i+1},"${r.name}","${r.className}",${r.planets}/4,${r.score},"${r.timestampText}"\n`);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'Leaderboard_English_Space_Battle.csv';
+            document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            playSuccessSound();
+        }
+        function copyAppsScriptCode() {
+            const code = `function doPost(e){var sh=SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();if(sh.getLastRow()===0){sh.appendRow(["ID","Nama","Kelas","Skor","Misi","Waktu"]);}var d=JSON.parse(e.postData.contents);sh.appendRow([d.id,d.name,d.className,d.score,d.planets,d.timestamp]);return ContentService.createTextOutput(JSON.stringify({status:"success"})).setMimeType(ContentService.MimeType.JSON);}`;
+            const ta = document.createElement('textarea'); ta.value = code; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta);
+            document.getElementById('copy-script-feedback')?.classList.remove('hidden'); playSuccessSound();
+        }
+        function renderLeaderboardTable() {
+            const tb = document.getElementById('leaderboard-tbody');
+            if (!tb) return;
+            if (leaderboardRecords.length === 0) { tb.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400 italic">Belum ada data di Leaderboard.</td></tr>`; return; }
+            tb.innerHTML = leaderboardRecords.map((r, i) => `
+                <tr class="${r.id === currentSessionId ? 'bg-sky-500/20 font-bold text-white' : ''}">
+                    <td class="py-2.5 px-3 text-center">${i+1 === 1 ? '🥇' : i+1 === 2 ? '🥈' : i+1 === 3 ? '🥉' : i+1}</td>
+                    <td class="py-2.5 px-3">${r.name}</td>
+                    <td class="py-2.5 px-3 text-amber-200">${r.className}</td>
+                    <td class="py-2.5 px-3 text-center">${r.planets}/4</td>
+                    <td class="py-2.5 px-3 text-right font-extrabold text-amber-300">${Number(r.score).toLocaleString('id-ID')}</td>
+                    <td class="py-2.5 px-3 text-center"><span class="px-2 py-0.5 rounded bg-slate-800 text-[10px]">Lokal</span></td>
+                </tr>
+            `).join('');
+        }
+
+        loadLeaderboardFromStorage();
+    </script>
+</body>
+</html>
