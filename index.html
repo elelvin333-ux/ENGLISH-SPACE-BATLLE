@@ -4085,7 +4085,7 @@
         async function fetchGeminiWithBackoff(promptText) {
             const customKey = (localStorage.getItem(GEMINI_API_KEY_STORAGE_KEY) || '').trim();
             const apiKey = customKey || "";
-            const models = ['gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+            const models = ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-3-flash-preview'];
             let lastError = null;
 
             for (const model of models) {
@@ -4121,6 +4121,129 @@
             throw lastError || new Error('Gagal menghubungi server Gemini AI.');
         }
 
+        function generateSmartOfflineQuestions(planetNum, topic, difficulty) {
+            const cleanTopic = (topic || 'SMK English & Daily Communication').trim();
+            const isHard = /sulit|b1|b2/i.test(difficulty);
+            const isEasy = /mudah|a1/i.test(difficulty);
+
+            if (planetNum === 1) {
+                const bank = [
+                    { q: `[${cleanTopic}] She ___ very enthusiastic when practicing in the school workshop.`, options: ["am", "is", "are", "be"], answer: 1 },
+                    { q: `[${cleanTopic}] My classmates and I ___ preparing our vocational project right now.`, options: ["is", "am", "are", "was"], answer: 2 },
+                    { q: `[${cleanTopic}] Mr. Hasan guides the students carefully. ___ explains every step clearly.`, options: ["He", "Him", "His", "She"], answer: 0 },
+                    { q: `[${cleanTopic}] That digital measuring tool belongs to Rina. It is ___ tool.`, options: ["she", "her", "hers", "herself"], answer: 1 },
+                    { q: `[${cleanTopic}] The technician checks the equipment before ___ starts the machine.`, options: ["he", "him", "his", "they"], answer: 0 },
+                    { q: `[${cleanTopic}] ___ you ready to present your group report today?`, options: ["Am", "Is", "Are", "Be"], answer: 2 },
+                    { q: `[${cleanTopic}] Good safety habits protect ___ from workplace accidents.`, options: ["we", "our", "ours", "us"], answer: 3 },
+                    { q: `[${cleanTopic}] Every morning, the students ___ at the laboratory at 07:30 AM.`, options: ["arrive", "arrives", "arriving", "arrived"], answer: 0 },
+                    { q: `[${cleanTopic}] Which expression is best for greeting a supervisor in the morning?`, options: ["See you tonight!", "Good morning, Sir. How are you?", "What do you want?", "Go away now."], answer: 1 },
+                    { q: `[${cleanTopic}] This achievement is ___ because we worked together as a solid team.`, options: ["our", "us", "ours", "we"], answer: 2 }
+                ];
+                return bank.sort(() => Math.random() - 0.5);
+            } else if (planetNum === 2) {
+                const easyPool = [
+                    { text: "We study English every morning", showWordHints: true },
+                    { text: "My team works very hard", showWordHints: true },
+                    { text: "Please check the water quality", showWordHints: true },
+                    { text: "Welcome to our vocational school", showWordHints: false },
+                    { text: "Safety first in the workshop", showWordHints: false }
+                ];
+                const hardPool = [
+                    { text: "Students must follow laboratory safety rules", showWordHints: true },
+                    { text: "Good communication builds strong teamwork", showWordHints: true },
+                    { text: "Always record the daily measurement data", showWordHints: true },
+                    { text: "Practice makes our skills much better", showWordHints: false },
+                    { text: "We are proud of our vocational major", showWordHints: false }
+                ];
+                return (isEasy ? easyPool : hardPool).map((item, idx) => ({
+                    text: item.text,
+                    showWordHints: idx < 3
+                }));
+            } else if (planetNum === 3) {
+                return [
+                    {
+                        topic: `Audio 1: ${cleanTopic}`,
+                        script: `Good morning, everyone. My name is Dimas, and today our class is discussing ${cleanTopic}. We start our session at eight o'clock in the school laboratory.`,
+                        question: "When does Dimas's class start the session?",
+                        options: ["A. At seven o'clock", "B. At eight o'clock", "C. At nine o'clock", "D. At ten o'clock"],
+                        answer: 1
+                    },
+                    {
+                        topic: `Audio 2: ${cleanTopic}`,
+                        script: `Hello, I am Nabila. Before doing practical work related to ${cleanTopic}, all students must wear clean uniforms and check their equipment.`,
+                        question: "What must students do before practical work?",
+                        options: ["A. Go home early", "B. Wear clean uniforms and check equipment", "C. Sleep in class", "D. Turn off the lights"],
+                        answer: 1
+                    },
+                    {
+                        topic: `Audio 3: ${cleanTopic}`,
+                        script: `Hi, my name is Galih. I enjoy learning about ${cleanTopic} because it helps me prepare for my future career after graduating from vocational high school.`,
+                        question: "Why does Galih enjoy learning the topic?",
+                        options: ["A. Because it is very short", "B. Because it helps prepare for his future career", "C. Because there is no homework", "D. Because he dislikes sports"],
+                        answer: 1
+                    },
+                    {
+                        topic: `Audio 4: ${cleanTopic}`,
+                        script: `Let me share our team plan. First, Siti will take notes, and then Arif will present our results on ${cleanTopic} in front of the teacher.`,
+                        question: "Who will present the team's results?",
+                        options: ["A. Siti", "B. Dimas", "C. Arif", "D. Nabila"],
+                        answer: 2
+                    },
+                    {
+                        topic: `Audio 5: ${cleanTopic}`,
+                        script: `Thank you for listening to our briefing about ${cleanTopic}. Remember to work carefully, cooperate with your partner, and submit your report on time.`,
+                        question: "What should students remember to do?",
+                        options: ["A. Submit their report on time", "B. Leave the tools dirty", "C. Work alone quietly", "D. Skip the briefing"],
+                        answer: 0
+                    }
+                ];
+            } else {
+                const levelNote = isHard ? "advanced technical" : "practical vocational";
+                return [
+                    {
+                        tag: "Text 1",
+                        title: `Introduction to ${cleanTopic}`,
+                        body: `At our vocational school, students actively learn ${levelNote} skills related to ${cleanTopic}. Through hands-on practice and teamwork, students gain real experience that prepares them for industry standards.`,
+                        question: `How do students gain real experience in ${cleanTopic}?`,
+                        options: ["A. By sleeping in class", "B. Through hands-on practice and teamwork", "C. By watching cartoons", "D. By skipping practice"],
+                        answer: 1
+                    },
+                    {
+                        tag: "Text 2",
+                        title: `Standard Procedures in ${cleanTopic}`,
+                        body: `Following standard operating procedures is essential during ${cleanTopic} activities. Students always inspect their tools before starting and clean the workspace after finishing their tasks.`,
+                        question: "When do students inspect their tools?",
+                        options: ["A. Before starting activities", "B. Next month", "C. After going home", "D. Only on Sunday"],
+                        answer: 0
+                    },
+                    {
+                        tag: "Text 3",
+                        title: `Team Collaboration`,
+                        body: `Every group consists of four students who share responsibilities fairly. One student records observations, while others prepare materials and verify the final quality.`,
+                        question: "How many students are in each group?",
+                        options: ["A. Two students", "B. Three students", "C. Four students", "D. Six students"],
+                        answer: 2
+                    },
+                    {
+                        tag: "Text 4",
+                        title: `Daily Monitoring & Accuracy`,
+                        body: `Accurate observation helps students detect problems early. By writing clear notes in English, students improve both their technical understanding and communication skills.`,
+                        question: "What improves when students write clear notes in English?",
+                        options: ["A. Only drawing skills", "B. Technical understanding and communication skills", "C. Running speed", "D. Cooking recipes"],
+                        answer: 1
+                    },
+                    {
+                        tag: "Text 5",
+                        title: `Future Career Readiness`,
+                        body: `Mastering ${cleanTopic} alongside English communication opens wider job opportunities. Graduates can work professionally in local enterprises or international companies.`,
+                        question: "What is the benefit of mastering the topic alongside English?",
+                        options: ["A. Shorter holidays", "B. Wider job opportunities", "C. Fewer classmates", "D. Heavier bags"],
+                        answer: 1
+                    }
+                ];
+            }
+        }
+
         async function generateQuestionsWithGeminiAI() {
             if (aiIsGenerating) return;
             aiIsGenerating = true;
@@ -4154,8 +4277,16 @@
                 setAiStatusBanner('success', `<i class="fa-solid fa-wand-magic-sparkles text-emerald-300"></i> <span>Berhasil membuat ${parsed.length} soal baru! Periksa pratinjau di bawah lalu klik <b>Terapkan &amp; Simpan Soal AI</b>.</span>`);
                 playSuccessSound();
             } catch (err) {
-                setAiStatusBanner('error', `<i class="fa-solid fa-triangle-exclamation text-rose-300"></i> <span>Gagal membuat soal: ${err.message}. Silakan gunakan tab <b>Edit Manual (Offline HTML)</b> jika offline.</span>`);
-                playErrorSound();
+                const isQuotaLimit = /quota|exceeded|429|rate-limit/i.test(String(err?.message || ''));
+                const offlineFallback = generateSmartOfflineQuestions(aiSelectedPlanet, topic, difficulty);
+                aiDraftQuestions = offlineFallback;
+                document.getElementById('btn-apply-ai-questions')?.classList.remove('hidden');
+                renderAiQuestionPreview(aiSelectedPlanet, aiDraftQuestions, true);
+                const reasonText = isQuotaLimit
+                    ? 'Kuota harian gratis Gemini API telah mencapai batas (20/hari).'
+                    : 'Koneksi Gemini API sedang sibuk/offline.';
+                setAiStatusBanner('success', `<i class="fa-solid fa-bolt text-amber-300"></i> <span>${reasonText} Otomatis menggunakan <b>Smart Offline Generator</b> (${offlineFallback.length} soal siap pakai)! Klik <b>Terapkan &amp; Simpan Soal AI</b> atau ubah di tab <b>Edit Manual</b>.</span>`);
+                playSuccessSound();
             } finally {
                 aiIsGenerating = false;
                 if (btn) btn.disabled = false;
