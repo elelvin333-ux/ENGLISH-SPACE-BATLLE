@@ -274,8 +274,8 @@
                         <span>Profil Pengembang &amp; CP</span>
                     </button>
                     <button onclick="closeHeaderDropdown(); requestPinForAction('aiQuestionEditor')" class="w-full px-3.5 py-2.5 text-xs text-fuchsia-200 hover:bg-fuchsia-500/20 hover:text-fuchsia-300 font-bold flex items-center gap-2.5 transition border-t border-slate-800/80">
-                        <i class="fa-solid fa-wand-magic-sparkles text-fuchsia-400 w-4 text-center"></i>
-                        <span>Ubah Soal (Gemini AI) <i class="fa-solid fa-lock text-[9px] text-amber-300 ml-0.5"></i></span>
+                        <i class="fa-solid fa-pen-to-square text-fuchsia-400 w-4 text-center"></i>
+                        <span>Ubah Soal (Manual HTML &amp; AI) <i class="fa-solid fa-lock text-[9px] text-amber-300 ml-0.5"></i></span>
                     </button>
                 </div>
             </div>
@@ -761,15 +761,17 @@
                         <div id="p4-passage-body" class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 text-slate-200 text-sm leading-relaxed"></div>
                     </div>
                     <div class="text-[11px] text-slate-400 italic">
-                        🐟 Contextual Material for Fisheries Agribusiness (+100 Points / Correct Answer).
+                        Read the passage carefully, then answer the question on the right.
                     </div>
                 </div>
 
                 <div class="glass-card rounded-3xl p-5 border border-amber-400/40 flex flex-col justify-between space-y-4">
                     <div class="space-y-3">
-                        <span class="text-xs font-bold text-amber-300 uppercase">Reading Comprehension Question:</span>
-                        <p id="p4-question-text" class="text-base sm:text-lg font-extrabold text-white"></p>
-                        <div id="p4-options-list" class="space-y-2.5"></div>
+                        <span class="px-3 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold">
+                            Comprehension Question
+                        </span>
+                        <p id="p4-question-text" class="text-base sm:text-lg font-extrabold text-white leading-snug"></p>
+                        <div id="p4-options-list" class="space-y-2.5 pt-1"></div>
                     </div>
                     <div id="p4-feedback-box" class="hidden p-3.5 rounded-2xl text-xs font-bold"></div>
                 </div>
@@ -778,155 +780,321 @@
 
     </main>
 
-    <!-- MODAL TAKE THE POINTS -->
-    <div id="take-points-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="glass-card rounded-3xl max-w-md w-full p-6 border-2 border-amber-400 text-center space-y-4">
-            <h3 class="font-game text-2xl font-bold text-amber-300">ARE YOU SURE YOU WANT TO STOP?</h3>
-            <p class="text-sm text-slate-200">
-                You have secured <span id="secured-points-text" class="font-extrabold text-emerald-400">0</span> points.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-2 pt-2">
-                <button onclick="closeTakePointsModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-600">
-                    CONTINUE PLAYING
-                </button>
-                <button onclick="confirmTakePoints()" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-extrabold text-xs shadow-lg">
-                    TAKE THE POINTS 💰
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- PLANET MISSION SUMMARY MODAL -->
+    <!-- SUMMARY MODAL (PLANET COMPLETE) -->
     <div id="summary-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="glass-card rounded-3xl max-w-lg w-full p-6 border-2 border-emerald-400 text-center space-y-4">
-            <div class="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 mx-auto flex items-center justify-center text-3xl">
-                🏆
+        <div class="glass-card rounded-3xl max-w-md w-full p-6 border-2 border-amber-400 text-center space-y-4 shadow-2xl">
+            <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-400 mx-auto flex items-center justify-center text-3xl text-amber-300">
+                <i class="fa-solid fa-trophy"></i>
             </div>
-            <h3 id="summary-title" class="font-game text-2xl font-bold text-amber-300">MISSION COMPLETE!</h3>
-            <p id="summary-subtitle" class="text-xs sm:text-sm text-slate-200"></p>
-            <div id="summary-details" class="p-4 rounded-2xl bg-slate-900/90 border border-slate-700 text-left text-xs text-slate-300 space-y-1.5 max-h-52 overflow-y-auto"></div>
-            <button onclick="finishPlanetSummary()" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-extrabold text-xs shadow-lg">
-                RETURN TO GALAXY MAP &amp; CONTINUE <i class="fa-solid fa-shuttle-space ml-1"></i>
+            <div class="space-y-1">
+                <h3 id="summary-title" class="font-game text-2xl font-bold text-amber-300">MISSION COMPLETE!</h3>
+                <p id="summary-subtitle" class="text-xs sm:text-sm text-sky-200 font-bold"></p>
+            </div>
+            <div id="summary-details" class="max-h-40 overflow-y-auto text-left text-xs text-slate-300 bg-slate-950/80 border border-slate-800 rounded-2xl p-3 space-y-1"></div>
+            <button onclick="finishPlanetSummary()" class="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-game font-extrabold text-sm shadow-lg transition">
+                CONTINUE TO NEXT PLANET 🚀
             </button>
         </div>
     </div>
 
-    <!-- MODAL LEADERBOARD & GOOGLE SHEETS SYNC -->
-    <div id="leaderboard-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="glass-card rounded-3xl max-w-3xl w-full p-5 sm:p-6 border-2 border-amber-400 space-y-4 max-h-[92vh] overflow-y-auto">
-            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <div class="flex items-center space-x-3">
-                    <div class="w-11 h-11 rounded-2xl bg-amber-500/20 border border-amber-400 text-amber-300 flex items-center justify-center text-2xl shadow">
+    <!-- TAKE THE POINTS CONFIRMATION MODAL -->
+    <div id="take-points-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="glass-card rounded-3xl max-w-sm w-full p-6 border-2 border-amber-400 text-center space-y-4 shadow-2xl">
+            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400 mx-auto flex items-center justify-center text-2xl text-amber-300">
+                💰
+            </div>
+            <h3 class="font-game text-xl font-bold text-amber-300">SECURE YOUR POINTS?</h3>
+            <p class="text-xs text-slate-300">
+                You will secure <span id="secured-points-text" class="font-extrabold text-amber-300">0</span> Points and complete this planet mission immediately.
+            </p>
+            <div class="flex gap-2">
+                <button onclick="closeTakePointsModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600">
+                    Keep Playing
+                </button>
+                <button onclick="confirmTakePoints()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg">
+                    YES, TAKE POINTS
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- LEADERBOARD & GOOGLE SHEETS MODAL -->
+    <div id="leaderboard-modal" onclick="if(event.target === this) closeLeaderboardModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[110] p-3 sm:p-5">
+        <div class="glass-card rounded-3xl max-w-4xl w-full p-5 sm:p-6 border-2 border-amber-400/80 shadow-2xl flex flex-col max-h-[90vh] space-y-4">
+            <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-600 flex items-center justify-center text-slate-950 text-xl shadow-lg">
                         <i class="fa-solid fa-trophy"></i>
                     </div>
                     <div class="text-left">
-                        <h3 class="font-game text-lg sm:text-xl font-bold text-amber-300 leading-tight">GALAXY LEADERBOARD &amp; GOOGLE SHEETS</h3>
-                        <p class="text-[11px] text-slate-300">Space Captain Rankings (Saved Locally &amp; Cloud Sheet)</p>
+                        <h3 class="font-game text-lg sm:text-xl font-bold text-amber-300">GALAXY CAPTAIN LEADERBOARD</h3>
+                        <span id="sheet-sync-badge" class="text-[10px] font-extrabold text-sky-300">💾 LOCAL + READY FOR APPS SCRIPT</span>
                     </div>
-                </div>
-                <button onclick="closeLeaderboardModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center border border-slate-600">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
-            </div>
-
-            <div class="bg-slate-900/90 border border-emerald-500/40 rounded-2xl p-3 flex flex-wrap justify-between items-center gap-2 text-xs">
-                <div class="flex items-center gap-2">
-                    <span id="sheet-sync-badge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-extrabold text-[10px]">
-                        📊 HYBRID MODE (LOCAL + GOOGLE SHEET)
-                    </span>
-                    <span id="sheet-sync-status-text" class="text-slate-300 text-[11px]">
-                        Data is saved automatically on this device &amp; ready to sync to Google Sheet.
-                    </span>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <a href="https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 border border-teal-400/60 text-teal-200 font-bold text-[11px] transition flex items-center gap-1">
-                        <i class="fa-solid fa-table"></i> Open Google Sheet
-                    </a>
-                    <button onclick="exportLeaderboardToCSV()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1">
-                        <i class="fa-solid fa-file-csv"></i> Download CSV
+                    <button onclick="syncAllToGoogleSheet(true)" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-rotate mr-1"></i> Sync Now
                     </button>
-                    <button onclick="requestPinForAction('sheetSetup')" class="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-300 font-bold text-[11px] transition flex items-center gap-1">
-                        <i class="fa-solid fa-lock text-amber-300"></i> <i class="fa-solid fa-gear"></i> Cloud Sheet Setup (PIN)
+                    <button onclick="exportLeaderboardToCSV()" class="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-200 font-bold text-xs transition">
+                        <i class="fa-solid fa-file-csv mr-1"></i> Download CSV
                     </button>
-                    <button onclick="syncAllToGoogleSheet(true)" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 font-bold text-[11px] transition flex items-center gap-1">
-                        <i class="fa-solid fa-rotate"></i> Sync Now
+                    <button onclick="requestPinForAction('sheetSetup')" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 font-bold text-xs transition">
+                        <i class="fa-solid fa-cloud-arrow-up mr-1"></i> Cloud Sheet (PIN)
+                    </button>
+                    <button onclick="closeLeaderboardModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center border border-slate-600">
+                        <i class="fa-solid fa-xmark"></i>
                     </button>
                 </div>
             </div>
 
-            <div id="sheet-setup-panel" class="hidden bg-slate-950 border border-sky-500/50 rounded-2xl p-4 space-y-3 text-left text-xs">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <h4 class="font-bold text-sky-300 text-sm">🔗 Automatic Google Sheets Connection (Apps Script)</h4>
-                        <p class="text-[11px] text-slate-400 mt-0.5">
-                            Target Sheet is configured. Follow these 3 one-time setup steps to auto-sync student scores:
-                        </p>
-                    </div>
-                    <button onclick="toggleSheetSetupPanel()" class="text-slate-400 hover:text-white text-xs">Close ▲</button>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
-                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Step 1: Open Your Sheet</span>
-                        Open the <a href="https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-sky-300 underline font-bold">Target Google Sheet</a>, then click <b>Extensions &gt; Apps Script</b>.
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Step 2: Paste &amp; Deploy</span>
-                        Click <b>Copy Auto Script Code</b> below, paste it in Apps Script, then click <b>Deploy &gt; New Deployment &gt; Web App</b> (Access: <i>Anyone</i>).
-                    </div>
-                    <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Step 3: Paste Web App URL</span>
-                        Paste the Web App URL (<code>https://script.google.com/macros/s/.../exec</code>) below and click <b>Save &amp; Connect</b>.
-                    </div>
-                </div>
-
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="copyAppsScriptCode()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow flex items-center gap-1.5">
-                        <i class="fa-solid fa-copy"></i> Copy Auto Sheet Apps Script Code
+            <div id="sheet-setup-panel" class="hidden p-3.5 rounded-2xl bg-slate-900/95 border border-amber-400/40 space-y-2.5 text-left text-xs">
+                <div class="flex flex-wrap justify-between items-center gap-2">
+                    <span class="font-extrabold text-amber-300">☁️ Google Sheets Apps Script Integration (Teacher Setup)</span>
+                    <button onclick="copyAppsScriptCode()" class="px-3 py-1 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-[11px]">
+                        <i class="fa-solid fa-copy mr-1"></i> Copy Apps Script Code
                     </button>
-                    <span id="copy-script-feedback" class="text-[11px] font-bold text-emerald-400 hidden">✅ Code copied successfully!</span>
                 </div>
-
-                <div class="pt-1 space-y-1.5">
-                    <label class="block text-[11px] font-bold text-sky-300">Your Google Apps Script Web App URL:</label>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input id="input-google-sheet-url" type="url" placeholder="https://script.google.com/macros/s/AKfycb.../exec"
-                               class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
-                        <button onclick="saveGoogleSheetUrl()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-extrabold text-xs shadow">
-                            Save &amp; Connect
-                        </button>
-                    </div>
+                <p id="copy-script-feedback" class="hidden text-emerald-300 text-[11px] font-bold">✅ Apps Script code copied to clipboard!</p>
+                <div class="flex flex-col sm:flex-row gap-2">
+                    <input id="input-google-sheet-url" type="text" placeholder="Paste Google Apps Script Web App URL (https://script.google.com/macros/s/.../exec)" class="flex-1 px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs">
+                    <button onclick="saveGoogleSheetUrl()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs">
+                        Save &amp; Connect
+                    </button>
                 </div>
             </div>
 
-            <div class="overflow-y-auto max-h-[300px] rounded-2xl border border-slate-700 bg-slate-950/70">
-                <table class="w-full text-left border-collapse text-xs">
-                    <thead>
-                        <tr class="bg-slate-900 text-sky-300 border-b border-slate-700 uppercase text-[10px] tracking-wider">
-                            <th class="py-2.5 px-3 text-center">#</th>
+            <p id="sheet-sync-status-text" class="text-slate-300 text-[11px] text-left">Data is saved locally. Connect your Apps Script URL to auto-sync to Google Sheet.</p>
+
+            <div class="flex-1 overflow-y-auto rounded-2xl border border-slate-800 bg-slate-950/90">
+                <table class="w-full text-left text-xs">
+                    <thead class="bg-slate-900 text-sky-300 uppercase text-[10px] border-b border-slate-800">
+                        <tr>
+                            <th class="py-2.5 px-3 text-center">Rank</th>
                             <th class="py-2.5 px-3">Captain Name</th>
-                            <th class="py-2.5 px-3">Class</th>
-                            <th class="py-2.5 px-3 text-center">Missions</th>
-                            <th class="py-2.5 px-3 text-right">Total Score</th>
-                            <th class="py-2.5 px-3 text-center">Sheet Status</th>
+                            <th class="py-2.5 px-3">Class / Major</th>
+                            <th class="py-2.5 px-3 text-center">Planets</th>
+                            <th class="py-2.5 px-3 text-right">Score</th>
+                            <th class="py-2.5 px-3 text-center">Status</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-tbody" class="divide-y divide-slate-800/80 text-slate-200"></tbody>
                 </table>
             </div>
 
-            <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
-                <span class="text-[11px] text-slate-400">
-                    <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> Scores are saved automatically after completing each planet mission.
-                </span>
-                <div class="flex gap-2">
-                    <button onclick="clearLeaderboardData()" class="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-xs transition">
-                        <i class="fa-solid fa-trash-can mr-1"></i> Reset Local Data
+            <div class="flex justify-between items-center pt-1">
+                <button onclick="clearLeaderboardData()" class="px-3 py-1.5 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 text-xs font-bold">
+                    <i class="fa-solid fa-trash mr-1"></i> Clear Local Records
+                </button>
+                <button onclick="closeLeaderboardModal()" class="px-5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs border border-slate-600">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL STUDIO UBAH SOAL (MANUAL HTML & GEMINI AI - KHUSUS GURU) -->
+    <div id="ai-question-modal" onclick="if(event.target === this) closeAiQuestionModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[130] p-3 sm:p-5">
+        <div class="glass-card rounded-3xl max-w-4xl w-full p-5 sm:p-6 border-2 border-fuchsia-400/80 shadow-[0_0_55px_rgba(232,121,249,0.3)] flex flex-col max-h-[92vh] space-y-3.5">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-sky-500 flex items-center justify-center text-white text-xl shadow-lg border border-fuchsia-300/50">
+                        <i class="fa-solid fa-pen-ruler"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-game text-lg sm:text-xl font-bold text-fuchsia-300 leading-tight">
+                            STUDIO UBAH SOAL — MODE MANUAL HTML &amp; GEMINI AI
+                        </h3>
+                        <p class="text-[11px] text-slate-300">
+                            Ubah soal secara langsung (100% offline di file .html) atau buat otomatis dengan Gemini AI, lalu unduh HTML siap pakai
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeAiQuestionModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-600 transition" title="Tutup">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Tab Pilih Planet -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800">
+                <button id="ai-tab-1" onclick="selectAiPlanetTab(1)" class="py-2 px-2.5 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow">
+                    🟣 Planet 1 (PG)
+                </button>
+                <button id="ai-tab-2" onclick="selectAiPlanetTab(2)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                    ☀️ Planet 2 (Dikte)
+                </button>
+                <button id="ai-tab-3" onclick="selectAiPlanetTab(3)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                    🌙 Planet 3 (Audio)
+                </button>
+                <button id="ai-tab-4" onclick="selectAiPlanetTab(4)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                    ⭐ Planet 4 (Bacaan)
+                </button>
+            </div>
+
+            <!-- Pemilih Mode: Edit Manual Offline (HTML) vs Generator Gemini AI -->
+            <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-900/90 border border-slate-700 rounded-2xl p-2.5">
+                <div class="flex items-center gap-1.5">
+                    <button type="button" id="studio-mode-manual-btn" onclick="switchQuestionStudioMode('manual')" class="px-3.5 py-2 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow flex items-center gap-1.5">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Manual (Offline HTML)
                     </button>
-                    <button onclick="closeLeaderboardModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-600 text-white font-extrabold text-xs shadow">
-                        Close
+                    <button type="button" id="studio-mode-ai-btn" onclick="switchQuestionStudioMode('ai')" class="px-3.5 py-2 rounded-xl font-bold text-xs transition bg-slate-800 hover:bg-slate-700 text-fuchsia-200 border border-fuchsia-400/40 flex items-center gap-1.5">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i> Buat Otomatis (Gemini AI)
                     </button>
                 </div>
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <button type="button" onclick="downloadStandaloneUpdatedHtml()" class="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1.5" title="Unduh file .html mandiri yang sudah tertanam soal baru untuk dibagikan ke siswa">
+                        <i class="fa-solid fa-file-code"></i> Unduh File HTML Baru
+                    </button>
+                    <button type="button" onclick="exportAllQuestionBanksJSON()" class="px-2.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-200 font-bold text-[11px] transition flex items-center gap-1" title="Ekspor Soal ke JSON">
+                        <i class="fa-solid fa-file-export"></i> Ekspor JSON
+                    </button>
+                    <button type="button" onclick="document.getElementById('import-questions-input').click()" class="px-2.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-200 font-bold text-[11px] transition flex items-center gap-1" title="Impor Soal dari JSON">
+                        <i class="fa-solid fa-file-import"></i> Impor JSON
+                    </button>
+                    <input type="file" id="import-questions-input" accept=".json,application/json" class="hidden" onchange="importAllQuestionBanksJSON(event)">
+                    <button type="button" onclick="resetPlanetQuestionsToDefault()" class="px-2.5 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-[11px] transition flex items-center gap-1" title="Kembalikan Soal Bawaan">
+                        <i class="fa-solid fa-rotate-left"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL 1: EDITOR MANUAL LANGSUNG (100% OFFLINE DI FILE HTML) -->
+            <div id="manual-editor-toolbar" class="bg-emerald-500/10 border border-emerald-400/40 rounded-2xl p-3 flex flex-wrap justify-between items-center gap-2 text-xs">
+                <div class="text-left">
+                    <span class="font-extrabold text-emerald-300 block"><i class="fa-solid fa-circle-check mr-1"></i> Mode Edit Manual Aktif (Bekerja 100% Tanpa Internet di File .HTML)</span>
+                    <span class="text-[11px] text-slate-300">Ubah teks soal, pilihan jawaban, kunci jawaban, atau tambah/hapus soal di bawah, lalu klik <b>Simpan Perubahan Soal</b>.</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button type="button" onclick="addManualQuestionItem()" class="px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs shadow transition flex items-center gap-1">
+                        <i class="fa-solid fa-plus"></i> Tambah Soal Baru
+                    </button>
+                    <button type="button" onclick="saveManualEditedQuestions()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan Soal
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANEL 2: PENGATURAN PROMPT GEMINI AI -->
+            <div id="ai-generator-panel" class="hidden bg-slate-900/90 border border-fuchsia-500/35 rounded-2xl p-3.5 space-y-2.5 text-left text-xs">
+                <div class="p-2.5 rounded-xl bg-slate-950/90 border border-amber-400/35 space-y-1.5">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <span class="text-[11px] font-extrabold text-amber-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-key"></i> Kunci API Gemini (Wajib Jika Online di GitHub Pages / File HTML)
+                        </span>
+                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-[10px] text-sky-300 underline font-bold hover:text-sky-200">
+                            Dapatkan API Key Gratis ↗
+                        </a>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input id="ai-custom-api-key" type="password" placeholder="Tempel Gemini API Key (AIzaSy...) — Kosongkan jika di mode Preview ini"
+                               class="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-amber-200 text-xs focus:outline-none focus:border-amber-400">
+                        <button type="button" onclick="saveCustomGeminiApiKey()" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] shadow transition">
+                            Simpan API Key
+                        </button>
+                    </div>
+                    <p id="ai-apikey-status" class="text-[10px] text-slate-400">
+                        <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> API Key disimpan aman di browser perangkat ini.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                    <div class="sm:col-span-2 space-y-1">
+                        <label for="ai-topic-input" class="block font-bold text-fuchsia-300 uppercase text-[10px]">
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Topik / Materi Soal Gemini AI:
+                        </label>
+                        <input id="ai-topic-input" type="text" placeholder="Contoh: Simple Present Tense & Daily Activities di SMK"
+                               class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-fuchsia-400">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="ai-difficulty-select" class="block font-bold text-sky-300 uppercase text-[10px]">
+                            <i class="fa-solid fa-layer-group mr-1"></i> Tingkat Kesulitan:
+                        </label>
+                        <select id="ai-difficulty-select" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
+                            <option value="Mudah (SMK Kelas X Dasar / A1-A2)">Mudah (A1-A2 Dasar)</option>
+                            <option value="Sedang (SMK Kelas X-XI / A2-B1)" selected>Sedang (A2-B1 Standar)</option>
+                            <option value="Sulit (SMK Kelas XI-XII / B1-B2)">Sulit (B1-B2 Tantangan)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
+                    <button id="btn-generate-ai-questions" onclick="generateQuestionsWithGeminiAI()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-2">
+                        <i class="fa-solid fa-sparkles"></i>
+                        <span>Buat Soal Baru dengan Gemini AI</span>
+                    </button>
+                    <span class="text-[10px] text-slate-400">Jika server AI padat, gunakan tab <b>Edit Manual (Offline HTML)</b> di atas.</span>
+                </div>
+            </div>
+
+            <!-- Status / Loading Indicator -->
+            <div id="ai-status-banner" class="hidden p-2.5 rounded-xl text-xs font-bold flex items-center gap-2"></div>
+
+            <!-- Area Form Edit Manual / Pratinjau Soal -->
+            <div class="flex-1 overflow-y-auto pr-1 space-y-2 text-left">
+                <div class="flex justify-between items-center">
+                    <span id="ai-preview-heading" class="text-[11px] font-extrabold text-amber-300 uppercase tracking-wider">
+                        ✏️ Edit Langsung Soal Planet 1:
+                    </span>
+                    <span id="ai-preview-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[10px] font-bold">
+                        Mode Edit Manual HTML
+                    </span>
+                </div>
+                <div id="ai-questions-preview-list" class="space-y-2.5 text-xs"></div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="flex flex-wrap justify-between items-center gap-2 pt-2 border-t border-slate-700">
+                <span class="text-[11px] text-slate-400">
+                    <i class="fa-solid fa-lightbulb text-amber-300 mr-1"></i> Klik <b>Unduh File HTML Baru</b> untuk menyimpan file `.html` mandiri berisi soal terbaru.
+                </span>
+                <div class="flex gap-2">
+                    <button onclick="closeAiQuestionModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600 transition">
+                        Tutup
+                    </button>
+                    <button id="btn-save-manual-footer" onclick="saveManualEditedQuestions()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan Soal
+                    </button>
+                    <button id="btn-apply-ai-questions" onclick="applyGeneratedAiQuestions()" class="hidden px-5 py-2 rounded-xl bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-check-double"></i> Terapkan &amp; Simpan Soal AI
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- POP-UP MODAL KHUSUS INPUT SOAL BARU SECARA MANUAL -->
+    <div id="add-manual-question-modal" onclick="if(event.target === this) closeAddManualQuestionModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[140] p-3 sm:p-5">
+        <div class="glass-card rounded-3xl max-w-2xl w-full p-5 sm:p-6 border-2 border-sky-400/80 shadow-[0_0_55px_rgba(56,189,248,0.35)] flex flex-col max-h-[90vh] space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center text-slate-950 text-lg shadow-lg">
+                        <i class="fa-solid fa-file-circle-plus"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 id="add-manual-modal-title" class="font-game text-lg sm:text-xl font-bold text-sky-300 leading-tight">
+                            TAMBAH SOAL MANUAL BARU
+                        </h3>
+                        <p id="add-manual-modal-subtitle" class="text-[11px] text-slate-300">
+                            Isi form soal baru di bawah ini, lalu klik Tambahkan Soal
+                        </p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeAddManualQuestionModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-600 transition" title="Tutup">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <div id="add-manual-form-body" class="overflow-y-auto pr-1 space-y-3 text-left text-xs flex-1"></div>
+
+            <p id="add-manual-error-msg" class="hidden p-2.5 rounded-xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold"></p>
+
+            <div class="flex justify-end items-center gap-2 pt-2 border-t border-slate-700">
+                <button type="button" onclick="closeAddManualQuestionModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600 transition">
+                    Batal
+                </button>
+                <button type="button" onclick="submitNewManualQuestionModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 via-cyan-400 to-emerald-400 hover:from-sky-300 hover:to-emerald-300 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus-circle"></i> Tambahkan Soal ke Daftar
+                </button>
             </div>
         </div>
     </div>
@@ -1423,14 +1591,14 @@
                         Tutup
                     </button>
                     <button id="btn-apply-ai-questions" onclick="applyGeneratedAiQuestions()" class="hidden px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-check-double"></i> Terapkan &amp; Simpan Soal ke Game
+                    <button onclick="closeDeveloperModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-lg transition">
+                        Tutup Profil
                     </button>
                 </div>
             </div>
         </div>
-    </div>
 
-    <script>
+        <script>
         /* ==========================================================================
            GLOBAL STATE, DROPDOWN & SOUND ENGINE
            ========================================================================== */
@@ -1453,6 +1621,13 @@
         let progressiveLockMode = true;
         const ADMIN_SECURITY_PIN = "1234";
         let pendingPinAction = null;
+        let isViewportFullscreenFallback = false;
+
+        // Planet 1 & Planet 2 runtime state variables
+        let p1Index = 0, p1CorrectCount = 0, p1CurrentPrize = 0, p1Locked = false, p1Logs = [];
+        let p1Lifelines = { fifty: false, phone: false, audience: false };
+        let p2Round = 0, p2CorrectCount = 0, p2EarnedPoints = 0, bwAttempts = 0;
+        let balloons = [], balloonAnimId = null, p2PickedPlanetIndices = [], p2CanvasListenerAdded = false, p2BgStars = [];
 
         let leaderboardRecords = [];
         const LEADERBOARD_STORAGE_KEY = 'english_space_battle_leaderboard_v1';
@@ -2507,6 +2682,28 @@
         function closeStationFinaleModal() { document.getElementById('station-finale-modal')?.classList.add('hidden'); }
         function closePlanetModal() { document.getElementById('planet-modal')?.classList.add('hidden'); }
 
+        function initPlanet1() {
+            if (p1Index >= millionaireQuestions.length) {
+                p1Index = 0; p1CorrectCount = 0; p1CurrentPrize = 0; p1Logs = [];
+            }
+            p1Locked = false;
+            showScreen('planet1-screen');
+            renderPlanet1Question();
+        }
+
+        function initPlanet2() {
+            if (!Array.isArray(dictationSentences) || dictationSentences.length === 0) {
+                dictationSentences = JSON.parse(JSON.stringify(DEFAULT_QUESTION_BANKS[2]));
+            }
+            if (p2Round >= dictationSentences.length) {
+                p2Round = 0; p2CorrectCount = 0; p2EarnedPoints = 0; bwAttempts = 0;
+            }
+            showScreen('planet2-screen');
+            initPlanet2CanvasClick();
+            setupBalloonRound();
+            startBalloonLoop();
+        }
+
         function launchSelectedPlanet() {
             closePlanetModal();
             if (selectedPlanetTarget === 1) initPlanet1();
@@ -2568,20 +2765,12 @@
             { q: "My friends and I love aquaculture. This hatchery project is ___.", options: ["our", "ours", "us", "we"], answer: 1 },
             { q: "Siti: 'How do you do, Captain?' — Andi: '___'", options: ["I am doing homework.", "How do you do?", "No, thank you.", "See you yesterday."], answer: 1 }
         ];
-
-        let p1Index = 0, p1CorrectCount = 0, p1CurrentPrize = 0, p1Locked = false, p1Logs = [];
-        let p1Lifelines = { fifty: false, phone: false, audience: false };
-
-        function initPlanet1() {
-            p1Locked = false;
-            const b50 = document.getElementById('lifeline-5050');
-            if (b50) { b50.disabled = p1Lifelines.fifty; b50.classList.toggle('opacity-40', p1Lifelines.fifty); }
-            const bp = document.getElementById('lifeline-phone');
-            if (bp) { bp.disabled = p1Lifelines.phone; bp.classList.toggle('opacity-40', p1Lifelines.phone); }
-            const ba = document.getElementById('lifeline-audience');
-            if (ba) { ba.disabled = p1Lifelines.audience; ba.classList.toggle('opacity-40', p1Lifelines.audience); }
-            showScreen('planet1-screen');
-            renderPlanet1Question();
+        // Penanda otomatis untuk penyisipan soal mandiri pada file HTML yang diunduh
+        /* EMBEDDED_CUSTOM_QUESTIONS_START */
+        const EMBEDDED_CUSTOM_QUESTIONS = null;
+        /* EMBEDDED_CUSTOM_QUESTIONS_END */
+        if (EMBEDDED_CUSTOM_QUESTIONS) {
+            if (Array.isArray(EMBEDDED_CUSTOM_QUESTIONS[1]) && EMBEDDED_CUSTOM_QUESTIONS[1].length > 0) millionaireQuestions = EMBEDDED_CUSTOM_QUESTIONS[1];
         }
 
         function renderPlanet1Ladder() {
@@ -2708,15 +2897,8 @@
             { text: "Nice to meet you", showWordHints: false },
             { text: "I love big fish", showWordHints: false }
         ];
-
-        let p2Round = 0, p2CorrectCount = 0, p2EarnedPoints = 0, bwAttempts = 0;
-        let balloons = [], p2PickedPlanetIndices = [], balloonAnimId = null, p2CanvasListenerAdded = false;
-        let p2BgStars = [];
-
-        function initPlanet2() {
-            document.getElementById('btn-take-points-p2')?.classList.add('hidden');
-            showScreen('planet2-screen');
-            setTimeout(() => { initPlanet2CanvasClick(); setupBalloonRound(); startBalloonLoop(); }, 100);
+        if (EMBEDDED_CUSTOM_QUESTIONS && Array.isArray(EMBEDDED_CUSTOM_QUESTIONS[2]) && EMBEDDED_CUSTOM_QUESTIONS[2].length > 0) {
+            dictationSentences = EMBEDDED_CUSTOM_QUESTIONS[2];
         }
 
         function handlePlanet2CanvasInteract(clientX, clientY) {
@@ -2777,10 +2959,16 @@
 
         function setupBalloonRound() {
             if (!document.getElementById('balloon-canvas')) return;
+            if (!Array.isArray(dictationSentences) || dictationSentences.length === 0) {
+                dictationSentences = JSON.parse(JSON.stringify(DEFAULT_QUESTION_BANKS[2]));
+            }
+            if (p2Round < 0 || p2Round >= dictationSentences.length) {
+                p2Round = 0;
+            }
             bwAttempts = 0; p2PickedPlanetIndices = [];
-            const item = dictationSentences[p2Round];
+            const item = dictationSentences[p2Round] || { text: "Hello my name is Andi", showWordHints: true };
 
-            document.getElementById('p2-round-badge').innerText = item.showWordHints ? `Question ${p2Round + 1}/5 (Word Hints)` : `Question ${p2Round + 1}/5 (Pure Dictation)`;
+            document.getElementById('p2-round-badge').innerText = item.showWordHints ? `Question ${p2Round + 1}/${dictationSentences.length} (Word Hints)` : `Question ${p2Round + 1}/${dictationSentences.length} (Pure Dictation)`;
             document.getElementById('p2-instruction-text').innerText = item.showWordHints ? `Listen to the audio, then tap/click the floating word planets!` : `Listen to the audio, then type the sentence you hear!`;
             document.getElementById('p2-attempts-badge').innerText = `Attempts: 2x`;
             document.getElementById('p2-feedback-box').classList.add('hidden');
@@ -2928,7 +3116,7 @@
             if (p2Round < dictationSentences.length) setupBalloonRound();
             else {
                 if (balloonAnimId) cancelAnimationFrame(balloonAnimId);
-                showSummaryModal("PLANET 2 COMPLETE!", `Correct: ${p2CorrectCount}/5 | Points: +${p2EarnedPoints}`, "", 2);
+                showSummaryModal("PLANET 2 COMPLETE!", `Correct: ${p2CorrectCount}/${dictationSentences.length} | Points: +${p2EarnedPoints}`, "", 2);
             }
         }
 
@@ -2942,9 +3130,15 @@
             { topic: "Question 4: School and Major", script: "Let me introduce myself. My name is Rina. I am a student in the fisheries department. I enjoy learning about fish cultivation. In the future, I want to become a successful fish farmer.", question: "What does Rina want to become in the future?", options: ["A. A teacher", "B. A doctor", "C. A fish farmer", "D. A police officer"], answer: 2 },
             { topic: "Question 5: Future Plans", script: "Hello, my name is Fajar. I am seventeen years old. I live in South Sulawesi. My favorite subject is English because I want to speak with people from other countries. I hope to work in an international company someday.", question: "Why does Fajar like English?", options: ["A. Because he wants to travel every day.", "B. Because he wants to speak with people from other countries.", "C. Because he wants to become a football player.", "D. Because he wants to study mathematics."], answer: 1 }
         ];
+        if (EMBEDDED_CUSTOM_QUESTIONS && Array.isArray(EMBEDDED_CUSTOM_QUESTIONS[3]) && EMBEDDED_CUSTOM_QUESTIONS[3].length > 0) {
+            listeningQuestions = EMBEDDED_CUSTOM_QUESTIONS[3];
+        }
 
         let p3Index = 0, p3CorrectCount = 0, p3EarnedPoints = 0, p3Locked = false;
         function initPlanet3() {
+            if (p3Index >= listeningQuestions.length) {
+                p3Index = 0; p3CorrectCount = 0; p3EarnedPoints = 0;
+            }
             p3Locked = false;
             document.getElementById('btn-take-points-p3')?.classList.add('hidden');
             showScreen('planet3-screen');
@@ -2953,7 +3147,7 @@
         function renderPlanet3Question() {
             p3Locked = false;
             const item = listeningQuestions[p3Index];
-            document.getElementById('p3-counter').innerText = `Audio ${p3Index + 1} / 5`;
+            document.getElementById('p3-counter').innerText = `Audio ${p3Index + 1} / ${listeningQuestions.length}`;
             document.getElementById('p3-topic-badge').innerText = item.topic;
             document.getElementById('p3-question-text').innerText = item.question;
             document.getElementById('p3-feedback-box').classList.add('hidden');
@@ -2982,7 +3176,7 @@
             setTimeout(() => {
                 p3Index++;
                 if (p3Index < listeningQuestions.length) renderPlanet3Question();
-                else showSummaryModal("PLANET 3 COMPLETE!", `Correct: ${p3CorrectCount}/5 | Points: +${p3EarnedPoints}`, "", 3);
+                else showSummaryModal("PLANET 3 COMPLETE!", `Correct: ${p3CorrectCount}/${listeningQuestions.length} | Points: +${p3EarnedPoints}`, "", 3);
             }, 2200);
         }
 
@@ -2996,9 +3190,15 @@
             { tag: "Text 4", title: "Fish Feeding Schedule", body: "We feed the fish twice a day: at 8:00 AM and 4:00 PM using high-protein floating pellets. We must not overfeed to keep water clean.", question: "When do students feed the fish?", options: ["A. Once a week", "B. Twice a day", "C. At midnight", "D. Never"], answer: 1 },
             { tag: "Text 5", title: "Harvesting Day in Sinjai", body: "After 3-4 months, we harvest the fish, grade them by size, and pack them in oxygenated plastic bags for buyers in Sinjai.", question: "How are live fish packed for delivery?", options: ["A. Paper boxes", "B. Oxygenated plastic bags", "C. Backpacks", "D. Buckets"], answer: 1 }
         ];
+        if (EMBEDDED_CUSTOM_QUESTIONS && Array.isArray(EMBEDDED_CUSTOM_QUESTIONS[4]) && EMBEDDED_CUSTOM_QUESTIONS[4].length > 0) {
+            readingPassages = EMBEDDED_CUSTOM_QUESTIONS[4];
+        }
 
         let p4Index = 0, p4CorrectCount = 0, p4EarnedPoints = 0, p4Locked = false;
         function initPlanet4() {
+            if (p4Index >= readingPassages.length) {
+                p4Index = 0; p4CorrectCount = 0; p4EarnedPoints = 0;
+            }
             p4Locked = false;
             document.getElementById('btn-take-points-p4')?.classList.add('hidden');
             showScreen('planet4-screen');
@@ -3007,7 +3207,7 @@
         function renderPlanet4Question() {
             p4Locked = false;
             const item = readingPassages[p4Index];
-            document.getElementById('p4-counter').innerText = `Text ${p4Index + 1} / 5`;
+            document.getElementById('p4-counter').innerText = `Text ${p4Index + 1} / ${readingPassages.length}`;
             document.getElementById('p4-passage-tag').innerText = item.tag;
             document.getElementById('p4-passage-title').innerText = item.title;
             document.getElementById('p4-passage-body').innerText = item.body;
@@ -3247,506 +3447,417 @@
         let aiSelectedPlanet = 1;
         let aiDraftQuestions = null;
         let aiIsGenerating = false;
+        let studioCurrentMode = 'manual'; // 'manual' | 'ai'
+        let manualEditingItems = [];
+        let editingManualQuestionIndex = -1;
 
-        function getStoredGeminiApiKey() {
-            try {
-                return (localStorage.getItem(GEMINI_API_KEY_STORAGE_KEY) || '').trim();
-            } catch (e) {
-                return '';
-            }
+        function escapeHtmlAttr(str) {
+            return String(str ?? '')
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
         }
 
-        function saveCustomGeminiApiKey() {
-            const input = document.getElementById('ai-custom-api-key');
-            const statusEl = document.getElementById('ai-apikey-status');
-            const val = (input?.value || '').trim();
-            try {
-                if (val) {
-                    localStorage.setItem(GEMINI_API_KEY_STORAGE_KEY, val);
-                    if (statusEl) {
-                        statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> API Key Gemini berhasil disimpan di browser! Siap digunakan secara online di GitHub / HTML.';
-                        statusEl.className = 'text-[10px] text-emerald-300 font-bold';
-                    }
-                    playSuccessSound();
-                } else {
-                    localStorage.removeItem(GEMINI_API_KEY_STORAGE_KEY);
-                    if (statusEl) {
-                        statusEl.innerHTML = '<i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> API Key dikosongkan (menggunakan kunci bawaan lingkungan Preview).';
-                        statusEl.className = 'text-[10px] text-slate-300';
-                    }
-                    playTone(480, 0.12, 'sine', 0.15);
-                }
-            } catch (e) {}
-        }
+        function switchQuestionStudioMode(mode) {
+            studioCurrentMode = mode;
+            const manualBtn = document.getElementById('studio-mode-manual-btn');
+            const aiBtn = document.getElementById('studio-mode-ai-btn');
+            const manualToolbar = document.getElementById('manual-editor-toolbar');
+            const aiPanel = document.getElementById('ai-generator-panel');
+            const saveFooterBtn = document.getElementById('btn-save-manual-footer');
+            const applyAiBtn = document.getElementById('btn-apply-ai-questions');
 
-        function loadCustomQuestionsFromStorage() {
-            try {
-                const raw = localStorage.getItem(CUSTOM_QUESTIONS_STORAGE_KEY);
-                if (!raw) return;
-                const saved = JSON.parse(raw);
-                if (Array.isArray(saved[1]) && saved[1].length > 0) millionaireQuestions = saved[1];
-                if (Array.isArray(saved[2]) && saved[2].length > 0) dictationSentences = saved[2];
-                if (Array.isArray(saved[3]) && saved[3].length > 0) listeningQuestions = saved[3];
-                if (Array.isArray(saved[4]) && saved[4].length > 0) readingPassages = saved[4];
-            } catch (e) {}
-        }
-
-        function saveCustomQuestionsToStorage() {
-            try {
-                const payload = {
-                    1: millionaireQuestions,
-                    2: dictationSentences,
-                    3: listeningQuestions,
-                    4: readingPassages
-                };
-                localStorage.setItem(CUSTOM_QUESTIONS_STORAGE_KEY, JSON.stringify(payload));
-            } catch (e) {}
-        }
-
-        function getActivePlanetQuestions(planetNum) {
-            if (planetNum === 1) return millionaireQuestions;
-            if (planetNum === 2) return dictationSentences;
-            if (planetNum === 3) return listeningQuestions;
-            return readingPassages;
-        }
-
-        function setAiStatusBanner(type, htmlMessage) {
-            const banner = document.getElementById('ai-status-banner');
-            if (!banner) return;
-            if (!htmlMessage) {
-                banner.classList.add('hidden');
-                return;
-            }
-            banner.classList.remove('hidden');
-            const styles = {
-                loading: 'p-2.5 rounded-xl bg-sky-500/20 border border-sky-400 text-sky-200 text-xs font-bold flex items-center gap-2',
-                success: 'p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold flex items-center gap-2',
-                error: 'p-2.5 rounded-xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold flex items-center gap-2'
-            };
-            banner.className = styles[type] || styles.loading;
-            banner.innerHTML = htmlMessage;
-        }
-
-        function openAiQuestionModal() {
-            const modal = document.getElementById('ai-question-modal');
-            if (!modal) return;
-            const savedKey = getStoredGeminiApiKey();
-            const keyInput = document.getElementById('ai-custom-api-key');
-            const statusEl = document.getElementById('ai-apikey-status');
-            if (keyInput && savedKey) keyInput.value = savedKey;
-            if (statusEl && savedKey) {
-                statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> API Key Gemini tersimpan & aktif untuk penggunaan online (GitHub Pages / HTML).';
-                statusEl.className = 'text-[10px] text-emerald-300 font-bold';
-            }
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-            selectAiPlanetTab(aiSelectedPlanet || 1);
-        }
-
-        function closeAiQuestionModal() {
-            const modal = document.getElementById('ai-question-modal');
-            if (modal) {
-                modal.classList.add('hidden');
-                modal.classList.remove('flex');
-            }
-        }
-
-        function applyAiPresetTopic(topicText) {
-            const input = document.getElementById('ai-topic-input');
-            if (input) {
-                input.value = topicText;
-                input.focus();
-            }
-            playTone(540, 0.08, 'sine', 0.14);
-        }
-
-        function selectAiPlanetTab(planetNum) {
-            aiSelectedPlanet = planetNum;
-            aiDraftQuestions = null;
-            document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
             setAiStatusBanner('', '');
 
-            for (let i = 1; i <= 4; i++) {
-                const btn = document.getElementById(`ai-tab-${i}`);
-                if (!btn) continue;
-                if (i === planetNum) {
-                    btn.className = 'py-2 px-2.5 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow';
+            if (mode === 'manual') {
+                if (manualBtn) manualBtn.className = 'px-3.5 py-2 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow flex items-center gap-1.5';
+                if (aiBtn) aiBtn.className = 'px-3.5 py-2 rounded-xl font-bold text-xs transition bg-slate-800 hover:bg-slate-700 text-fuchsia-200 border border-fuchsia-400/40 flex items-center gap-1.5';
+                manualToolbar?.classList.remove('hidden');
+                aiPanel?.classList.add('hidden');
+                saveFooterBtn?.classList.remove('hidden');
+                applyAiBtn?.classList.add('hidden');
+                manualEditingItems = JSON.parse(JSON.stringify(getActivePlanetQuestions(aiSelectedPlanet)));
+                renderManualQuestionEditor(aiSelectedPlanet);
+            } else {
+                if (aiBtn) aiBtn.className = 'px-3.5 py-2 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-fuchsia-500 to-purple-600 text-white shadow flex items-center gap-1.5';
+                if (manualBtn) manualBtn.className = 'px-3.5 py-2 rounded-xl font-bold text-xs transition bg-slate-800 hover:bg-slate-700 text-emerald-200 border border-emerald-400/40 flex items-center gap-1.5';
+                manualToolbar?.classList.add('hidden');
+                aiPanel?.classList.remove('hidden');
+                saveFooterBtn?.classList.add('hidden');
+                if (aiDraftQuestions && aiDraftQuestions.length > 0) {
+                    applyAiBtn?.classList.remove('hidden');
+                    renderAiQuestionPreview(aiSelectedPlanet, aiDraftQuestions, true);
                 } else {
-                    btn.className = 'py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800';
+                    applyAiBtn?.classList.add('hidden');
+                    renderAiQuestionPreview(aiSelectedPlanet, getActivePlanetQuestions(aiSelectedPlanet), false);
                 }
             }
-
-            const defaultHints = {
-                1: 'Pronouns, To Be, atau Simple Present Tense (Pilihan Ganda)',
-                2: 'Kalimat Pendek Bahasa Inggris untuk Dikte Audio (4-6 kata)',
-                3: 'Dialog/Monolog Pendek Listening Comprehension Bahasa Inggris',
-                4: 'Teks Bacaan Singkat Kontekstual SMK / Agribisnis Perikanan'
-            };
-            const input = document.getElementById('ai-topic-input');
-            if (input && !input.value.trim()) {
-                input.placeholder = `Contoh: ${defaultHints[planetNum]}`;
-            }
-
-            renderAiQuestionPreview(planetNum, getActivePlanetQuestions(planetNum), false);
         }
 
-        function renderAiQuestionPreview(planetNum, items, isDraft = false) {
+        function renderManualQuestionEditor(planetNum) {
             const heading = document.getElementById('ai-preview-heading');
             const badge = document.getElementById('ai-preview-badge');
             const listEl = document.getElementById('ai-questions-preview-list');
             if (!listEl) return;
 
             const planetLabels = {
-                1: 'Planet 1 (Millionaire 10 Soal PG)',
-                2: 'Planet 2 (Space Typing 5 Kalimat Dikte)',
-                3: 'Planet 3 (Listening Radar 5 Soal Audio)',
-                4: 'Planet 4 (Reading 5 Teks Bacaan)'
+                1: 'Planet 1 (Pilihan Ganda)',
+                2: 'Planet 2 (Kalimat Dikte Audio)',
+                3: 'Planet 3 (Listening Comprehension)',
+                4: 'Planet 4 (Reading Comprehension)'
             };
-            if (heading) {
-                heading.innerText = isDraft
-                    ? `✨ Pratinjau Soal Baru Gemini AI — ${planetLabels[planetNum]}:`
-                    : `📋 Daftar Soal Aktif — ${planetLabels[planetNum]}:`;
-            }
+            if (heading) heading.innerText = `📋 Daftar Soal — ${planetLabels[planetNum]} (${manualEditingItems.length} Soal):`;
             if (badge) {
-                badge.innerText = isDraft ? 'Siap Diterapkan (Draft AI)' : 'Aktif di Game';
-                badge.className = isDraft
-                    ? 'px-2.5 py-0.5 rounded bg-fuchsia-500/25 border border-fuchsia-400 text-fuchsia-200 text-[10px] font-extrabold'
-                    : 'px-2.5 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[10px] font-bold';
+                badge.innerText = 'Input via Pop-Up';
+                badge.className = 'px-2.5 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[10px] font-bold';
             }
 
             const labels = ['A', 'B', 'C', 'D'];
-            if (planetNum === 1) {
-                listEl.innerHTML = items.map((item, idx) => `
-                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1">
-                        <div class="font-bold text-white">${idx + 1}. ${item.q}</div>
-                        <div class="grid grid-cols-2 gap-1 text-[11px] pt-1">
-                            ${(item.options || []).map((opt, oi) => `
-                                <div class="px-2 py-1 rounded-lg ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">
-                                    ${labels[oi] || ''}. ${opt} ${oi === item.answer ? '✅' : ''}
-                                </div>
-                            `).join('')}
+            listEl.innerHTML = manualEditingItems.map((item, idx) => {
+                let summaryTitle = '';
+                let summarySub = '';
+                if (planetNum === 1) {
+                    summaryTitle = item.q;
+                    summarySub = `Kunci: ${labels[item.answer] || 'A'} (${(item.options || [])[item.answer] || ''})`;
+                } else if (planetNum === 2) {
+                    summaryTitle = item.text;
+                    summarySub = item.showWordHints ? 'Mode: Planet Kata Melayang' : 'Mode: Dikte Murni';
+                } else if (planetNum === 3) {
+                    summaryTitle = item.question;
+                    summarySub = `${item.topic || 'Audio'} • Kunci: ${labels[item.answer] || 'A'}`;
+                } else {
+                    summaryTitle = `${item.tag || `Text ${idx + 1}`}: ${item.title}`;
+                    summarySub = `${item.question} • Kunci: ${labels[item.answer] || 'A'}`;
+                }
+                return `
+                    <div class="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800 flex items-center justify-between gap-2">
+                        <div class="min-w-0 flex-1">
+                            <div class="font-bold text-white truncate"><span class="text-amber-300 mr-1.5">#${idx + 1}</span>${escapeHtmlAttr(summaryTitle)}</div>
+                            <div class="text-[11px] text-slate-400 truncate mt-0.5">${escapeHtmlAttr(summarySub)}</div>
+                        </div>
+                        <div class="flex items-center gap-1.5 shrink-0">
+                            <button type="button" onclick="openAddManualQuestionModal(${idx})" class="px-2.5 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-300 text-[11px] font-bold transition" title="Ubah Soal lewat Pop-Up">
+                                <i class="fa-solid fa-pen"></i> Edit
+                            </button>
+                            ${manualEditingItems.length > 1 ? `<button type="button" onclick="removeManualQuestionItem(${idx})" class="px-2.5 py-1.5 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-300 text-[11px] font-bold transition" title="Hapus Soal"><i class="fa-solid fa-trash"></i></button>` : ''}
                         </div>
                     </div>
-                `).join('');
-            } else if (planetNum === 2) {
-                listEl.innerHTML = items.map((item, idx) => `
-                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-wrap justify-between items-center gap-2">
-                        <div class="font-bold text-amber-200">${idx + 1}. "${item.text}"</div>
-                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.showWordHints ? 'bg-sky-500/20 text-sky-300 border border-sky-400/40' : 'bg-purple-500/20 text-purple-300 border border-purple-400/40'}">
-                            ${item.showWordHints ? 'Petunjuk Planet Kata' : 'Pure Dictation'}
-                        </span>
+                `;
+            }).join('');
+        }
+
+        function addManualQuestionItem() {
+            openAddManualQuestionModal(-1);
+        }
+
+        function openAddManualQuestionModal(editIndex = -1) {
+            const modal = document.getElementById('add-manual-question-modal');
+            const titleEl = document.getElementById('add-manual-modal-title');
+            const subEl = document.getElementById('add-manual-modal-subtitle');
+            const bodyEl = document.getElementById('add-manual-form-body');
+            const errEl = document.getElementById('add-manual-error-msg');
+            if (!modal || !bodyEl) return;
+
+            editingManualQuestionIndex = (typeof editIndex === 'number' && editIndex >= 0) ? editIndex : -1;
+            const isEditing = editingManualQuestionIndex >= 0;
+            const existingItem = isEditing ? manualEditingItems[editingManualQuestionIndex] : null;
+
+            if (errEl) {
+                errEl.classList.add('hidden');
+                errEl.innerText = '';
+            }
+
+            const targetNum = isEditing ? (editingManualQuestionIndex + 1) : (manualEditingItems.length + 1);
+            const actionLabel = isEditing ? 'EDIT' : 'TAMBAH';
+            const planetTitles = {
+                1: `${actionLabel} SOAL PLANET 1 (PILIHAN GANDA #${targetNum})`,
+                2: `${actionLabel} SOAL PLANET 2 (DIKTE AUDIO #${targetNum})`,
+                3: `${actionLabel} SOAL PLANET 3 (LISTENING #${targetNum})`,
+                4: `${actionLabel} SOAL PLANET 4 (READING #${targetNum})`
+            };
+            if (titleEl) titleEl.innerText = planetTitles[aiSelectedPlanet] || 'INPUT SOAL MANUAL';
+            if (subEl) subEl.innerText = 'Isi form soal pada pop-up di bawah ini dengan lengkap, lalu klik Simpan ke Daftar.';
+
+            const labels = ['A', 'B', 'C', 'D'];
+            if (aiSelectedPlanet === 1) {
+                const qVal = existingItem ? existingItem.q : '';
+                const optsVal = existingItem ? (existingItem.options || []) : ['', '', '', ''];
+                const ansVal = existingItem ? existingItem.answer : 0;
+                bodyEl.innerHTML = `
+                    <div class="space-y-1.5">
+                        <label class="block font-bold text-amber-300 uppercase text-[11px]">Teks Pertanyaan:</label>
+                        <textarea id="new-mq-p1-q" rows="3" placeholder="Contoh: She ___ a diligent student at SMKN 4 Sinjai."
+                                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">${escapeHtmlAttr(qVal)}</textarea>
                     </div>
-                `).join('');
-            } else if (planetNum === 3) {
-                listEl.innerHTML = items.map((item, idx) => `
-                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1.5">
-                        <div class="text-[10px] font-extrabold text-emerald-300 uppercase">${item.topic || 'Audio ' + (idx + 1)}</div>
-                        <div class="italic text-slate-300 bg-slate-900/80 p-2 rounded-lg border border-slate-800">"${item.script}"</div>
-                        <div class="font-bold text-amber-200">Q: ${item.question}</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
-                            ${(item.options || []).map((opt, oi) => `
-                                <div class="px-2 py-1 rounded-lg ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">
-                                    ${opt} ${oi === item.answer ? '✅' : ''}
-                                </div>
-                            `).join('')}
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        ${[0,1,2,3].map(oi => `
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sky-300 text-[11px]">Pilihan ${labels[oi]}:</label>
+                                <input id="new-mq-p1-opt-${oi}" type="text" value="${escapeHtmlAttr(optsVal[oi] || '')}" placeholder="Isi pilihan ${labels[oi]}..."
+                                       class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
+                            </div>
+                        `).join('')}
                     </div>
-                `).join('');
+                    <div class="space-y-1">
+                        <label class="block font-bold text-emerald-300 uppercase text-[11px]">Kunci Jawaban Benar:</label>
+                        <select id="new-mq-p1-ans" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-emerald-400/50 text-emerald-300 font-bold text-xs focus:outline-none">
+                            ${[0,1,2,3].map(oi => `<option value="${oi}" ${ansVal === oi ? 'selected' : ''}>Pilihan ${labels[oi]}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
+            } else if (aiSelectedPlanet === 2) {
+                const textVal = existingItem ? existingItem.text : '';
+                const hintsVal = existingItem ? existingItem.showWordHints : true;
+                bodyEl.innerHTML = `
+                    <div class="space-y-1.5">
+                        <label class="block font-bold text-amber-300 uppercase text-[11px]">Kalimat Bahasa Inggris (Untuk Dibacakan Audio &amp; Diketik Siswa):</label>
+                        <input id="new-mq-p2-text" type="text" value="${escapeHtmlAttr(textVal)}" placeholder="Contoh: Good morning my dear friends"
+                               class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-amber-200 font-bold text-xs focus:outline-none focus:border-sky-400">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="block font-bold text-sky-300 uppercase text-[11px]">Mode Bantuan Visual:</label>
+                        <select id="new-mq-p2-hints" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-sky-400/40 text-sky-300 font-bold text-xs focus:outline-none">
+                            <option value="true" ${hintsVal ? 'selected' : ''}>Tampilkan Planet Kata Melayang (Bisa Diklik/Sentuh)</option>
+                            <option value="false" ${!hintsVal ? 'selected' : ''}>Dikte Murni (Siswa Mengetik Tanpa Petunjuk Kata)</option>
+                        </select>
+                    </div>
+                `;
+            } else if (aiSelectedPlanet === 3) {
+                const topicVal = existingItem ? existingItem.topic : `Question ${targetNum}: Listening`;
+                const scriptVal = existingItem ? existingItem.script : '';
+                const qVal = existingItem ? existingItem.question : '';
+                const optsVal = existingItem ? (existingItem.options || []) : ['', '', '', ''];
+                const ansVal = existingItem ? existingItem.answer : 0;
+                bodyEl.innerHTML = `
+                    <div class="space-y-1">
+                        <label class="block font-bold text-emerald-300 uppercase text-[11px]">Judul / Topik Audio:</label>
+                        <input id="new-mq-p3-topic" type="text" value="${escapeHtmlAttr(topicVal)}"
+                               class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-emerald-300 font-bold text-xs focus:outline-none focus:border-sky-400">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-bold text-sky-300 uppercase text-[11px]">Naskah Suara (Akan Dibacakan Otomatis oleh Audio):</label>
+                        <textarea id="new-mq-p3-script" rows="3" placeholder="Contoh: Hello, my name is Sarah. I live in Sinjai and I love swimming."
+                                  class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-sky-400">${escapeHtmlAttr(scriptVal)}</textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-bold text-amber-300 uppercase text-[11px]">Pertanyaan Listening:</label>
+                        <input id="new-mq-p3-q" type="text" value="${escapeHtmlAttr(qVal)}" placeholder="Contoh: Where does Sarah live?"
+                               class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold text-xs focus:outline-none focus:border-sky-400">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        ${[0,1,2,3].map(oi => `
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sky-300 text-[11px]">Pilihan ${labels[oi]}:</label>
+                                <input id="new-mq-p3-opt-${oi}" type="text" value="${escapeHtmlAttr(optsVal[oi] || '')}" placeholder="${labels[oi]}. ..."
+                                       class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-bold text-emerald-300 uppercase text-[11px]">Kunci Jawaban Benar:</label>
+                        <select id="new-mq-p3-ans" class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-emerald-400/50 text-emerald-300 font-bold text-xs focus:outline-none">
+                            ${[0,1,2,3].map(oi => `<option value="${oi}" ${ansVal === oi ? 'selected' : ''}>Pilihan ${labels[oi]}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
             } else {
-                listEl.innerHTML = items.map((item, idx) => `
-                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1.5">
-                        <div class="flex justify-between items-center">
-                            <span class="font-extrabold text-sky-300">${idx + 1}. ${item.title}</span>
-                            <span class="text-[10px] text-amber-300 font-bold">${item.tag || 'Text ' + (idx + 1)}</span>
+                const tagVal = existingItem ? existingItem.tag : `Text ${targetNum}`;
+                const titleVal = existingItem ? existingItem.title : '';
+                const bodyVal = existingItem ? existingItem.body : '';
+                const qVal = existingItem ? existingItem.question : '';
+                const optsVal = existingItem ? (existingItem.options || []) : ['', '', '', ''];
+                const ansVal = existingItem ? existingItem.answer : 0;
+                bodyEl.innerHTML = `
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div class="space-y-1">
+                            <label class="block font-bold text-amber-300 uppercase text-[11px]">Label Teks:</label>
+                            <input id="new-mq-p4-tag" type="text" value="${escapeHtmlAttr(tagVal)}"
+                                   class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-amber-300 font-bold text-xs focus:outline-none">
                         </div>
-                        <p class="text-slate-300 bg-slate-900/80 p-2 rounded-lg border border-slate-800 leading-relaxed">${item.body}</p>
-                        <div class="font-bold text-amber-200">Q: ${item.question}</div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
-                            ${(item.options || []).map((opt, oi) => `
-                                <div class="px-2 py-1 rounded-lg ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">
-                                    ${opt} ${oi === item.answer ? '✅' : ''}
-                                </div>
-                            `).join('')}
+                        <div class="sm:col-span-2 space-y-1">
+                            <label class="block font-bold text-sky-300 uppercase text-[11px]">Judul Bacaan:</label>
+                            <input id="new-mq-p4-title" type="text" value="${escapeHtmlAttr(titleVal)}" placeholder="Contoh: Catfish Pond Management"
+                                   class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-sky-300 font-bold text-xs focus:outline-none focus:border-sky-400">
                         </div>
                     </div>
-                `).join('');
+                    <div class="space-y-1">
+                        <label class="block font-bold text-sky-300 uppercase text-[11px]">Isi Teks Bacaan (Reading Passage):</label>
+                        <textarea id="new-mq-p4-body" rows="3" placeholder="Tulis paragraf bacaan Bahasa Inggris di sini..."
+                                  class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-slate-200 text-xs focus:outline-none focus:border-sky-400">${escapeHtmlAttr(bodyVal)}</textarea>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-bold text-amber-300 uppercase text-[11px]">Pertanyaan Bacaan:</label>
+                        <input id="new-mq-p4-q" type="text" value="${escapeHtmlAttr(qVal)}" placeholder="Contoh: What is the main topic of the text?"
+                               class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white font-bold text-xs focus:outline-none focus:border-sky-400">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        ${[0,1,2,3].map(oi => `
+                            <div class="space-y-1">
+                                <label class="block font-bold text-sky-300 text-[11px]">Pilihan ${labels[oi]}:</label>
+                                <input id="new-mq-p4-opt-${oi}" type="text" value="${escapeHtmlAttr(optsVal[oi] || '')}" placeholder="${labels[oi]}. ..."
+                                       class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="space-y-1">
+                        <label class="block font-bold text-emerald-300 uppercase text-[11px]">Kunci Jawaban Benar:</label>
+                        <select id="new-mq-p4-ans" class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-emerald-400/50 text-emerald-300 font-bold text-xs focus:outline-none">
+                            ${[0,1,2,3].map(oi => `<option value="${oi}" ${ansVal === oi ? 'selected' : ''}>Pilihan ${labels[oi]}</option>`).join('')}
+                        </select>
+                    </div>
+                `;
             }
+
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            playTone(620, 0.12, 'sine', 0.16);
         }
 
-        async function fetchGeminiWithBackoff(payload, maxRetries = 3) {
-            const apiKey = getStoredGeminiApiKey();
-            // Gunakan model utama gemini-3-flash-preview, dan otomatis fallback ke gemini-3.8-flash jika di hosting eksternal
-            const candidateModels = ['gemini-3-flash-preview', 'gemini-3.8-flash'];
-            const delays = [1000, 2000, 4000];
-            let lastError = null;
-
-            for (const modelName of candidateModels) {
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
-                for (let attempt = 0; attempt <= maxRetries; attempt++) {
-                    try {
-                        const response = await fetch(apiUrl, {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify(payload)
-                        });
-                        if (response.ok) {
-                            return await response.json();
-                        }
-                        let errDetail = `HTTP ${response.status}`;
-                        try {
-                            const errJson = await response.json();
-                            if (errJson?.error?.message) errDetail = errJson.error.message;
-                        } catch (e) {}
-                        lastError = new Error(errDetail);
-
-                        // Jika 400/403 (API key belum diisi saat di-host di GitHub Pages), langsung hentikan retry
-                        if (response.status === 400 || response.status === 403) {
-                            throw lastError;
-                        }
-                        if (attempt < maxRetries && (response.status === 429 || response.status >= 500)) {
-                            await new Promise(res => setTimeout(res, delays[attempt] || 4000));
-                            continue;
-                        }
-                        break;
-                    } catch (err) {
-                        lastError = err;
-                        if (err.message && (err.message.includes('API key') || err.message.includes('HTTP 400') || err.message.includes('HTTP 403'))) {
-                            throw err;
-                        }
-                        if (attempt < maxRetries) {
-                            await new Promise(res => setTimeout(res, delays[attempt] || 4000));
-                            continue;
-                        }
-                    }
-                }
-            }
-            throw lastError || new Error('Gagal menghubungi server Gemini AI.');
+        function closeAddManualQuestionModal() {
+            const modal = document.getElementById('add-manual-question-modal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            editingManualQuestionIndex = -1;
         }
 
-        function buildGeminiSchemaAndPrompt(planetNum, topic, difficulty) {
-            const systemInstruction = {
-                parts: [{
-                    text: "You are an expert Indonesian SMK English teacher creating engaging, accurate, classroom-ready English quiz questions. Always return strictly valid JSON matching the requested schema. All English text must be grammatically correct and appropriate for vocational high school students."
-                }]
-            };
-
-            if (planetNum === 1) {
-                return {
-                    systemInstruction,
-                    contents: [{
-                        parts: [{
-                            text: `Create exactly 10 multiple-choice English questions for a Millionaire-style quiz game. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Each question must have 4 short options and the 0-based index (0-3) of the single correct answer.`
-                        }]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "ARRAY",
-                            items: {
-                                type: "OBJECT",
-                                properties: {
-                                    q: { type: "STRING" },
-                                    options: { type: "ARRAY", items: { type: "STRING" } },
-                                    answer: { type: "INTEGER" }
-                                },
-                                required: ["q", "options", "answer"]
-                            }
-                        }
-                    }
-                };
-            }
-
-            if (planetNum === 2) {
-                return {
-                    systemInstruction,
-                    contents: [{
-                        parts: [{
-                            text: `Create exactly 5 short, clear English dictation sentences (each 4 to 6 simple words, no punctuation marks like commas or periods inside) for a space word-ordering & dictation game. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Set showWordHints to true for the first 3 sentences and false for the last 2 sentences.`
-                        }]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "ARRAY",
-                            items: {
-                                type: "OBJECT",
-                                properties: {
-                                    text: { type: "STRING" },
-                                    showWordHints: { type: "BOOLEAN" }
-                                },
-                                required: ["text", "showWordHints"]
-                            }
-                        }
-                    }
-                };
-            }
-
-            if (planetNum === 3) {
-                return {
-                    systemInstruction,
-                    contents: [{
-                        parts: [{
-                            text: `Create exactly 5 English listening comprehension items. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Each item must have a short label topic (e.g., "Question 1: ..."), a spoken English audio script (3-4 natural sentences), one comprehension question, 4 options prefixed with "A. ", "B. ", "C. ", "D. ", and the 0-based correct answer index (0-3).`
-                        }]
-                    }],
-                    generationConfig: {
-                        responseMimeType: "application/json",
-                        responseSchema: {
-                            type: "ARRAY",
-                            items: {
-                                type: "OBJECT",
-                                properties: {
-                                    topic: { type: "STRING" },
-                                    script: { type: "STRING" },
-                                    question: { type: "STRING" },
-                                    options: { type: "ARRAY", items: { type: "STRING" } },
-                                    answer: { type: "INTEGER" }
-                                },
-                                required: ["topic", "script", "question", "options", "answer"]
-                            }
-                        }
-                    }
-                };
-            }
-
-            return {
-                systemInstruction,
-                contents: [{
-                    parts: [{
-                        text: `Create exactly 5 short English reading comprehension passages with questions. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Each item must have tag (e.g. "Text 1"), title, body (3-5 clear English sentences), question, 4 options prefixed with "A. ", "B. ", "C. ", "D. ", and the 0-based correct answer index (0-3).`
-                    }]
-                }],
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: {
-                        type: "ARRAY",
-                        items: {
-                            type: "OBJECT",
-                            properties: {
-                                tag: { type: "STRING" },
-                                title: { type: "STRING" },
-                                body: { type: "STRING" },
-                                question: { type: "STRING" },
-                                options: { type: "ARRAY", items: { type: "STRING" } },
-                                answer: { type: "INTEGER" }
-                            },
-                            required: ["tag", "title", "body", "question", "options", "answer"]
-                        }
-                    }
+        function submitNewManualQuestionModal() {
+            const errEl = document.getElementById('add-manual-error-msg');
+            const showErr = (msg) => {
+                if (errEl) {
+                    errEl.innerText = `⚠️ ${msg}`;
+                    errEl.classList.remove('hidden');
                 }
-            };
-        }
-
-        async function generateQuestionsWithGeminiAI() {
-            if (aiIsGenerating) return;
-            const topicInput = document.getElementById('ai-topic-input');
-            const diffSelect = document.getElementById('ai-difficulty-select');
-            const genBtn = document.getElementById('btn-generate-ai-questions');
-            const applyBtn = document.getElementById('btn-apply-ai-questions');
-
-            const topic = (topicInput?.value || '').trim() || 'General Vocational English (SMK Kelas X)';
-            const difficulty = diffSelect?.value || 'Sedang (SMK Kelas X-XI / A2-B1)';
-
-            aiIsGenerating = true;
-            if (genBtn) {
-                genBtn.disabled = true;
-                genBtn.classList.add('opacity-60', 'cursor-wait');
-            }
-            if (applyBtn) applyBtn.classList.add('hidden');
-
-            setAiStatusBanner('loading', `<i class="fa-solid fa-spinner fa-spin text-sky-300"></i> <span>Gemini AI sedang menyusun soal baru untuk Planet ${aiSelectedPlanet} (Topik: "${topic}")...</span>`);
-
-            try {
-                const payload = buildGeminiSchemaAndPrompt(aiSelectedPlanet, topic, difficulty);
-                const result = await fetchGeminiWithBackoff(payload);
-                const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-                if (!rawText) throw new Error('Respon AI kosong.');
-
-                const parsed = JSON.parse(rawText);
-                if (!Array.isArray(parsed) || parsed.length === 0) {
-                    throw new Error('Format soal tidak sesuai.');
-                }
-
-                // Normalisasi data agar selalu aman dimainkan
-                const sanitized = parsed.map((item, idx) => {
-                    if (aiSelectedPlanet === 1) {
-                        const opts = Array.isArray(item.options) && item.options.length === 4 ? item.options : ['Option A', 'Option B', 'Option C', 'Option D'];
-                        const ans = Math.min(Math.max(parseInt(item.answer, 10) || 0, 0), 3);
-                        return { q: String(item.q || `Question ${idx + 1}`), options: opts.map(String), answer: ans };
-                    }
-                    if (aiSelectedPlanet === 2) {
-                        const cleanText = String(item.text || 'Good morning my friend').replace(/[^\w\s']/g, '').trim();
-                        return { text: cleanText, showWordHints: typeof item.showWordHints === 'boolean' ? item.showWordHints : idx < 3 };
-                    }
-                    if (aiSelectedPlanet === 3) {
-                        const opts = Array.isArray(item.options) && item.options.length === 4 ? item.options : ['A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'];
-                        const ans = Math.min(Math.max(parseInt(item.answer, 10) || 0, 0), 3);
-                        return {
-                            topic: String(item.topic || `Question ${idx + 1}`),
-                            script: String(item.script || ''),
-                            question: String(item.question || ''),
-                            options: opts.map(String),
-                            answer: ans
-                        };
-                    }
-                    const opts = Array.isArray(item.options) && item.options.length === 4 ? item.options : ['A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'];
-                    const ans = Math.min(Math.max(parseInt(item.answer, 10) || 0, 0), 3);
-                    return {
-                        tag: String(item.tag || `Text ${idx + 1}`),
-                        title: String(item.title || `Reading Text ${idx + 1}`),
-                        body: String(item.body || ''),
-                        question: String(item.question || ''),
-                        options: opts.map(String),
-                        answer: ans
-                    };
-                });
-
-                aiDraftQuestions = sanitized;
-                renderAiQuestionPreview(aiSelectedPlanet, sanitized, true);
-                if (applyBtn) applyBtn.classList.remove('hidden');
-                setAiStatusBanner('success', `<i class="fa-solid fa-circle-check text-emerald-300"></i> <span>Berhasil! ${sanitized.length} soal baru siap ditinjau. Klik <b>"Terapkan &amp; Simpan Soal ke Game"</b> untuk mengaktifkan.</span>`);
-                playSuccessSound();
-            } catch (err) {
-                const hasCustomKey = !!getStoredGeminiApiKey();
-                const isHostingExternal = window.location.protocol === 'file:' || window.location.hostname.includes('github.io');
-                let hintMsg = 'Periksa koneksi internet Anda lalu coba lagi.';
-                if (!hasCustomKey && isHostingExternal) {
-                    hintMsg = 'Anda menjalankan file ini di GitHub Pages / HTML lokal. Silakan masukkan <b>Gemini API Key</b> gratis pada kotak di atas terlebih dahulu!';
-                } else if (err?.message) {
-                    hintMsg = `Detail: ${err.message}`;
-                }
-                setAiStatusBanner('error', `<i class="fa-solid fa-triangle-exclamation text-rose-300"></i> <span>Gagal membuat soal: ${hintMsg}</span>`);
                 playErrorSound();
-            } finally {
-                aiIsGenerating = false;
-                if (genBtn) {
-                    genBtn.disabled = false;
-                    genBtn.classList.remove('opacity-60', 'cursor-wait');
+            };
+
+            const labels = ['A', 'B', 'C', 'D'];
+            let newObj = null;
+            if (aiSelectedPlanet === 1) {
+                const q = (document.getElementById('new-mq-p1-q')?.value || '').trim();
+                const options = [0,1,2,3].map(oi => (document.getElementById(`new-mq-p1-opt-${oi}`)?.value || '').trim());
+                const answer = parseInt(document.getElementById('new-mq-p1-ans')?.value || '0', 10);
+                if (!q || options.some(o => !o)) {
+                    showErr('Mohon isi teks pertanyaan dan keempat pilihan jawaban (A, B, C, D) terlebih dahulu.');
+                    return;
                 }
+                newObj = { q, options, answer };
+            } else if (aiSelectedPlanet === 2) {
+                const rawText = (document.getElementById('new-mq-p2-text')?.value || '').trim();
+                const text = rawText.replace(/[^\w\s']/g, '').trim();
+                const showWordHints = document.getElementById('new-mq-p2-hints')?.value === 'true';
+                if (!text) {
+                    showErr('Mohon isi kalimat Bahasa Inggris untuk dikte audio.');
+                    return;
+                }
+                newObj = { text, showWordHints };
+            } else if (aiSelectedPlanet === 3) {
+                const topic = (document.getElementById('new-mq-p3-topic')?.value || '').trim() || `Question ${manualEditingItems.length + 1}: Listening`;
+                const script = (document.getElementById('new-mq-p3-script')?.value || '').trim();
+                const question = (document.getElementById('new-mq-p3-q')?.value || '').trim();
+                const options = [0,1,2,3].map(oi => {
+                    const val = (document.getElementById(`new-mq-p3-opt-${oi}`)?.value || '').trim();
+                    if (!val) return '';
+                    return /^[A-D]\./i.test(val) ? val : `${labels[oi]}. ${val}`;
+                });
+                const answer = parseInt(document.getElementById('new-mq-p3-ans')?.value || '0', 10);
+                if (!script || !question || options.some(o => !o)) {
+                    showErr('Mohon isi naskah suara, pertanyaan, dan semua pilihan jawaban.');
+                    return;
+                }
+                newObj = { topic, script, question, options, answer };
+            } else {
+                const tag = (document.getElementById('new-mq-p4-tag')?.value || '').trim() || `Text ${manualEditingItems.length + 1}`;
+                const title = (document.getElementById('new-mq-p4-title')?.value || '').trim();
+                const body = (document.getElementById('new-mq-p4-body')?.value || '').trim();
+                const question = (document.getElementById('new-mq-p4-q')?.value || '').trim();
+                const options = [0,1,2,3].map(oi => {
+                    const val = (document.getElementById(`new-mq-p4-opt-${oi}`)?.value || '').trim();
+                    if (!val) return '';
+                    return /^[A-D]\./i.test(val) ? val : `${labels[oi]}. ${val}`;
+                });
+                const answer = parseInt(document.getElementById('new-mq-p4-ans')?.value || '0', 10);
+                if (!title || !body || !question || options.some(o => !o)) {
+                    showErr('Mohon lengkapi judul bacaan, isi teks bacaan, pertanyaan, dan pilihan jawaban.');
+                    return;
+                }
+                newObj = { tag, title, body, question, options, answer };
             }
+
+            if (editingManualQuestionIndex >= 0 && editingManualQuestionIndex < manualEditingItems.length) {
+                manualEditingItems[editingManualQuestionIndex] = newObj;
+            } else {
+                manualEditingItems.push(newObj);
+            }
+
+            closeAddManualQuestionModal();
+            renderManualQuestionEditor(aiSelectedPlanet);
+            saveManualEditedQuestions();
         }
 
-        function exportAllQuestionBanksJSON() {
+        function removeManualQuestionItem(idx) {
+            if (manualEditingItems.length <= 1) return;
+            manualEditingItems.splice(idx, 1);
+            renderManualQuestionEditor(aiSelectedPlanet);
+            playTone(340, 0.1, 'sine', 0.15);
+        }
+
+        function saveManualEditedQuestions() {
+            if (!Array.isArray(manualEditingItems) || manualEditingItems.length === 0) return;
+            const cleaned = JSON.parse(JSON.stringify(manualEditingItems));
+
+            if (aiSelectedPlanet === 1) {
+                millionaireQuestions = cleaned;
+                p1Index = 0; p1CorrectCount = 0; p1CurrentPrize = 0; p1Locked = false; p1Logs = [];
+                p1Lifelines = { fifty: false, phone: false, audience: false };
+                if (!document.getElementById('planet1-screen')?.classList.contains('hidden')) renderPlanet1Question();
+            } else if (aiSelectedPlanet === 2) {
+                cleaned.forEach(item => { item.text = String(item.text || 'Hello friend').replace(/[^\w\s']/g, '').trim() || 'Hello friend'; });
+                dictationSentences = cleaned;
+                p2Round = 0; p2CorrectCount = 0; p2EarnedPoints = 0; bwAttempts = 0;
+                if (!document.getElementById('planet2-screen')?.classList.contains('hidden')) setupBalloonRound();
+            } else if (aiSelectedPlanet === 3) {
+                listeningQuestions = cleaned;
+                p3Index = 0; p3CorrectCount = 0; p3EarnedPoints = 0; p3Locked = false;
+                if (!document.getElementById('planet3-screen')?.classList.contains('hidden')) renderPlanet3Question();
+            } else if (aiSelectedPlanet === 4) {
+                readingPassages = cleaned;
+                p4Index = 0; p4CorrectCount = 0; p4EarnedPoints = 0; p4Locked = false;
+                if (!document.getElementById('planet4-screen')?.classList.contains('hidden')) renderPlanet4Question();
+            }
+
+            saveCustomQuestionsToStorage();
+            setAiStatusBanner('success', `<i class="fa-solid fa-circle-check text-emerald-300"></i> <span>Perubahan soal Planet ${aiSelectedPlanet} (${cleaned.length} soal) berhasil disimpan &amp; langsung aktif! Klik <b>Unduh File HTML Baru</b> jika ingin membagikan file .html ke siswa.</span>`);
+            playSuccessSound();
+        }
+
+        function downloadStandaloneUpdatedHtml() {
+            if (studioCurrentMode === 'manual' && Array.isArray(manualEditingItems) && manualEditingItems.length > 0) {
+                saveManualEditedQuestions();
+            }
             const bundle = {
-                app: 'English Space Battle',
-                exportedAt: new Date().toISOString(),
-                planets: {
-                    1: millionaireQuestions,
-                    2: dictationSentences,
-                    3: listeningQuestions,
-                    4: readingPassages
-                }
+                1: millionaireQuestions,
+                2: dictationSentences,
+                3: listeningQuestions,
+                4: readingPassages
             };
-            const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+            const fullHtml = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const markerRegex = /\/\* EMBEDDED_CUSTOM_QUESTIONS_START \*\/[\s\S]*?\/\* EMBEDDED_CUSTOM_QUESTIONS_END \*\//;
+            const replacement = `/* EMBEDDED_CUSTOM_QUESTIONS_START */\n        const EMBEDDED_CUSTOM_QUESTIONS = ${JSON.stringify(bundle)};\n        /* EMBEDDED_CUSTOM_QUESTIONS_END */`;
+            const updatedHtml = fullHtml.replace(markerRegex, replacement);
+
+            const blob = new Blob([updatedHtml], { type: 'text/html;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'Paket_Soal_English_Space_Battle.json';
+            a.download = 'English_Space_Battle_Soal_Baru.html';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            setAiStatusBanner('success', '<i class="fa-solid fa-file-export text-emerald-300"></i> <span>Paket soal seluruh planet berhasil diunduh (.JSON)! File ini dapat diimpor di perangkat lain atau dijadikan soal default.</span>');
+
+            setAiStatusBanner('success', '<i class="fa-solid fa-file-code text-emerald-300"></i> <span>File <b>English_Space_Battle_Soal_Baru.html</b> berhasil diunduh! File HTML ini sudah berisi seluruh soal terbaru dan bisa langsung dibuka di HP/laptop siswa atau diunggah ke GitHub.</span>');
             playSuccessSound();
         }
 
@@ -3829,38 +3940,318 @@
             saveCustomQuestionsToStorage();
             aiDraftQuestions = null;
             document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
-            renderAiQuestionPreview(aiSelectedPlanet, defCopy, false);
-            setAiStatusBanner('success', `<i class="fa-solid fa-rotate-left text-emerald-300"></i> <span>Soal Planet ${aiSelectedPlanet} telah dikembalikan ke soal bawaan awal.</span>`);
-            playTone(520, 0.14, 'triangle', 0.18);
+            if (studioCurrentMode === 'manual') {
+                manualEditingItems = JSON.parse(JSON.stringify(defCopy));
+                renderManualQuestionEditor(aiSelectedPlanet);
+            } else {
+                renderAiQuestionPreview(aiSelectedPlanet, defCopy, false);
+            }
+            setAiStatusBanner('success', `<i class="fa-solid fa-rotate-left text-emerald-300"></i> <span>Soal Planet ${aiSelectedPlanet} berhasil dikembalikan ke soal bawaan!</span>`);
+            playSuccessSound();
         }
 
-        loadCustomQuestionsFromStorage();
+        function getActivePlanetQuestions(planetNum) {
+            if (planetNum === 1) return millionaireQuestions;
+            if (planetNum === 2) return dictationSentences;
+            if (planetNum === 3) return listeningQuestions;
+            return readingPassages;
+        }
 
-        /* ==========================================================================
-           FULL SCREEN & RESPONSIVE VIEWPORT HANDLER
-           ========================================================================== */
-        let isViewportFullscreenFallback = false;
+        function saveCustomQuestionsToStorage() {
+            try {
+                const payload = {
+                    1: millionaireQuestions,
+                    2: dictationSentences,
+                    3: listeningQuestions,
+                    4: readingPassages
+                };
+                localStorage.setItem(CUSTOM_QUESTIONS_STORAGE_KEY, JSON.stringify(payload));
+            } catch (e) {}
+        }
+
+        function loadCustomQuestionsFromStorage() {
+            try {
+                const raw = localStorage.getItem(CUSTOM_QUESTIONS_STORAGE_KEY);
+                if (raw) {
+                    const data = JSON.parse(raw);
+                    if (Array.isArray(data[1]) && data[1].length > 0) millionaireQuestions = data[1];
+                    if (Array.isArray(data[2]) && data[2].length > 0) dictationSentences = data[2];
+                    if (Array.isArray(data[3]) && data[3].length > 0) listeningQuestions = data[3];
+                    if (Array.isArray(data[4]) && data[4].length > 0) readingPassages = data[4];
+                }
+                const savedKey = localStorage.getItem(GEMINI_API_KEY_STORAGE_KEY);
+                const keyInput = document.getElementById('ai-custom-api-key');
+                if (savedKey && keyInput) keyInput.value = savedKey;
+            } catch (e) {}
+        }
+
+        function saveCustomGeminiApiKey() {
+            const val = (document.getElementById('ai-custom-api-key')?.value || '').trim();
+            try {
+                if (val) localStorage.setItem(GEMINI_API_KEY_STORAGE_KEY, val);
+                else localStorage.removeItem(GEMINI_API_KEY_STORAGE_KEY);
+                setAiStatusBanner('success', '<i class="fa-solid fa-key text-emerald-300"></i> <span>Pengaturan Gemini API Key berhasil disimpan di browser ini.</span>');
+                playSuccessSound();
+            } catch (e) {}
+        }
+
+        function setAiStatusBanner(type, htmlContent) {
+            const banner = document.getElementById('ai-status-banner');
+            if (!banner) return;
+            if (!type || !htmlContent) {
+                banner.classList.add('hidden');
+                banner.innerHTML = '';
+                return;
+            }
+            banner.classList.remove('hidden');
+            if (type === 'loading') {
+                banner.className = 'p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-sky-500/20 border border-sky-400 text-sky-200';
+            } else if (type === 'error') {
+                banner.className = 'p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-rose-500/20 border border-rose-400 text-rose-200';
+            } else {
+                banner.className = 'p-2.5 rounded-xl text-xs font-bold flex items-center gap-2 bg-emerald-500/20 border border-emerald-400 text-emerald-200';
+            }
+            banner.innerHTML = htmlContent;
+        }
+
+        function renderAiQuestionPreview(planetNum, items, isDraft) {
+            const heading = document.getElementById('ai-preview-heading');
+            const badge = document.getElementById('ai-preview-badge');
+            const listEl = document.getElementById('ai-questions-preview-list');
+            if (!listEl) return;
+
+            if (heading) {
+                heading.innerText = isDraft
+                    ? `✨ Pratinjau Soal Baru Hasil Gemini AI — Planet ${planetNum} (${items.length} Soal):`
+                    : `📋 Daftar Soal Aktif — Planet ${planetNum} (${items.length} Soal):`;
+            }
+            if (badge) {
+                badge.innerText = isDraft ? 'Draft Baru (Belum Disimpan)' : 'Soal Aktif di Game';
+                badge.className = isDraft
+                    ? 'px-2.5 py-0.5 rounded bg-fuchsia-500/25 border border-fuchsia-400 text-fuchsia-200 text-[10px] font-bold'
+                    : 'px-2.5 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-bold';
+            }
+
+            const labels = ['A', 'B', 'C', 'D'];
+            if (planetNum === 1) {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1.5">
+                        <div class="font-bold text-white"><span class="text-amber-300 mr-1">#${idx + 1}</span> ${item.q}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
+                            ${(item.options || []).map((opt, oi) => `
+                                <div class="px-2 py-1 rounded ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">
+                                    ${labels[oi]}. ${opt}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            } else if (planetNum === 2) {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-2.5 rounded-xl bg-slate-950/90 border border-slate-800 flex justify-between items-center gap-2">
+                        <div><span class="text-amber-300 font-bold mr-1.5">#${idx + 1}</span> <span class="text-white font-semibold">${item.text}</span></div>
+                        <span class="px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 text-[10px] font-bold">${item.showWordHints ? 'Planet Kata' : 'Dikte Murni'}</span>
+                    </div>
+                `).join('');
+            } else if (planetNum === 3) {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1.5">
+                        <div class="text-[10px] font-bold text-emerald-300">${item.topic || `Audio ${idx + 1}`}</div>
+                        <div class="text-[11px] text-slate-400 italic">"${item.script}"</div>
+                        <div class="font-bold text-white">${item.question}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
+                            ${(item.options || []).map((opt, oi) => `
+                                <div class="px-2 py-1 rounded ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">${opt}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1.5">
+                        <div class="font-bold text-amber-300">${item.tag || `Text ${idx + 1}`}: ${item.title}</div>
+                        <div class="text-[11px] text-slate-300 leading-relaxed">${item.body}</div>
+                        <div class="font-bold text-white pt-1">${item.question}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
+                            ${(item.options || []).map((opt, oi) => `
+                                <div class="px-2 py-1 rounded ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">${opt}</div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function fetchGeminiWithBackoff(promptText) {
+            const customKey = (localStorage.getItem(GEMINI_API_KEY_STORAGE_KEY) || '').trim();
+            const apiKey = customKey || "";
+            const models = ['gemini-3-flash-preview', 'gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+            let lastError = null;
+
+            for (const model of models) {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${encodeURIComponent(apiKey)}`;
+                for (let attempt = 0; attempt < 2; attempt++) {
+                    try {
+                        const res = await fetch(url, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                contents: [{ parts: [{ text: promptText }] }],
+                                generationConfig: { responseMimeType: "application/json" }
+                            })
+                        });
+                        if (res.ok) {
+                            const data = await res.json();
+                            const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
+                            if (rawText) return rawText;
+                        }
+                        const errBody = await res.json().catch(() => ({}));
+                        lastError = new Error(errBody?.error?.message || `HTTP ${res.status}`);
+                        if (res.status === 503 || res.status === 429) {
+                            await new Promise(r => setTimeout(r, 900 * (attempt + 1)));
+                            continue;
+                        }
+                        break;
+                    } catch (err) {
+                        lastError = err;
+                        await new Promise(r => setTimeout(r, 700));
+                    }
+                }
+            }
+            throw lastError || new Error('Gagal menghubungi server Gemini AI.');
+        }
+
+        async function generateQuestionsWithGeminiAI() {
+            if (aiIsGenerating) return;
+            aiIsGenerating = true;
+            const btn = document.getElementById('btn-generate-ai-questions');
+            if (btn) btn.disabled = true;
+
+            const topic = (document.getElementById('ai-topic-input')?.value || '').trim() || 'Vocational High School English & Fisheries Agribusiness';
+            const difficulty = document.getElementById('ai-difficulty-select')?.value || 'Sedang (A2-B1)';
+
+            setAiStatusBanner('loading', '<i class="fa-solid fa-spinner fa-spin text-sky-300"></i> <span>Sedang membuat soal baru dengan Gemini AI... Mohon tunggu sebentar.</span>');
+
+            const schemaInstructions = {
+                1: `Return a JSON array of 10 multiple-choice English questions for Planet 1. Each object must have: {"q": string, "options": [string, string, string, string], "answer": number (0-3)}.`,
+                2: `Return a JSON array of 5 short English dictation sentences (4 to 7 words each) for Planet 2. Each object must have: {"text": string, "showWordHints": boolean (true for first 3, false for last 2)}.`,
+                3: `Return a JSON array of 5 listening comprehension items for Planet 3. Each object must have: {"topic": string, "script": string (2-3 spoken English sentences), "question": string, "options": ["A. ...", "B. ...", "C. ...", "D. ..."], "answer": number (0-3)}.`,
+                4: `Return a JSON array of 5 reading comprehension items for Planet 4. Each object must have: {"tag": string, "title": string, "body": string (short English paragraph), "question": string, "options": ["A. ...", "B. ...", "C. ...", "D. ..."], "answer": number (0-3)}.`
+            };
+
+            const prompt = `Create English learning game questions on the topic: "${topic}". Difficulty level: ${difficulty}. ${schemaInstructions[aiSelectedPlanet]} Output valid JSON array only.`;
+
+            try {
+                const rawJson = await fetchGeminiWithBackoff(prompt);
+                const cleanedJson = rawJson.replace(/```json|```/gi, '').trim();
+                const parsed = JSON.parse(cleanedJson);
+                if (!Array.isArray(parsed) || parsed.length === 0) {
+                    throw new Error('Format soal dari AI kosong.');
+                }
+                aiDraftQuestions = parsed;
+                document.getElementById('btn-apply-ai-questions')?.classList.remove('hidden');
+                renderAiQuestionPreview(aiSelectedPlanet, aiDraftQuestions, true);
+                setAiStatusBanner('success', `<i class="fa-solid fa-wand-magic-sparkles text-emerald-300"></i> <span>Berhasil membuat ${parsed.length} soal baru! Periksa pratinjau di bawah lalu klik <b>Terapkan &amp; Simpan Soal AI</b>.</span>`);
+                playSuccessSound();
+            } catch (err) {
+                setAiStatusBanner('error', `<i class="fa-solid fa-triangle-exclamation text-rose-300"></i> <span>Gagal membuat soal: ${err.message}. Silakan gunakan tab <b>Edit Manual (Offline HTML)</b> jika offline.</span>`);
+                playErrorSound();
+            } finally {
+                aiIsGenerating = false;
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        function exportAllQuestionBanksJSON() {
+            const payload = {
+                exportedAt: new Date().toISOString(),
+                planets: {
+                    1: millionaireQuestions,
+                    2: dictationSentences,
+                    3: listeningQuestions,
+                    4: readingPassages
+                }
+            };
+            const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Bank_Soal_English_Space_Battle.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            playSuccessSound();
+        }
+
+        function openAiQuestionModal() {
+            const modal = document.getElementById('ai-question-modal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            selectAiPlanetTab(aiSelectedPlanet);
+            switchQuestionStudioMode('manual');
+            playTone(659.25, 0.15, 'sine', 0.18);
+        }
+
+        function closeAiQuestionModal() {
+            const modal = document.getElementById('ai-question-modal');
+            if (!modal) return;
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
 
         function resizePlanet2CanvasForViewport() {
-            const p2Screen = document.getElementById('planet2-screen');
             const canvas = document.getElementById('balloon-canvas');
-            if (!p2Screen || p2Screen.classList.contains('hidden') || !canvas) return;
+            const p2Screen = document.getElementById('planet2-screen');
+            if (!canvas || !p2Screen || p2Screen.classList.contains('hidden')) return;
             const newW = canvas.clientWidth || 680;
-            const newH = canvas.clientHeight || 240;
-            if (canvas.width !== newW || canvas.height !== newH) {
-                canvas.width = newW;
-                canvas.height = newH;
-                p2BgStars.forEach(s => {
-                    s.x = Math.min(s.x, newW);
-                    s.y = Math.min(s.y, newH);
-                });
-                balloons.forEach(b => {
-                    const topPad = b.word ? b.r + 34 : b.r + 14;
-                    const sidePad = b.r * 1.95 + 10;
-                    const bottomPad = b.r * 0.75 + 12;
-                    b.x = Math.max(sidePad, Math.min(newW - sidePad, b.x));
-                    b.y = Math.max(topPad, Math.min(newH - bottomPad, b.y));
-                });
+            const newH = canvas.clientHeight || 260;
+            if (newW <= 0 || newH <= 0) return;
+            canvas.width = newW;
+            canvas.height = newH;
+
+            balloons.forEach(b => {
+                const topPad = b.word ? b.r + 34 : b.r + 14;
+                const sidePad = b.r * 1.95 + 10;
+                const bottomPad = b.r * 0.75 + 12;
+                b.x = Math.max(sidePad, Math.min(newW - sidePad, b.x));
+                b.y = Math.max(topPad, Math.min(newH - bottomPad, b.y));
+            });
+        }
+
+        function selectAiPlanetTab(planetNum) {
+            aiSelectedPlanet = planetNum;
+            aiDraftQuestions = null;
+            document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
+            setAiStatusBanner('', '');
+
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`ai-tab-${i}`);
+                if (!btn) continue;
+                if (i === planetNum) {
+                    btn.className = 'py-2 px-2.5 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow';
+                } else {
+                    btn.className = 'py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800';
+                }
+            }
+
+            const defaultHints = {
+                1: 'Pronouns, To Be, atau Simple Present Tense (Pilihan Ganda)',
+                2: 'Kalimat Pendek Bahasa Inggris untuk Dikte Audio (4-6 kata)',
+                3: 'Dialog/Monolog Pendek Listening Comprehension Bahasa Inggris',
+                4: 'Teks Bacaan Singkat Kontekstual SMK / Agribisnis Perikanan'
+            };
+            const input = document.getElementById('ai-topic-input');
+            if (input && !input.value.trim()) {
+                input.placeholder = `Contoh: ${defaultHints[planetNum]}`;
+            }
+
+            if (studioCurrentMode === 'manual') {
+                manualEditingItems = JSON.parse(JSON.stringify(getActivePlanetQuestions(planetNum)));
+                renderManualQuestionEditor(planetNum);
+            } else {
+                renderAiQuestionPreview(planetNum, getActivePlanetQuestions(planetNum), false);
             }
         }
 
@@ -3929,6 +4320,7 @@
         });
 
         window.onload = function() {
+            loadCustomQuestionsFromStorage();
             initIntroAutoMusic();
             updateHeaderUI();
         };
