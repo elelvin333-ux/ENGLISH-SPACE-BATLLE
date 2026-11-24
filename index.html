@@ -1332,6 +1332,28 @@
 
             <!-- Form Pengaturan Prompt Gemini AI -->
             <div class="bg-slate-900/90 border border-fuchsia-500/35 rounded-2xl p-4 space-y-3 text-left text-xs">
+                <!-- Pengaturan API Key Khusus Hosting Online (GitHub Pages / HTML Mandiri) -->
+                <div class="p-3 rounded-xl bg-slate-950/90 border border-amber-400/35 space-y-2">
+                    <div class="flex flex-wrap justify-between items-center gap-2">
+                        <span class="text-[11px] font-extrabold text-amber-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-key"></i> Kunci API Gemini (Wajib Jika Online di GitHub Pages / File HTML)
+                        </span>
+                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-[10px] text-sky-300 underline font-bold hover:text-sky-200">
+                            Dapatkan API Key Gratis (Google AI Studio) ↗
+                        </a>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input id="ai-custom-api-key" type="password" placeholder="Tempel Gemini API Key (AIzaSy...) — Kosongkan jika di mode Preview ini"
+                               class="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-amber-200 text-xs focus:outline-none focus:border-amber-400">
+                        <button type="button" onclick="saveCustomGeminiApiKey()" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] shadow transition">
+                            Simpan API Key
+                        </button>
+                    </div>
+                    <p id="ai-apikey-status" class="text-[10px] text-slate-400">
+                        <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> API Key disimpan aman di browser perangkat ini (tidak bocor ke repositori GitHub).
+                    </p>
+                </div>
+
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div class="sm:col-span-2 space-y-1">
                         <label for="ai-topic-input" class="block font-bold text-fuchsia-300 uppercase text-[10px]">
@@ -1354,24 +1376,24 @@
 
                 <!-- Pilihan Topik Cepat (Preset Chips) -->
                 <div class="flex flex-wrap items-center gap-1.5">
-                    <span class="text-[10px] text-slate-400 font-bold mr-1">Topik Cepat:</span>
-                    <button type="button" onclick="applyAiPresetTopic('Self-Introduction, Pronouns & To Be')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Self-Introduction</button>
-                    <button type="button" onclick="applyAiPresetTopic('Simple Present Tense & Daily Routines')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Simple Present Tense</button>
-                    <button type="button" onclick="applyAiPresetTopic('Simple Past Tense & Recount Text')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Simple Past Tense</button>
-                    <button type="button" onclick="applyAiPresetTopic('Procedure Text & Equipment in Aquaculture / Fisheries')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Procedure Text Perikanan</button>
-                    <button type="button" onclick="applyAiPresetTopic('Descriptive Text about Marine Animals & Fish Ponds')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Descriptive Text</button>
-                    <button type="button" onclick="applyAiPresetTopic('Greeting, Asking & Giving Opinion')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Expressions &amp; Opinion</button>
-                </div>
-
-                <!-- Tombol Aksi Generate -->
+                <!-- Tombol Aksi Generate & Ekspor/Impor Paket Soal -->
                 <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
                     <button id="btn-generate-ai-questions" onclick="generateQuestionsWithGeminiAI()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-2">
                         <i class="fa-solid fa-sparkles"></i>
                         <span>Buat Soal Baru dengan Gemini AI</span>
                     </button>
-                    <button type="button" onclick="resetPlanetQuestionsToDefault()" class="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-[11px] transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-rotate-left"></i> Reset Soal Bawaan Planet Ini
-                    </button>
+                    <div class="flex flex-wrap items-center gap-1.5">
+                        <button type="button" onclick="exportAllQuestionBanksJSON()" class="px-3 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-200 font-bold text-[11px] transition flex items-center gap-1" title="Unduh Paket Soal untuk dibagikan ke Siswa">
+                            <i class="fa-solid fa-file-export"></i> Ekspor Paket Soal (.JSON)
+                        </button>
+                        <button type="button" onclick="document.getElementById('import-questions-input').click()" class="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-200 font-bold text-[11px] transition flex items-center gap-1" title="Muat Paket Soal dari File JSON">
+                            <i class="fa-solid fa-file-import"></i> Impor Soal
+                        </button>
+                        <input type="file" id="import-questions-input" accept=".json,application/json" class="hidden" onchange="importAllQuestionBanksJSON(event)">
+                        <button type="button" onclick="resetPlanetQuestionsToDefault()" class="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-[11px] transition flex items-center gap-1">
+                            <i class="fa-solid fa-rotate-left"></i> Reset Bawaan
+                        </button>
+                    </div>
                 </div>
 
                 <!-- Status / Loading Indicator -->
@@ -3214,6 +3236,7 @@
            STUDIO UBAH SOAL DENGAN GEMINI AI (KHUSUS GURU)
            ========================================================================== */
         const CUSTOM_QUESTIONS_STORAGE_KEY = 'english_space_battle_custom_questions_v1';
+        const GEMINI_API_KEY_STORAGE_KEY = 'english_space_battle_gemini_api_key_v1';
         const DEFAULT_QUESTION_BANKS = {
             1: JSON.parse(JSON.stringify(millionaireQuestions)),
             2: JSON.parse(JSON.stringify(dictationSentences)),
@@ -3224,6 +3247,37 @@
         let aiSelectedPlanet = 1;
         let aiDraftQuestions = null;
         let aiIsGenerating = false;
+
+        function getStoredGeminiApiKey() {
+            try {
+                return (localStorage.getItem(GEMINI_API_KEY_STORAGE_KEY) || '').trim();
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function saveCustomGeminiApiKey() {
+            const input = document.getElementById('ai-custom-api-key');
+            const statusEl = document.getElementById('ai-apikey-status');
+            const val = (input?.value || '').trim();
+            try {
+                if (val) {
+                    localStorage.setItem(GEMINI_API_KEY_STORAGE_KEY, val);
+                    if (statusEl) {
+                        statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> API Key Gemini berhasil disimpan di browser! Siap digunakan secara online di GitHub / HTML.';
+                        statusEl.className = 'text-[10px] text-emerald-300 font-bold';
+                    }
+                    playSuccessSound();
+                } else {
+                    localStorage.removeItem(GEMINI_API_KEY_STORAGE_KEY);
+                    if (statusEl) {
+                        statusEl.innerHTML = '<i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> API Key dikosongkan (menggunakan kunci bawaan lingkungan Preview).';
+                        statusEl.className = 'text-[10px] text-slate-300';
+                    }
+                    playTone(480, 0.12, 'sine', 0.15);
+                }
+            } catch (e) {}
+        }
 
         function loadCustomQuestionsFromStorage() {
             try {
@@ -3276,6 +3330,14 @@
         function openAiQuestionModal() {
             const modal = document.getElementById('ai-question-modal');
             if (!modal) return;
+            const savedKey = getStoredGeminiApiKey();
+            const keyInput = document.getElementById('ai-custom-api-key');
+            const statusEl = document.getElementById('ai-apikey-status');
+            if (keyInput && savedKey) keyInput.value = savedKey;
+            if (statusEl && savedKey) {
+                statusEl.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> API Key Gemini tersimpan & aktif untuk penggunaan online (GitHub Pages / HTML).';
+                statusEl.className = 'text-[10px] text-emerald-300 font-bold';
+            }
             modal.classList.remove('hidden');
             modal.classList.add('flex');
             selectAiPlanetTab(aiSelectedPlanet || 1);
@@ -3412,33 +3474,53 @@
         }
 
         async function fetchGeminiWithBackoff(payload, maxRetries = 3) {
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const apiKey = getStoredGeminiApiKey();
+            // Gunakan model utama gemini-3-flash-preview, dan otomatis fallback ke gemini-3.8-flash jika di hosting eksternal
+            const candidateModels = ['gemini-3-flash-preview', 'gemini-3.8-flash'];
             const delays = [1000, 2000, 4000];
+            let lastError = null;
 
-            for (let attempt = 0; attempt <= maxRetries; attempt++) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (response.ok) {
-                        return await response.json();
+            for (const modelName of candidateModels) {
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${encodeURIComponent(apiKey)}`;
+                for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (response.ok) {
+                            return await response.json();
+                        }
+                        let errDetail = `HTTP ${response.status}`;
+                        try {
+                            const errJson = await response.json();
+                            if (errJson?.error?.message) errDetail = errJson.error.message;
+                        } catch (e) {}
+                        lastError = new Error(errDetail);
+
+                        // Jika 400/403 (API key belum diisi saat di-host di GitHub Pages), langsung hentikan retry
+                        if (response.status === 400 || response.status === 403) {
+                            throw lastError;
+                        }
+                        if (attempt < maxRetries && (response.status === 429 || response.status >= 500)) {
+                            await new Promise(res => setTimeout(res, delays[attempt] || 4000));
+                            continue;
+                        }
+                        break;
+                    } catch (err) {
+                        lastError = err;
+                        if (err.message && (err.message.includes('API key') || err.message.includes('HTTP 400') || err.message.includes('HTTP 403'))) {
+                            throw err;
+                        }
+                        if (attempt < maxRetries) {
+                            await new Promise(res => setTimeout(res, delays[attempt] || 4000));
+                            continue;
+                        }
                     }
-                    if (attempt < maxRetries && (response.status === 429 || response.status >= 500)) {
-                        await new Promise(res => setTimeout(res, delays[attempt] || 4000));
-                        continue;
-                    }
-                    throw new Error(`HTTP ${response.status}`);
-                } catch (err) {
-                    if (attempt < maxRetries) {
-                        await new Promise(res => setTimeout(res, delays[attempt] || 4000));
-                        continue;
-                    }
-                    throw err;
                 }
             }
+            throw lastError || new Error('Gagal menghubungi server Gemini AI.');
         }
 
         function buildGeminiSchemaAndPrompt(planetNum, topic, difficulty) {
@@ -3625,7 +3707,15 @@
                 setAiStatusBanner('success', `<i class="fa-solid fa-circle-check text-emerald-300"></i> <span>Berhasil! ${sanitized.length} soal baru siap ditinjau. Klik <b>"Terapkan &amp; Simpan Soal ke Game"</b> untuk mengaktifkan.</span>`);
                 playSuccessSound();
             } catch (err) {
-                setAiStatusBanner('error', `<i class="fa-solid fa-triangle-exclamation text-rose-300"></i> <span>Gagal menghubungi Gemini AI. Periksa koneksi internet Anda lalu coba lagi.</span>`);
+                const hasCustomKey = !!getStoredGeminiApiKey();
+                const isHostingExternal = window.location.protocol === 'file:' || window.location.hostname.includes('github.io');
+                let hintMsg = 'Periksa koneksi internet Anda lalu coba lagi.';
+                if (!hasCustomKey && isHostingExternal) {
+                    hintMsg = 'Anda menjalankan file ini di GitHub Pages / HTML lokal. Silakan masukkan <b>Gemini API Key</b> gratis pada kotak di atas terlebih dahulu!';
+                } else if (err?.message) {
+                    hintMsg = `Detail: ${err.message}`;
+                }
+                setAiStatusBanner('error', `<i class="fa-solid fa-triangle-exclamation text-rose-300"></i> <span>Gagal membuat soal: ${hintMsg}</span>`);
                 playErrorSound();
             } finally {
                 aiIsGenerating = false;
@@ -3634,6 +3724,55 @@
                     genBtn.classList.remove('opacity-60', 'cursor-wait');
                 }
             }
+        }
+
+        function exportAllQuestionBanksJSON() {
+            const bundle = {
+                app: 'English Space Battle',
+                exportedAt: new Date().toISOString(),
+                planets: {
+                    1: millionaireQuestions,
+                    2: dictationSentences,
+                    3: listeningQuestions,
+                    4: readingPassages
+                }
+            };
+            const blob = new Blob([JSON.stringify(bundle, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Paket_Soal_English_Space_Battle.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            setAiStatusBanner('success', '<i class="fa-solid fa-file-export text-emerald-300"></i> <span>Paket soal seluruh planet berhasil diunduh (.JSON)! File ini dapat diimpor di perangkat lain atau dijadikan soal default.</span>');
+            playSuccessSound();
+        }
+
+        function importAllQuestionBanksJSON(event) {
+            const file = event.target?.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    const p = data.planets || data;
+                    if (Array.isArray(p[1]) && p[1].length > 0) millionaireQuestions = p[1];
+                    if (Array.isArray(p[2]) && p[2].length > 0) dictationSentences = p[2];
+                    if (Array.isArray(p[3]) && p[3].length > 0) listeningQuestions = p[3];
+                    if (Array.isArray(p[4]) && p[4].length > 0) readingPassages = p[4];
+                    saveCustomQuestionsToStorage();
+                    renderAiQuestionPreview(aiSelectedPlanet, getActivePlanetQuestions(aiSelectedPlanet), false);
+                    setAiStatusBanner('success', '<i class="fa-solid fa-file-import text-emerald-300"></i> <span>Paket soal berhasil diimpor dan langsung aktif di semua planet!</span>');
+                    playSuccessSound();
+                } catch (err) {
+                    setAiStatusBanner('error', '<i class="fa-solid fa-triangle-exclamation text-rose-300"></i> <span>File JSON tidak valid. Pastikan memilih file hasil Ekspor Paket Soal.</span>');
+                    playErrorSound();
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
         }
 
         function applyGeneratedAiQuestions() {
