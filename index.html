@@ -893,168 +893,169 @@
     </div>
 
     <!-- MODAL STUDIO UBAH SOAL (MANUAL HTML & GEMINI AI - KHUSUS GURU) -->
-    <div id="ai-question-modal" onclick="if(event.target === this) closeAiQuestionModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[130] p-3 sm:p-5">
-        <div class="glass-card rounded-3xl max-w-4xl w-full p-5 sm:p-6 border-2 border-fuchsia-400/80 shadow-[0_0_55px_rgba(232,121,249,0.3)] flex flex-col max-h-[92vh] space-y-3.5">
+    <div id="ai-question-modal" onclick="if(event.target === this) closeAiQuestionModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[130] p-2.5 sm:p-4">
+        <div class="glass-card rounded-2xl max-w-2xl w-full p-3.5 sm:p-4 border-2 border-fuchsia-400/80 shadow-[0_0_45px_rgba(232,121,249,0.3)] flex flex-col max-h-[85vh] space-y-2.5">
             <!-- Header Modal -->
-            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-sky-500 flex items-center justify-center text-white text-xl shadow-lg border border-fuchsia-300/50">
+            <div class="flex justify-between items-center border-b border-slate-700 pb-2">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-sky-500 flex items-center justify-center text-white text-base shadow-lg border border-fuchsia-300/50">
                         <i class="fa-solid fa-pen-ruler"></i>
                     </div>
                     <div class="text-left">
-                        <h3 class="font-game text-lg sm:text-xl font-bold text-fuchsia-300 leading-tight">
-                            STUDIO UBAH SOAL — MODE MANUAL HTML &amp; GEMINI AI
+                        <h3 class="font-game text-sm sm:text-base font-bold text-fuchsia-300 leading-tight">
+                            STUDIO UBAH SOAL — MANUAL HTML &amp; GEMINI AI
                         </h3>
-                        <p class="text-[11px] text-slate-300">
-                            Ubah soal secara langsung (100% offline di file .html) atau buat otomatis dengan Gemini AI, lalu unduh HTML siap pakai
+                        <p class="text-[10px] text-slate-300">
+                            Ubah soal langsung (offline .html) atau otomatis via Gemini AI
                         </p>
                     </div>
                 </div>
-                <button onclick="closeAiQuestionModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-600 transition" title="Tutup">
-                    <i class="fa-solid fa-xmark text-base"></i>
+                <button onclick="closeAiQuestionModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-600 transition" title="Tutup">
+                    <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <!-- Tab Pilih Planet -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800">
-                <button id="ai-tab-1" onclick="selectAiPlanetTab(1)" class="py-2 px-2.5 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow">
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 bg-slate-950/80 p-1 rounded-xl border border-slate-800">
+                <button id="ai-tab-1" onclick="selectAiPlanetTab(1)" class="py-1.5 px-2 rounded-lg font-extrabold text-[11px] transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow">
                     🟣 Planet 1 (PG)
                 </button>
-                <button id="ai-tab-2" onclick="selectAiPlanetTab(2)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                <button id="ai-tab-2" onclick="selectAiPlanetTab(2)" class="py-1.5 px-2 rounded-lg font-bold text-[11px] transition text-slate-300 hover:bg-slate-800">
                     ☀️ Planet 2 (Dikte)
                 </button>
-                <button id="ai-tab-3" onclick="selectAiPlanetTab(3)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                <button id="ai-tab-3" onclick="selectAiPlanetTab(3)" class="py-1.5 px-2 rounded-lg font-bold text-[11px] transition text-slate-300 hover:bg-slate-800">
                     🌙 Planet 3 (Audio)
                 </button>
-                <button id="ai-tab-4" onclick="selectAiPlanetTab(4)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                <button id="ai-tab-4" onclick="selectAiPlanetTab(4)" class="py-1.5 px-2 rounded-lg font-bold text-[11px] transition text-slate-300 hover:bg-slate-800">
                     ⭐ Planet 4 (Bacaan)
                 </button>
             </div>
 
             <!-- Pemilih Mode: Edit Manual Offline (HTML) vs Generator Gemini AI -->
-            <div class="flex flex-wrap items-center justify-between gap-2 bg-slate-900/90 border border-slate-700 rounded-2xl p-2.5">
-                <div class="flex items-center gap-1.5">
-                    <button type="button" id="studio-mode-manual-btn" onclick="switchQuestionStudioMode('manual')" class="px-3.5 py-2 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow flex items-center gap-1.5">
+            <div class="flex flex-wrap items-center justify-between gap-1.5 bg-slate-900/90 border border-slate-700 rounded-xl p-2">
+                <div class="flex items-center gap-1">
+                    <button type="button" id="studio-mode-manual-btn" onclick="switchQuestionStudioMode('manual')" class="px-2.5 py-1.5 rounded-lg font-extrabold text-[11px] transition bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 shadow flex items-center gap-1">
                         <i class="fa-solid fa-pen-to-square"></i> Edit Manual (Offline HTML)
                     </button>
-                    <button type="button" id="studio-mode-ai-btn" onclick="switchQuestionStudioMode('ai')" class="px-3.5 py-2 rounded-xl font-bold text-xs transition bg-slate-800 hover:bg-slate-700 text-fuchsia-200 border border-fuchsia-400/40 flex items-center gap-1.5">
+                    <button type="button" id="studio-mode-ai-btn" onclick="switchQuestionStudioMode('ai')" class="px-2.5 py-1.5 rounded-lg font-bold text-[11px] transition bg-slate-800 hover:bg-slate-700 text-fuchsia-200 border border-fuchsia-400/40 flex items-center gap-1">
                         <i class="fa-solid fa-wand-magic-sparkles"></i> Buat Otomatis (Gemini AI)
                     </button>
                 </div>
-                <div class="flex flex-wrap items-center gap-1.5">
-                    <button type="button" onclick="downloadStandaloneUpdatedHtml()" class="px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1.5" title="Unduh file .html mandiri yang sudah tertanam soal baru untuk dibagikan ke siswa">
-                        <i class="fa-solid fa-file-code"></i> Unduh File HTML Baru
+                <div class="flex flex-wrap items-center gap-1">
+                    <button type="button" onclick="downloadStandaloneUpdatedHtml()" class="px-2.5 py-1.5 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-extrabold text-[10px] shadow transition flex items-center gap-1" title="Unduh file .html mandiri yang sudah tertanam soal baru untuk dibagikan ke siswa">
+                        <i class="fa-solid fa-file-code"></i> Unduh HTML Baru
                     </button>
-                    <button type="button" onclick="exportAllQuestionBanksJSON()" class="px-2.5 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-200 font-bold text-[11px] transition flex items-center gap-1" title="Ekspor Soal ke JSON">
-                        <i class="fa-solid fa-file-export"></i> Ekspor JSON
+                    <button type="button" onclick="exportAllQuestionBanksJSON()" class="px-2 py-1.5 rounded-lg bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-200 font-bold text-[10px] transition flex items-center gap-1" title="Ekspor Soal ke JSON">
+                        <i class="fa-solid fa-file-export"></i> Ekspor
                     </button>
-                    <button type="button" onclick="document.getElementById('import-questions-input').click()" class="px-2.5 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-200 font-bold text-[11px] transition flex items-center gap-1" title="Impor Soal dari JSON">
-                        <i class="fa-solid fa-file-import"></i> Impor JSON
+                    <button type="button" onclick="document.getElementById('import-questions-input').click()" class="px-2 py-1.5 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-200 font-bold text-[10px] transition flex items-center gap-1" title="Impor Soal dari JSON">
+                        <i class="fa-solid fa-file-import"></i> Impor
                     </button>
                     <input type="file" id="import-questions-input" accept=".json,application/json" class="hidden" onchange="importAllQuestionBanksJSON(event)">
-                    <button type="button" onclick="resetPlanetQuestionsToDefault()" class="px-2.5 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-[11px] transition flex items-center gap-1" title="Kembalikan Soal Bawaan">
+                    <button type="button" onclick="resetPlanetQuestionsToDefault()" class="px-2 py-1.5 rounded-lg bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-[10px] transition flex items-center gap-1" title="Kembalikan Soal Bawaan">
                         <i class="fa-solid fa-rotate-left"></i> Reset
                     </button>
                 </div>
             </div>
 
             <!-- PANEL 1: EDITOR MANUAL LANGSUNG (100% OFFLINE DI FILE HTML) -->
-            <div id="manual-editor-toolbar" class="bg-emerald-500/10 border border-emerald-400/40 rounded-2xl p-3 flex flex-wrap justify-between items-center gap-2 text-xs">
+            <div id="manual-editor-toolbar" class="bg-emerald-500/10 border border-emerald-400/40 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
                 <div class="text-left">
-                    <span class="font-extrabold text-emerald-300 block"><i class="fa-solid fa-circle-check mr-1"></i> Mode Edit Manual Aktif (Bekerja 100% Tanpa Internet di File .HTML)</span>
-                    <span class="text-[11px] text-slate-300">Ubah teks soal, pilihan jawaban, kunci jawaban, atau tambah/hapus soal di bawah, lalu klik <b>Simpan Perubahan Soal</b>.</span>
+                    <span class="font-extrabold text-emerald-300 text-[11px] block"><i class="fa-solid fa-circle-check mr-1"></i> Mode Edit Manual Aktif (100% Offline HTML)</span>
+                    <span class="text-[10px] text-slate-300">Klik <b>Tambah Soal Baru</b> atau <b>Edit</b> pada daftar di bawah.</span>
                 </div>
-                <div class="flex items-center gap-2">
-                    <button type="button" onclick="addManualQuestionItem()" class="px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-xs shadow transition flex items-center gap-1">
+                <div class="flex items-center gap-1.5">
+                    <button type="button" onclick="addManualQuestionItem()" class="px-3 py-1.5 rounded-lg bg-sky-500 hover:bg-sky-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1">
                         <i class="fa-solid fa-plus"></i> Tambah Soal Baru
                     </button>
-                    <button type="button" onclick="saveManualEditedQuestions()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan Soal
+                    <button type="button" onclick="saveManualEditedQuestions()" class="px-3 py-1.5 rounded-lg bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan
                     </button>
                 </div>
             </div>
 
             <!-- PANEL 2: PENGATURAN PROMPT GEMINI AI -->
-            <div id="ai-generator-panel" class="hidden bg-slate-900/90 border border-fuchsia-500/35 rounded-2xl p-3.5 space-y-2.5 text-left text-xs">
-                <div class="p-2.5 rounded-xl bg-slate-950/90 border border-amber-400/35 space-y-1.5">
-                    <div class="flex flex-wrap justify-between items-center gap-2">
-                        <span class="text-[11px] font-extrabold text-amber-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-key"></i> Kunci API Gemini (Wajib Jika Online di GitHub Pages / File HTML)
+            <div id="ai-generator-panel" class="hidden bg-slate-900/90 border border-fuchsia-500/35 rounded-xl p-2.5 space-y-2 text-left text-xs">
+                <div class="p-2 rounded-lg bg-slate-950/90 border border-amber-400/35 space-y-1">
+                    <div class="flex flex-wrap justify-between items-center gap-1">
+                        <span class="text-[10px] font-extrabold text-amber-300 flex items-center gap-1">
+                            <i class="fa-solid fa-key"></i> Kunci API Gemini (Wajib Jika Online di GitHub / HTML)
                         </span>
                         <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-[10px] text-sky-300 underline font-bold hover:text-sky-200">
-                            Dapatkan API Key Gratis ↗
+                            API Key Gratis ↗
                         </a>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input id="ai-custom-api-key" type="password" placeholder="Tempel Gemini API Key (AIzaSy...) — Kosongkan jika di mode Preview ini"
-                               class="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-amber-200 text-xs focus:outline-none focus:border-amber-400">
-                        <button type="button" onclick="saveCustomGeminiApiKey()" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] shadow transition">
+                    <div class="flex flex-col sm:flex-row gap-1.5">
+                        <input id="ai-custom-api-key" type="password" placeholder="Tempel Gemini API Key (AIzaSy...) — Kosongkan jika di mode Preview"
+                               class="flex-1 px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-amber-200 text-[11px] focus:outline-none focus:border-amber-400">
+                        <button type="button" onclick="saveCustomGeminiApiKey()" class="px-3 py-1 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[10px] shadow transition">
                             Simpan API Key
                         </button>
                     </div>
-                    <p id="ai-apikey-status" class="text-[10px] text-slate-400">
-                        <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> API Key disimpan aman di browser perangkat ini.
-                    </p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                     <div class="sm:col-span-2 space-y-1">
                         <label for="ai-topic-input" class="block font-bold text-fuchsia-300 uppercase text-[10px]">
-                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Topik / Materi Soal Gemini AI:
+                            <i class="fa-solid fa-wand-magic-sparkles mr-1"></i> Topik / Materi Soal:
                         </label>
                         <input id="ai-topic-input" type="text" placeholder="Contoh: Simple Present Tense & Daily Activities di SMK"
-                               class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-fuchsia-400">
+                               class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-[11px] focus:outline-none focus:border-fuchsia-400">
                     </div>
                     <div class="space-y-1">
                         <label for="ai-difficulty-select" class="block font-bold text-sky-300 uppercase text-[10px]">
-                            <i class="fa-solid fa-layer-group mr-1"></i> Tingkat Kesulitan:
+                            <i class="fa-solid fa-layer-group mr-1"></i> Kesulitan:
                         </label>
-                        <select id="ai-difficulty-select" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
-                            <option value="Mudah (SMK Kelas X Dasar / A1-A2)">Mudah (A1-A2 Dasar)</option>
-                            <option value="Sedang (SMK Kelas X-XI / A2-B1)" selected>Sedang (A2-B1 Standar)</option>
-                            <option value="Sulit (SMK Kelas XI-XII / B1-B2)">Sulit (B1-B2 Tantangan)</option>
+                        <select id="ai-difficulty-select" class="w-full px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-white text-[11px] focus:outline-none focus:border-sky-400">
+                            <option value="Mudah (SMK Kelas X Dasar / A1-A2)">Mudah (A1-A2)</option>
+                            <option value="Sedang (SMK Kelas X-XI / A2-B1)" selected>Sedang (A2-B1)</option>
+                            <option value="Sulit (SMK Kelas XI-XII / B1-B2)">Sulit (B1-B2)</option>
                         </select>
                     </div>
                 </div>
 
                 <div class="flex flex-wrap items-center justify-between gap-2 pt-0.5">
-                    <button id="btn-generate-ai-questions" onclick="generateQuestionsWithGeminiAI()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-2">
+                    <button id="btn-generate-ai-questions" onclick="generateQuestionsWithGeminiAI()" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-extrabold text-[11px] shadow transition flex items-center gap-1.5">
                         <i class="fa-solid fa-sparkles"></i>
                         <span>Buat Soal Baru dengan Gemini AI</span>
                     </button>
-                    <span class="text-[10px] text-slate-400">Jika server AI padat, gunakan tab <b>Edit Manual (Offline HTML)</b> di atas.</span>
+                    <button id="btn-apply-ai-questions-inline" onclick="applyGeneratedAiQuestions()" class="hidden px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 hover:from-emerald-300 hover:to-cyan-300 text-slate-950 font-extrabold text-[11px] shadow-[0_0_16px_rgba(52,211,153,0.65)] animate-pulse transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-check-double"></i>
+                        <span>Terapkan &amp; Simpan Soal AI</span>
+                    </button>
+                    <span class="text-[10px] text-slate-400">Atau gunakan tab <b>Edit Manual</b> di atas.</span>
                 </div>
             </div>
 
             <!-- Status / Loading Indicator -->
-            <div id="ai-status-banner" class="hidden p-2.5 rounded-xl text-xs font-bold flex items-center gap-2"></div>
+            <div id="ai-status-banner" class="hidden p-2 rounded-lg text-[11px] font-bold flex items-center gap-2"></div>
 
             <!-- Area Form Edit Manual / Pratinjau Soal -->
-            <div class="flex-1 overflow-y-auto pr-1 space-y-2 text-left">
+            <div class="flex-1 overflow-y-auto pr-1 space-y-1.5 text-left min-h-[120px]">
                 <div class="flex justify-between items-center">
-                    <span id="ai-preview-heading" class="text-[11px] font-extrabold text-amber-300 uppercase tracking-wider">
+                    <span id="ai-preview-heading" class="text-[10px] font-extrabold text-amber-300 uppercase tracking-wider">
                         ✏️ Edit Langsung Soal Planet 1:
                     </span>
-                    <span id="ai-preview-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[10px] font-bold">
+                    <span id="ai-preview-badge" class="px-2 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[9px] font-bold">
                         Mode Edit Manual HTML
                     </span>
                 </div>
-                <div id="ai-questions-preview-list" class="space-y-2.5 text-xs"></div>
+                <div id="ai-questions-preview-list" class="space-y-1.5 text-[11px]"></div>
             </div>
 
             <!-- Footer Modal -->
             <div class="flex flex-wrap justify-between items-center gap-2 pt-2 border-t border-slate-700">
-                <span class="text-[11px] text-slate-400">
-                    <i class="fa-solid fa-lightbulb text-amber-300 mr-1"></i> Klik <b>Unduh File HTML Baru</b> untuk menyimpan file `.html` mandiri berisi soal terbaru.
+                <span class="text-[10px] text-slate-400">
+                    <i class="fa-solid fa-lightbulb text-amber-300 mr-1"></i> Klik <b>Unduh HTML Baru</b> untuk simpan file `.html` mandiri.
                 </span>
-                <div class="flex gap-2">
-                    <button onclick="closeAiQuestionModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600 transition">
+                <div class="flex gap-1.5">
+                    <button onclick="closeAiQuestionModal()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-[11px] border border-slate-600 transition">
                         Tutup
                     </button>
-                    <button id="btn-save-manual-footer" onclick="saveManualEditedQuestions()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
-                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan Soal
+                    <button id="btn-save-manual-footer" onclick="saveManualEditedQuestions()" class="px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1">
+                        <i class="fa-solid fa-floppy-disk"></i> Simpan Perubahan
                     </button>
-                    <button id="btn-apply-ai-questions" onclick="applyGeneratedAiQuestions()" class="hidden px-5 py-2 rounded-xl bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-400 hover:to-purple-500 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                    <button id="btn-apply-ai-questions" onclick="applyGeneratedAiQuestions()" class="hidden px-3.5 py-1.5 rounded-lg bg-gradient-to-r from-fuchsia-500 to-purple-600 hover:from-fuchsia-400 hover:to-purple-500 text-white font-extrabold text-[11px] shadow transition flex items-center gap-1">
                         <i class="fa-solid fa-check-double"></i> Terapkan &amp; Simpan Soal AI
                     </button>
                 </div>
@@ -1458,145 +1459,6 @@
             </div>
         </div>
     </div>
-
-    <!-- MODAL STUDIO UBAH SOAL DENGAN GEMINI AI (KHUSUS GURU) -->
-    <div id="ai-question-modal" onclick="if(event.target === this) closeAiQuestionModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[130] p-3 sm:p-5">
-        <div class="glass-card rounded-3xl max-w-4xl w-full p-5 sm:p-6 border-2 border-fuchsia-400/80 shadow-[0_0_55px_rgba(232,121,249,0.3)] flex flex-col max-h-[92vh] space-y-4">
-            <!-- Header Modal -->
-            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-sky-500 flex items-center justify-center text-white text-xl shadow-lg border border-fuchsia-300/50">
-                        <i class="fa-solid fa-wand-magic-sparkles"></i>
-                    </div>
-                    <div class="text-left">
-                        <h3 class="font-game text-lg sm:text-xl font-bold text-fuchsia-300 leading-tight">
-                            STUDIO UBAH SOAL — GEMINI AI
-                        </h3>
-                        <p class="text-[11px] text-slate-300">
-                            Ubah topik, jenis soal, dan tingkat kesulitan tiap planet sewaktu-waktu dengan bantuan Gemini AI
-                        </p>
-                    </div>
-                </div>
-                <button onclick="closeAiQuestionModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-600 transition" title="Tutup">
-                    <i class="fa-solid fa-xmark text-base"></i>
-                </button>
-            </div>
-
-            <!-- Tab Pilih Planet -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800">
-                <button id="ai-tab-1" onclick="selectAiPlanetTab(1)" class="py-2 px-2.5 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow">
-                    🟣 Planet 1 (10 PG)
-                </button>
-                <button id="ai-tab-2" onclick="selectAiPlanetTab(2)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
-                    ☀️ Planet 2 (5 Dikte)
-                </button>
-                <button id="ai-tab-3" onclick="selectAiPlanetTab(3)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
-                    🌙 Planet 3 (5 Audio)
-                </button>
-                <button id="ai-tab-4" onclick="selectAiPlanetTab(4)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
-                    ⭐ Planet 4 (5 Bacaan)
-                </button>
-            </div>
-
-            <!-- Form Pengaturan Prompt Gemini AI -->
-            <div class="bg-slate-900/90 border border-fuchsia-500/35 rounded-2xl p-4 space-y-3 text-left text-xs">
-                <!-- Pengaturan API Key Khusus Hosting Online (GitHub Pages / HTML Mandiri) -->
-                <div class="p-3 rounded-xl bg-slate-950/90 border border-amber-400/35 space-y-2">
-                    <div class="flex flex-wrap justify-between items-center gap-2">
-                        <span class="text-[11px] font-extrabold text-amber-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-key"></i> Kunci API Gemini (Wajib Jika Online di GitHub Pages / File HTML)
-                        </span>
-                        <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener noreferrer" class="text-[10px] text-sky-300 underline font-bold hover:text-sky-200">
-                            Dapatkan API Key Gratis (Google AI Studio) ↗
-                        </a>
-                    </div>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <input id="ai-custom-api-key" type="password" placeholder="Tempel Gemini API Key (AIzaSy...) — Kosongkan jika di mode Preview ini"
-                               class="flex-1 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-amber-200 text-xs focus:outline-none focus:border-amber-400">
-                        <button type="button" onclick="saveCustomGeminiApiKey()" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-[11px] shadow transition">
-                            Simpan API Key
-                        </button>
-                    </div>
-                    <p id="ai-apikey-status" class="text-[10px] text-slate-400">
-                        <i class="fa-solid fa-shield-halved text-emerald-400 mr-1"></i> API Key disimpan aman di browser perangkat ini (tidak bocor ke repositori GitHub).
-                    </p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    <div class="sm:col-span-2 space-y-1">
-                        <label for="ai-topic-input" class="block font-bold text-fuchsia-300 uppercase text-[10px]">
-                            <i class="fa-solid fa-pen-to-square mr-1"></i> Topik / Materi / Jenis Soal yang Diinginkan:
-                        </label>
-                        <input id="ai-topic-input" type="text" placeholder="Contoh: Simple Present Tense & Daily Activities di SMK Perikanan"
-                               class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-fuchsia-400">
-                    </div>
-                    <div class="space-y-1">
-                        <label for="ai-difficulty-select" class="block font-bold text-sky-300 uppercase text-[10px]">
-                            <i class="fa-solid fa-layer-group mr-1"></i> Tingkat Kesulitan:
-                        </label>
-                        <select id="ai-difficulty-select" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
-                            <option value="Mudah (SMK Kelas X Dasar / A1-A2)">Mudah (A1-A2 Dasar)</option>
-                            <option value="Sedang (SMK Kelas X-XI / A2-B1)" selected>Sedang (A2-B1 Standar)</option>
-                            <option value="Sulit (SMK Kelas XI-XII / B1-B2)">Sulit (B1-B2 Tantangan)</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Pilihan Topik Cepat (Preset Chips) -->
-                <div class="flex flex-wrap items-center gap-1.5">
-                <!-- Tombol Aksi Generate & Ekspor/Impor Paket Soal -->
-                <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
-                    <button id="btn-generate-ai-questions" onclick="generateQuestionsWithGeminiAI()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-2">
-                        <i class="fa-solid fa-sparkles"></i>
-                        <span>Buat Soal Baru dengan Gemini AI</span>
-                    </button>
-                    <div class="flex flex-wrap items-center gap-1.5">
-                        <button type="button" onclick="exportAllQuestionBanksJSON()" class="px-3 py-2 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-200 font-bold text-[11px] transition flex items-center gap-1" title="Unduh Paket Soal untuk dibagikan ke Siswa">
-                            <i class="fa-solid fa-file-export"></i> Ekspor Paket Soal (.JSON)
-                        </button>
-                        <button type="button" onclick="document.getElementById('import-questions-input').click()" class="px-3 py-2 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/50 text-emerald-200 font-bold text-[11px] transition flex items-center gap-1" title="Muat Paket Soal dari File JSON">
-                            <i class="fa-solid fa-file-import"></i> Impor Soal
-                        </button>
-                        <input type="file" id="import-questions-input" accept=".json,application/json" class="hidden" onchange="importAllQuestionBanksJSON(event)">
-                        <button type="button" onclick="resetPlanetQuestionsToDefault()" class="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-[11px] transition flex items-center gap-1">
-                            <i class="fa-solid fa-rotate-left"></i> Reset Bawaan
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Status / Loading Indicator -->
-                <div id="ai-status-banner" class="hidden p-2.5 rounded-xl text-xs font-bold flex items-center gap-2"></div>
-            </div>
-
-            <!-- Area Pratinjau Soal Aktif / Hasil Generate -->
-            <div class="flex-1 overflow-y-auto pr-1 space-y-2 text-left">
-                <div class="flex justify-between items-center">
-                    <span id="ai-preview-heading" class="text-[11px] font-extrabold text-amber-300 uppercase tracking-wider">
-                        📋 Daftar Soal Planet 1 Saat Ini:
-                    </span>
-                    <span id="ai-preview-badge" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-bold">
-                        Soal Aktif
-                    </span>
-                </div>
-                <div id="ai-questions-preview-list" class="space-y-2 text-xs"></div>
-            </div>
-
-            <!-- Footer Modal -->
-            <div class="flex flex-wrap justify-between items-center gap-2 pt-2 border-t border-slate-700">
-                <span class="text-[11px] text-slate-400">
-                    <i class="fa-solid fa-floppy-disk text-emerald-400 mr-1"></i> Soal yang diterapkan otomatis tersimpan di perangkat ini.
-                </span>
-                <div class="flex gap-2">
-                    <button onclick="closeAiQuestionModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600 transition">
-                        Tutup
-                    </button>
-                    <button id="btn-apply-ai-questions" onclick="applyGeneratedAiQuestions()" class="hidden px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
-                    <button onclick="closeDeveloperModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-lg transition">
-                        Tutup Profil
-                    </button>
-                </div>
-            </div>
-        </div>
 
         <script>
         /* ==========================================================================
@@ -3477,6 +3339,7 @@
                 aiPanel?.classList.add('hidden');
                 saveFooterBtn?.classList.remove('hidden');
                 applyAiBtn?.classList.add('hidden');
+                document.getElementById('btn-apply-ai-questions-inline')?.classList.add('hidden');
                 manualEditingItems = JSON.parse(JSON.stringify(getActivePlanetQuestions(aiSelectedPlanet)));
                 renderManualQuestionEditor(aiSelectedPlanet);
             } else {
@@ -3487,9 +3350,14 @@
                 saveFooterBtn?.classList.add('hidden');
                 if (aiDraftQuestions && aiDraftQuestions.length > 0) {
                     applyAiBtn?.classList.remove('hidden');
+                    applyAiBtn?.classList.add('flex');
+                    const inlineApplyBtn = document.getElementById('btn-apply-ai-questions-inline');
+                    inlineApplyBtn?.classList.remove('hidden');
+                    inlineApplyBtn?.classList.add('flex');
                     renderAiQuestionPreview(aiSelectedPlanet, aiDraftQuestions, true);
                 } else {
                     applyAiBtn?.classList.add('hidden');
+                    document.getElementById('btn-apply-ai-questions-inline')?.classList.add('hidden');
                     renderAiQuestionPreview(aiSelectedPlanet, getActivePlanetQuestions(aiSelectedPlanet), false);
                 }
             }
@@ -3912,6 +3780,7 @@
             const appliedItems = aiDraftQuestions;
             aiDraftQuestions = null;
             document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
+            document.getElementById('btn-apply-ai-questions-inline')?.classList.add('hidden');
             renderAiQuestionPreview(aiSelectedPlanet, appliedItems, false);
             setAiStatusBanner('success', `<i class="fa-solid fa-floppy-disk text-emerald-300"></i> <span>Soal Planet ${aiSelectedPlanet} berhasil diperbarui dan disimpan! Siswa akan langsung memainkan soal terbaru ini.</span>`);
             playSuccessSound();
@@ -3940,6 +3809,7 @@
             saveCustomQuestionsToStorage();
             aiDraftQuestions = null;
             document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
+            document.getElementById('btn-apply-ai-questions-inline')?.classList.add('hidden');
             if (studioCurrentMode === 'manual') {
                 manualEditingItems = JSON.parse(JSON.stringify(defCopy));
                 renderManualQuestionEditor(aiSelectedPlanet);
@@ -4272,7 +4142,12 @@
                     throw new Error('Format soal dari AI kosong.');
                 }
                 aiDraftQuestions = parsed;
-                document.getElementById('btn-apply-ai-questions')?.classList.remove('hidden');
+                const footerApplyBtn = document.getElementById('btn-apply-ai-questions');
+                const inlineApplyBtn = document.getElementById('btn-apply-ai-questions-inline');
+                footerApplyBtn?.classList.remove('hidden');
+                footerApplyBtn?.classList.add('flex');
+                inlineApplyBtn?.classList.remove('hidden');
+                inlineApplyBtn?.classList.add('flex');
                 renderAiQuestionPreview(aiSelectedPlanet, aiDraftQuestions, true);
                 setAiStatusBanner('success', `<i class="fa-solid fa-wand-magic-sparkles text-emerald-300"></i> <span>Berhasil membuat ${parsed.length} soal baru! Periksa pratinjau di bawah lalu klik <b>Terapkan &amp; Simpan Soal AI</b>.</span>`);
                 playSuccessSound();
@@ -4280,7 +4155,12 @@
                 const isQuotaLimit = /quota|exceeded|429|rate-limit/i.test(String(err?.message || ''));
                 const offlineFallback = generateSmartOfflineQuestions(aiSelectedPlanet, topic, difficulty);
                 aiDraftQuestions = offlineFallback;
-                document.getElementById('btn-apply-ai-questions')?.classList.remove('hidden');
+                const footerApplyBtn = document.getElementById('btn-apply-ai-questions');
+                const inlineApplyBtn = document.getElementById('btn-apply-ai-questions-inline');
+                footerApplyBtn?.classList.remove('hidden');
+                footerApplyBtn?.classList.add('flex');
+                inlineApplyBtn?.classList.remove('hidden');
+                inlineApplyBtn?.classList.add('flex');
                 renderAiQuestionPreview(aiSelectedPlanet, aiDraftQuestions, true);
                 const reasonText = isQuotaLimit
                     ? 'Kuota harian gratis Gemini API telah mencapai batas (20/hari).'
@@ -4355,6 +4235,7 @@
             aiSelectedPlanet = planetNum;
             aiDraftQuestions = null;
             document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
+            document.getElementById('btn-apply-ai-questions-inline')?.classList.add('hidden');
             setAiStatusBanner('', '');
 
             for (let i = 1; i <= 4; i++) {
