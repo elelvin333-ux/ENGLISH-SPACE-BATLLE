@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>English Space Battle - Game Bahasa Inggris SMK Kelas 10</title>
+    <title>English Space Battle - Vocational High School Grade 10 English Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -190,24 +190,6 @@
             transition: left 2.8s cubic-bezier(0.25, 1, 0.4, 1), top 2.8s cubic-bezier(0.25, 1, 0.4, 1), transform 0.8s ease;
         }
 
-        /* PERINTAH PUTAR LAYAR KE LANDSCAPE KHUSUS HP (PORTRAIT) */
-        #portrait-warning-overlay {
-            display: none;
-        }
-        @media screen and (max-width: 820px) and (orientation: portrait) {
-            #portrait-warning-overlay:not(.dismissed-portrait) {
-                display: flex;
-            }
-        }
-        @keyframes rotatePhonePrompt {
-            0%, 15% { transform: rotate(0deg); }
-            45%, 70% { transform: rotate(-90deg); }
-            90%, 100% { transform: rotate(0deg); }
-        }
-        .animate-rotate-phone {
-            animation: rotatePhonePrompt 2.4s ease-in-out infinite;
-        }
-
         /* Penyesuaian ekstra agar nyaman saat HP sudah diputar ke posisi Landscape */
         @media screen and (max-height: 500px) and (orientation: landscape) {
             #welcome-screen {
@@ -221,41 +203,6 @@
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
-
-    <!-- OVERLAY PERINTAH PUTAR HP KE LANDSCAPE (OTOMATIS MUNCUL SAAT HP POSISI PORTRAIT) -->
-    <div id="portrait-warning-overlay" class="fixed inset-0 z-[200] bg-slate-950/95 backdrop-blur-xl flex-col items-center justify-center p-6 text-center select-none">
-        <div class="max-w-xs w-full bg-slate-900/90 border-2 border-sky-400/70 rounded-3xl p-6 shadow-[0_0_50px_rgba(56,189,248,0.35)] space-y-5">
-            <!-- Ikon HP Berputar Animasi -->
-            <div class="relative w-24 h-24 mx-auto flex items-center justify-center rounded-2xl bg-sky-500/15 border border-sky-400/40">
-                <i class="fa-solid fa-mobile-screen-button text-5xl text-amber-300 animate-rotate-phone drop-shadow-[0_0_12px_rgba(251,191,36,0.7)]"></i>
-                <i class="fa-solid fa-rotate text-sky-400 text-lg absolute -bottom-2 -right-2 bg-slate-950 p-1.5 rounded-full border border-sky-400/60"></i>
-            </div>
-
-            <div class="space-y-2">
-                <span class="inline-block px-3 py-0.5 rounded-full bg-amber-400/20 border border-amber-300/60 text-amber-300 text-[10px] font-extrabold uppercase tracking-wider">
-                    🚀 MODE LAYAR OPTIMAL
-                </span>
-                <h2 class="font-game text-xl font-bold text-white leading-snug">
-                    Putar Posisi HP ke <span class="text-sky-300">Landscape</span>
-                </h2>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                    Miringkan ponsel Anda secara mendatar (<b>Landscape</b>) dan pastikan fitur <i>Rotasi Otomatis</i> HP aktif agar Peta Galaksi 3D serta kuis tampil penuh dan nyaman dimainkan.
-                </p>
-            </div>
-
-            <p id="landscape-hint-status" class="hidden text-[11px] text-amber-300 font-semibold bg-amber-500/10 border border-amber-400/40 rounded-xl p-2"></p>
-
-            <div class="space-y-2 pt-1">
-                <button onclick="tryLockLandscape()" class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-[0_0_20px_rgba(56,189,248,0.4)] transition flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-expand"></i>
-                    <span>AKTIFKAN LANDSCAPE &amp; LAYAR PENUH</span>
-                </button>
-                <button onclick="dismissPortraitWarning()" class="w-full py-2 px-4 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-slate-300 font-bold text-[11px] border border-slate-700 transition">
-                    Tetap Lanjutkan Mode Portrait
-                </button>
-            </div>
-        </div>
-    </div>
 
     <!-- BACKGROUND COVER KHUSUS HALAMAN DEPAN -->
     <div id="welcome-custom-cover" class="fixed inset-0 w-full h-full z-0 transition-opacity duration-700 pointer-events-none"></div>
@@ -272,10 +219,10 @@
                 </h1>
                 <div class="flex items-center gap-2 mt-0.5">
                     <p id="header-player-name" class="text-xs text-amber-300 font-semibold">
-                        Kapten: Siswa SMK
+                        Captain: SMK Student
                     </p>
-                    <button onclick="document.getElementById('cover-input').click()" class="px-1.5 py-0.5 rounded bg-sky-900/50 border border-sky-400/50 text-sky-200 text-[9px] font-bold hover:bg-sky-800 transition flex items-center gap-1 shadow-sm" title="Ganti Wallpaper">
-                        <i class="fa-solid fa-images"></i> Ganti Wall
+                    <button onclick="document.getElementById('cover-input').click()" class="px-1.5 py-0.5 rounded bg-sky-900/50 border border-sky-400/50 text-sky-200 text-[9px] font-bold hover:bg-sky-800 transition flex items-center gap-1 shadow-sm" title="Change Wallpaper">
+                        <i class="fa-solid fa-images"></i> Change Wall
                     </button>
                     <input type="file" id="cover-input" accept="image/*" class="hidden" onchange="changeCoverImage(event)">
                 </div>
@@ -285,14 +232,14 @@
         <div class="flex items-center flex-wrap gap-2">
             <div class="bg-slate-900/90 border border-amber-500/40 px-3 py-1 rounded-xl flex items-center space-x-2">
                 <i class="fa-solid fa-coins text-amber-400"></i>
-                <span class="text-xs text-slate-300">Skor:</span>
+                <span class="text-xs text-slate-300">Score:</span>
                 <span id="global-gold" class="font-game font-bold text-amber-300 text-sm">0</span>
             </div>
             <div class="bg-slate-900/90 border border-sky-500/40 px-3 py-1 rounded-xl flex items-center space-x-2">
                 <i class="fa-solid fa-globe text-sky-400"></i>
-                <span id="planet-progress-text" class="text-xs font-bold text-sky-200">0/4 Planet</span>
+                <span id="planet-progress-text" class="text-xs font-bold text-sky-200">0/4 Planets</span>
             </div>
-            <button onclick="openLeaderboardModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 flex items-center space-x-1.5 text-amber-300 font-bold text-xs transition shadow" title="Papan Peringkat & Google Sheet">
+            <button onclick="openLeaderboardModal()" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 flex items-center space-x-1.5 text-amber-300 font-bold text-xs transition shadow" title="Leaderboard & Google Sheet">
                 <i class="fa-solid fa-trophy"></i>
                 <span class="hidden sm:inline">Leaderboard</span>
             </button>
@@ -326,62 +273,66 @@
                         <i class="fa-solid fa-id-card text-amber-400 w-4 text-center"></i>
                         <span>Profil Pengembang &amp; CP</span>
                     </button>
+                    <button onclick="closeHeaderDropdown(); requestPinForAction('aiQuestionEditor')" class="w-full px-3.5 py-2.5 text-xs text-fuchsia-200 hover:bg-fuchsia-500/20 hover:text-fuchsia-300 font-bold flex items-center gap-2.5 transition border-t border-slate-800/80">
+                        <i class="fa-solid fa-wand-magic-sparkles text-fuchsia-400 w-4 text-center"></i>
+                        <span>Ubah Soal (Gemini AI) <i class="fa-solid fa-lock text-[9px] text-amber-300 ml-0.5"></i></span>
+                    </button>
                 </div>
             </div>
 
-            <button onclick="toggleMute()" id="sound-btn" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 flex items-center justify-center text-sky-300 transition" title="Suara">
-                <i class="fa-solid fa-volume-high"></i>
-            </button>
-            <button onclick="toggleFullScreenMode()" id="fullscreen-btn" class="px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/60 flex items-center space-x-1.5 text-emerald-300 font-bold text-xs transition shadow" title="Mode Layar Penuh Tanpa Scroll">
+            <!-- FULL SCREEN BUTTON -->
+            <button id="fullscreen-btn" onclick="toggleFullscreen()" class="px-3 py-1.5 rounded-xl bg-indigo-500/20 hover:bg-indigo-500/35 border border-indigo-400/50 flex items-center space-x-1.5 text-indigo-200 hover:text-amber-300 font-bold text-xs transition shadow" title="Full Screen Mode Without Scrolling">
                 <i id="fullscreen-icon" class="fa-solid fa-expand"></i>
-                <span id="fullscreen-label">Full Screen</span>
+                <span id="fullscreen-label" class="hidden sm:inline">Full Screen</span>
+            </button>
+
+            <!-- AUDIO / MUTE BUTTON -->
+            <button id="sound-btn" onclick="toggleMute()" class="w-9 h-9 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-sky-500/40 flex items-center justify-center text-sky-300 transition shadow" title="Sound / Music">
+                <i class="fa-solid fa-volume-high text-sky-300"></i>
             </button>
         </div>
     </header>
 
     <!-- MAIN CONTENT CONTAINER -->
-    <main class="flex-1 relative z-10 flex flex-col items-center justify-center p-3 sm:p-6 w-full max-w-6xl mx-auto">
+    <main class="flex-1 w-full max-w-6xl mx-auto p-3 sm:p-5 flex flex-col justify-center relative z-10">
 
-        <!-- 1. WELCOME SCREEN -->
-        <section id="welcome-screen" class="w-full max-w-[310px] sm:max-w-xs bg-slate-950/80 backdrop-blur-md border-2 border-sky-400/80 rounded-2xl p-3 sm:p-3.5 text-center space-y-2 -mt-32 sm:-mt-36 relative shadow-[0_20px_60px_rgba(0,0,0,0.8)]">
-            <!-- Form Input Nama & Kelas -->
-            <div class="bg-slate-900/70 border border-sky-500/50 rounded-xl p-3 text-left space-y-2.5 w-full mx-auto shadow-inner">
-                <div>
-                    <label class="block text-[10px] font-bold text-sky-300 uppercase mb-0.5">
-                        <i class="fa-solid fa-user-astronaut mr-1"></i> Nama Lengkap Peserta:
-                    </label>
-                    <input id="input-player-name" type="text" placeholder="Contoh: Andi Pratama"
-                           class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-600 text-white text-xs focus:outline-none focus:border-sky-400 shadow-inner">
-                </div>
-                <div>
-                    <label class="block text-[10px] font-bold text-amber-300 uppercase mb-0.5">
-                        <i class="fa-solid fa-graduation-cap mr-1"></i> Kelas / Jurusan:
-                    </label>
-                    <input id="input-player-class" type="text" placeholder="Contoh: X Agribisnis Perikanan 1"
-                           class="w-full px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-600 text-white text-xs focus:outline-none focus:border-amber-400 shadow-inner">
-                </div>
-                <p id="welcome-error" class="text-[10px] text-rose-400 font-bold hidden">
-                    ⚠️ Harap isi Nama Lengkap dan Kelas terlebih dahulu sebelum memulai misi!
+        <!-- 1. WELCOME SCREEN: CAPTAIN IDENTITY FORM -->
+        <section id="welcome-screen" class="w-full max-w-sm mx-auto -mt-16 sm:-mt-28 glass-card rounded-2xl p-4 sm:p-5 border-2 border-sky-400/50 text-center space-y-3 shadow-[0_20px_60px_rgba(0,0,0,0.85)]">
+            <div class="space-y-0.5">
+                <h2 class="font-game text-2xl sm:text-3xl font-bold title-3d tracking-wide">
+                    ENGLISH SPACE BATTLE
+                </h2>
+                <p class="text-[11px] sm:text-xs text-slate-300 leading-snug">
+                    Explore 4 Space Mission Planets, conquer the English challenges, and achieve the highest score!
                 </p>
+            </div>
 
-                <button onclick="startAdventure()" class="w-full py-2 rounded-lg bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-white font-extrabold text-xs shadow-[0_0_15px_rgba(56,189,248,0.4)] transition transform hover:scale-[1.02]">
-                    LUNCURKAN MISI ANTARIKSA <i class="fa-solid fa-rocket ml-1"></i>
-                </button>
-
+            <div class="space-y-2.5 text-left pt-0.5">
                 <div>
-                    <button onclick="openLeaderboardModal()" type="button" class="w-full py-1.5 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/50 text-amber-300 font-extrabold text-[10px] shadow transition flex items-center justify-center gap-1.5">
-                        <i class="fa-solid fa-trophy"></i> LEADERBOARD & GOOGLE SHEET
-                    </button>
+                    <label for="input-player-name" class="block text-[11px] font-bold text-sky-300 uppercase mb-1">
+                        <i class="fa-solid fa-user-astronaut mr-1 text-amber-300"></i> CAPTAIN'S FULL NAME:
+                    </label>
+                    <input id="input-player-name" type="text" placeholder="Example: Andi Pratama"
+                           onkeydown="if(event.key==='Enter') startAdventure()"
+                           class="w-full px-3 py-2 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs sm:text-sm font-semibold focus:outline-none focus:border-amber-400 transition">
                 </div>
+                <div>
+                    <label for="input-player-class" class="block text-[11px] font-bold text-sky-300 uppercase mb-1">
+                        <i class="fa-solid fa-graduation-cap mr-1 text-amber-300"></i> CLASS / MAJOR:
+                    </label>
+                    <input id="input-player-class" type="text" placeholder="Example: X Fisheries Agribusiness 1"
+                           onkeydown="if(event.key==='Enter') startAdventure()"
+                           class="w-full px-3 py-2 rounded-xl bg-slate-950/90 border border-slate-700 text-white text-xs sm:text-sm font-semibold focus:outline-none focus:border-amber-400 transition">
+                </div>
+                <p id="welcome-error" class="hidden text-[11px] font-bold text-rose-400 bg-rose-950/60 border border-rose-500/40 rounded-xl px-3 py-1.5 text-center">
+                    ⚠️ Please enter your Full Name and Class first!
+                </p>
             </div>
 
-            <!-- Developer Credit at Bottom Corner of Welcome Screen -->
-            <div class="pt-1.5 border-t border-slate-700 flex justify-center items-center text-[9.5px]">
-                <button type="button" onclick="openDeveloperModal()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 border border-sky-500/30 hover:border-amber-400/60 text-slate-300 shadow transition" title="Lihat Profil Pengembang & CP">
-                    <i class="fa-solid fa-code text-sky-400"></i>
-                    <span>Pengembang: <strong class="text-amber-300 font-extrabold">Irwan Elvin Kadir.S.Pd.,Gr.</strong></span>
-                </button>
-            </div>
+            <button onclick="startAdventure()" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 hover:from-amber-300 hover:to-orange-400 text-slate-950 font-game font-extrabold text-xs sm:text-sm shadow-[0_8px_24px_rgba(245,158,11,0.45)] transition transform hover:scale-[1.02] flex items-center justify-center gap-2">
+                <span>LAUNCH SPACE MISSION</span>
+                <i class="fa-solid fa-rocket"></i>
+            </button>
         </section>
 
         <!-- 2. GALAXY MAP SCREEN -->
@@ -390,13 +341,13 @@
             <div class="glass-card rounded-2xl p-4 border border-amber-400/40 flex flex-wrap justify-between items-center gap-3">
                 <div>
                     <span class="text-[11px] font-extrabold text-amber-300 uppercase tracking-wider">🌌 LIVING COSMOS OBSERVATORY</span>
-                    <h2 class="font-game text-xl sm:text-2xl font-bold title-3d">PETA GALAKSI ANTARIKSA 3D</h2>
-                    <p class="text-xs text-slate-300">Pilih planet tujuanmu, selesaikan misi Bahasa Inggris, dan kumpulkan skor tertinggi!</p>
+                    <h2 class="font-game text-xl sm:text-2xl font-bold title-3d">3D SPACE GALAXY MAP</h2>
+                    <p class="text-xs text-slate-300">Choose your destination planet, complete the English missions, and collect the highest score!</p>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <button id="lock-mode-btn" onclick="requestPinForAction('lockMode')" class="px-3 py-2 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-300 text-xs font-bold transition flex items-center gap-1.5">
                         <i class="fa-solid fa-lock"></i>
-                        <span>Mode Bertahap: Harus Urut Planet 1-4 (PIN)</span>
+                        <span>Sequential Mode: Planets 1-4 in Order (PIN)</span>
                     </button>
                 </div>
             </div>
@@ -478,7 +429,7 @@
                      style="left: 12%; top: 60%;">
                     <div class="px-2 py-0.5 rounded-full bg-slate-950/85 text-amber-300 font-extrabold text-[9px] shadow-[0_0_10px_rgba(56,189,248,0.5)] -mb-1 whitespace-nowrap border border-sky-400/50 flex items-center gap-1 backdrop-blur-sm">
                         <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
-                        <span id="spaceship-captain-tag">Kapten</span>
+                        <span id="spaceship-captain-tag">Captain</span>
                     </div>
                     <div id="player-rocket-tilt-wrapper" class="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center overflow-visible transition-transform duration-700 ease-out"
                          style="transform: rotate(40deg); filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.45));">
@@ -490,7 +441,7 @@
                 <div onclick="selectPlanetOnMap(1)" class="planet-node absolute left-[3%] sm:left-[4%] top-[48%] cursor-pointer flex flex-col items-center z-20 group">
                     <div class="flex flex-col items-center mb-1">
                         <div class="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white font-extrabold text-[10px] shadow-[0_0_12px_rgba(192,132,252,0.9)] border border-purple-200 flex items-center gap-1">
-                            <i class="fa-solid fa-flag text-purple-100"></i> <span>PLANET AWAL</span>
+                            <i class="fa-solid fa-flag text-purple-100"></i> <span>START PLANET</span>
                         </div>
                         <div class="w-0.5 h-2.5 bg-purple-300"></div>
                     </div>
@@ -501,7 +452,7 @@
 
                     <div class="mt-1 bg-slate-950/90 border border-purple-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
                         <div class="font-bold text-[11px] text-purple-300">Planet 1: Pre-Test</div>
-                        <div id="status-planet-1" class="text-[9px] text-emerald-300 font-semibold">Planet Awal • Terbuka</div>
+                        <div id="status-planet-1" class="text-[9px] text-emerald-300 font-semibold">Start Planet • Unlocked</div>
                     </div>
                 </div>
 
@@ -520,7 +471,7 @@
 
                     <div class="mt-1 bg-slate-950/90 border border-cyan-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
                         <div class="font-bold text-[11px] text-cyan-300">Planet 2: Vocabulary</div>
-                        <div id="status-planet-2" class="text-[9px] text-sky-200 font-semibold">Level 2 • Terbuka</div>
+                        <div id="status-planet-2" class="text-[9px] text-sky-200 font-semibold">Level 2 • Unlocked</div>
                     </div>
                 </div>
 
@@ -528,7 +479,7 @@
                 <div onclick="selectPlanetOnMap(3)" class="planet-node absolute left-[42%] sm:left-[43%] top-[44%] cursor-pointer flex flex-col items-center z-20 group" style="animation-delay:1.4s">
                     <div class="flex flex-col items-center mb-1">
                         <div class="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-orange-500 via-red-600 to-amber-500 text-white font-extrabold text-[10px] shadow-[0_0_14px_rgba(249,115,22,0.9)] border border-amber-200 flex items-center gap-1">
-                            <i class="fa-solid fa-moon text-amber-200"></i> <span>TANTANGAN MENENGAH</span>
+                            <i class="fa-solid fa-moon text-amber-200"></i> <span>INTERMEDIATE</span>
                         </div>
                         <div class="w-0.5 h-2.5 bg-orange-400"></div>
                     </div>
@@ -539,7 +490,7 @@
 
                     <div class="mt-1 bg-slate-950/90 border border-orange-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
                         <div class="font-bold text-[11px] text-orange-300">Planet 3: Listening</div>
-                        <div id="status-planet-3" class="text-[9px] text-amber-200 font-semibold">Tantangan Menengah</div>
+                        <div id="status-planet-3" class="text-[9px] text-amber-200 font-semibold">Intermediate Challenge</div>
                     </div>
                 </div>
 
@@ -547,7 +498,7 @@
                 <div onclick="selectPlanetOnMap(4)" class="planet-node absolute left-[62%] sm:left-[63%] top-[20%] cursor-pointer flex flex-col items-center z-20 group" style="animation-delay:2.1s">
                     <div class="flex flex-col items-center mb-1">
                         <div class="px-2.5 py-0.5 rounded-md bg-gradient-to-r from-teal-500 to-sky-600 text-white font-extrabold text-[10px] shadow-[0_0_14px_rgba(45,212,191,0.9)] border border-teal-200 flex items-center gap-1">
-                            <i class="fa-solid fa-star text-yellow-300"></i> <span>TATA BAHASA & BACAAN</span>
+                            <i class="fa-solid fa-star text-yellow-300"></i> <span>GRAMMAR &amp; READING</span>
                         </div>
                         <div class="w-0.5 h-2.5 bg-teal-300"></div>
                     </div>
@@ -558,7 +509,7 @@
 
                     <div class="mt-1 bg-slate-950/90 border border-teal-400/60 px-2.5 py-1 rounded-xl text-center shadow-lg">
                         <div class="font-bold text-[11px] text-teal-300">Planet 4: Fisheries</div>
-                        <div id="status-planet-4" class="text-[9px] text-teal-200 font-semibold">Planet Tata Bahasa</div>
+                        <div id="status-planet-4" class="text-[9px] text-teal-200 font-semibold">Grammar &amp; Reading Planet</div>
                     </div>
                 </div>
 
@@ -578,7 +529,7 @@
 
                     <div class="mt-2 bg-slate-950/95 border border-amber-400/80 px-3 py-1 rounded-xl text-center shadow-xl">
                         <div class="font-bold text-[11px] text-amber-300">Orbital Station: FINISH</div>
-                        <div id="status-planet-5" class="text-[9px] text-amber-200 font-semibold">Stasiun Akhir Misi</div>
+                        <div id="status-planet-5" class="text-[9px] text-amber-200 font-semibold">Final Mission Station</div>
                     </div>
                 </div>
             </div>
@@ -586,12 +537,12 @@
             <!-- Bottom Navigation Bar -->
             <div class="glass-card rounded-2xl p-3.5 border border-amber-400/40 flex flex-wrap justify-between items-center gap-3 text-xs">
                 <button onclick="backToWelcome()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 font-bold text-sky-300 flex items-center gap-2 transition">
-                    <i class="fa-solid fa-house"></i> Ganti Kapten / Menu Utama
+                    <i class="fa-solid fa-house"></i> Change Captain / Main Menu
                 </button>
                 <div class="flex flex-wrap items-center gap-4 text-slate-300">
-                    <span><i class="fa-solid fa-shuttle-space text-amber-300 mr-1"></i> Posisi Pesawat Aktif</span>
-                    <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Misi Selesai</span>
-                    <span><i class="fa-solid fa-ellipsis text-amber-300 mr-1"></i> Jalur Orbit Antariksa</span>
+                    <span><i class="fa-solid fa-shuttle-space text-amber-300 mr-1"></i> Active Spaceship</span>
+                    <span><i class="fa-solid fa-circle-check text-emerald-400 mr-1"></i> Mission Completed</span>
+                    <span><i class="fa-solid fa-ellipsis text-amber-300 mr-1"></i> Space Orbit Path</span>
                 </div>
             </div>
         </section>
@@ -608,7 +559,7 @@
                         💰 TAKE THE POINTS
                     </button>
                     <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
-                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Galaxy Map
                     </button>
                 </div>
             </div>
@@ -617,7 +568,7 @@
                 <div class="lg:col-span-2 glass-card rounded-3xl p-5 sm:p-6 flex flex-col justify-between space-y-5">
                     <div class="flex flex-wrap justify-between items-center gap-2 border-b border-slate-700 pb-3">
                         <span id="p1-question-counter" class="px-3 py-1 rounded-full bg-sky-500/20 border border-sky-400/40 text-sky-300 text-xs font-bold">
-                            Soal 1 / 10
+                            Question 1 / 10
                         </span>
                         <div class="flex items-center gap-2">
                             <button id="lifeline-5050" onclick="useLifeline5050()" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow transition">
@@ -646,15 +597,15 @@
                 <div class="glass-card rounded-3xl p-4 border border-amber-400/40 flex flex-col justify-between">
                     <div>
                         <h4 class="font-game text-center text-sm font-bold text-amber-300 border-b border-slate-700 pb-2 mb-2">
-                            🏆 TANGGA HADIAH VIRTUAL
+                            🏆 VIRTUAL PRIZE LADDER
                         </h4>
                         <ul id="p1-prize-ladder" class="space-y-1 text-xs font-bold"></ul>
                     </div>
                     <div class="mt-3 p-2.5 rounded-xl bg-slate-900/90 border border-slate-700 text-[11px] text-slate-300 space-y-1">
-                        <div>💡 <b>Aturan Planet 1:</b></div>
-                        <div>• Jawaban benar menaikkan tangga hadiah.</div>
-                        <div>• Jawaban salah tetap lanjut ke soal berikutnya tanpa menambah hadiah.</div>
-                        <div>• Klik <b>TAKE THE POINTS</b> kapan saja setelah minimal 1 jawaban benar.</div>
+                        <div>💡 <b>Planet 1 Rules:</b></div>
+                        <div>• Correct answers move you up the prize ladder.</div>
+                        <div>• Wrong answers continue to the next question without adding points.</div>
+                        <div>• Click <b>TAKE THE POINTS</b> anytime after at least 1 correct answer.</div>
                     </div>
                 </div>
             </div>
@@ -669,13 +620,13 @@
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <span id="p2-round-badge" class="px-3 py-1.5 rounded-xl bg-purple-500/20 border border-purple-400 text-purple-200 text-xs font-bold">
-                        Soal Audio 1 / 5
+                        Audio Question 1 / 5
                     </span>
                     <button id="btn-take-points-p2" onclick="openTakePointsModal(2)" class="hidden px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-lg transition">
                         💰 TAKE THE POINTS
                     </button>
                     <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
-                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Galaxy Map
                     </button>
                 </div>
             </div>
@@ -684,14 +635,14 @@
                 <div id="p2-top-bar" class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 bg-slate-900/90 p-3.5 rounded-2xl border border-slate-700">
                     <div class="flex flex-wrap items-center gap-3">
                         <button onclick="playPlanet2SentenceAudio()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-sky-400 to-indigo-500 hover:from-sky-300 hover:to-indigo-400 text-slate-950 font-extrabold text-xs shadow-lg flex items-center gap-2 transition">
-                            <i class="fa-solid fa-volume-high text-sm"></i> DENGARKAN AUDIO
+                            <i class="fa-solid fa-volume-high text-sm"></i> LISTEN TO AUDIO
                         </button>
                         <span id="p2-instruction-text" class="text-xs text-slate-300">
-                            Dengarkan audio, lalu klik/sentuh planet kata yang melayang untuk menyusun kalimat!
+                            Listen to the audio, then tap/click the floating word planets to arrange the sentence!
                         </span>
                     </div>
                     <span id="p2-attempts-badge" class="px-3 py-1 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-300 text-xs font-extrabold whitespace-nowrap">
-                        Kesempatan: 2x
+                        Attempts: 2x
                     </span>
                 </div>
 
@@ -704,25 +655,25 @@
                 <div id="p2-input-tray" class="bg-slate-900/90 border border-sky-500/30 rounded-2xl p-4 space-y-2.5">
                     <div class="flex flex-wrap justify-between items-center gap-2">
                         <label id="p2-input-label" for="p2-typed-answer" class="text-xs text-sky-300 font-bold uppercase">
-                            <i class="fa-solid fa-hand-pointer mr-1 text-amber-300"></i> Sentuh/Klik Planet Kata di Atas atau Ketik Jawaban:
+                            <i class="fa-solid fa-hand-pointer mr-1 text-amber-300"></i> Tap/Click the Floating Word Planets Above or Type Your Answer:
                         </label>
                         <div class="flex items-center gap-1.5">
                             <button type="button" onclick="undoPlanet2Word()" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-amber-300 text-[11px] font-bold transition">
-                                <i class="fa-solid fa-rotate-left mr-1"></i> Hapus 1 Kata
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Undo Word
                             </button>
                             <button type="button" onclick="resetPlanet2Words()" class="px-2.5 py-1 rounded-lg bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-rose-300 text-[11px] font-bold transition">
                                 <i class="fa-solid fa-trash-can mr-1"></i> Reset
                             </button>
                         </div>
                     </div>
-                    <input type="text" id="p2-typed-answer" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-amber-200 font-bold text-sm sm:text-base focus:outline-none focus:border-purple-500" placeholder="Klik/sentuh planet kata yang melayang di atas..." autocomplete="off">
+                    <input type="text" id="p2-typed-answer" class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-amber-200 font-bold text-sm sm:text-base focus:outline-none focus:border-purple-500" placeholder="Tap/click the floating word planets above..." autocomplete="off">
                 </div>
 
                 <div id="p2-feedback-box" class="hidden p-3 rounded-xl text-xs font-bold"></div>
 
                 <div class="flex flex-wrap justify-end items-center gap-2">
                     <button onclick="checkPlanet2Answer()" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg">
-                        <i class="fa-solid fa-check mr-1"></i> CHECK ANSWER (+100 Poin)
+                        <i class="fa-solid fa-check mr-1"></i> CHECK ANSWER (+100 Points)
                     </button>
                 </div>
             </div>
@@ -743,7 +694,7 @@
                         💰 TAKE THE POINTS
                     </button>
                     <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
-                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Galaxy Map
                     </button>
                 </div>
             </div>
@@ -755,13 +706,13 @@
                             Topic: Personal Information
                         </span>
                         <h4 class="text-sm sm:text-base font-bold text-white">
-                            Dengarkan rekaman suara perkenalan diri berikut, lalu jawab pertanyaannya!
+                            Listen to the self-introduction audio recording below, then answer the question!
                         </h4>
-                        <p class="text-xs text-slate-400">Klik tombol Putar Audio (bisa didengarkan berulang kali).</p>
+                        <p class="text-xs text-slate-400">Click Play Audio (you can replay it as many times as you need).</p>
                     </div>
                     <div class="flex items-center gap-2">
                         <button onclick="playListeningAudio()" class="px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg flex items-center gap-2">
-                            <i class="fa-solid fa-volume-high text-base"></i> PUTAR AUDIO
+                            <i class="fa-solid fa-volume-high text-base"></i> PLAY AUDIO
                         </button>
                     </div>
                 </div>
@@ -775,22 +726,22 @@
             </div>
         </section>
 
-        <!-- 6. PLANET 4 SCREEN: READING AGRIBISNIS PERIKANAN SMKN 4 SINJAI -->
+        <!-- 6. PLANET 4 SCREEN: READING FISHERIES AGRIBUSINESS -->
         <section id="planet4-screen" class="w-full hidden flex-col space-y-4">
             <div class="flex flex-wrap justify-between items-center gap-2 glass-card rounded-2xl p-4 border border-amber-400/40">
                 <div>
                     <span class="text-xs font-extrabold text-amber-300 uppercase">🪐 PLANET 4 — READING COMPREHENSION</span>
-                    <h3 class="font-game text-xl sm:text-2xl font-bold text-sky-300">Agribisnis Perikanan SMKN 4 Sinjai</h3>
+                    <h3 class="font-game text-xl sm:text-2xl font-bold text-sky-300">Fisheries Agribusiness Reading Mission</h3>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
                     <span id="p4-counter" class="px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-xs font-bold">
-                        Teks 1 / 5
+                        Text 1 / 5
                     </span>
                     <button id="btn-take-points-p4" onclick="openTakePointsModal(4)" class="hidden px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-extrabold text-xs shadow-lg transition">
                         💰 TAKE THE POINTS
                     </button>
                     <button onclick="showScreen('map-screen')" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold border border-slate-600">
-                        <i class="fa-solid fa-arrow-left mr-1"></i> Peta Galaksi
+                        <i class="fa-solid fa-arrow-left mr-1"></i> Galaxy Map
                     </button>
                 </div>
             </div>
@@ -803,20 +754,20 @@
                                 Fisheries Reading Text
                             </span>
                             <button onclick="speakReadingPassage()" class="px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 text-xs font-bold border border-slate-600">
-                                <i class="fa-solid fa-volume-high mr-1"></i> Dengarkan Teks
+                                <i class="fa-solid fa-volume-high mr-1"></i> Listen to Text
                             </button>
                         </div>
                         <h4 id="p4-passage-title" class="font-game text-lg font-bold text-amber-300"></h4>
                         <div id="p4-passage-body" class="p-4 rounded-2xl bg-slate-950/90 border border-slate-800 text-slate-200 text-sm leading-relaxed"></div>
                     </div>
                     <div class="text-[11px] text-slate-400 italic">
-                        🐟 Materi Kontekstual Jurusan Agribisnis Perikanan — SMKN 4 Sinjai (+100 Poin / Jawaban Benar).
+                        🐟 Contextual Material for Fisheries Agribusiness (+100 Points / Correct Answer).
                     </div>
                 </div>
 
                 <div class="glass-card rounded-3xl p-5 border border-amber-400/40 flex flex-col justify-between space-y-4">
                     <div class="space-y-3">
-                        <span class="text-xs font-bold text-amber-300 uppercase">Pertanyaan Pemahaman Bacaan:</span>
+                        <span class="text-xs font-bold text-amber-300 uppercase">Reading Comprehension Question:</span>
                         <p id="p4-question-text" class="text-base sm:text-lg font-extrabold text-white"></p>
                         <div id="p4-options-list" class="space-y-2.5"></div>
                     </div>
@@ -845,17 +796,17 @@
         </div>
     </div>
 
-    <!-- MODAL RINGKASAN HASIL MISI PLANET -->
+    <!-- PLANET MISSION SUMMARY MODAL -->
     <div id="summary-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
         <div class="glass-card rounded-3xl max-w-lg w-full p-6 border-2 border-emerald-400 text-center space-y-4">
             <div class="w-16 h-16 rounded-full bg-emerald-500/20 border-2 border-emerald-400 mx-auto flex items-center justify-center text-3xl">
                 🏆
             </div>
-            <h3 id="summary-title" class="font-game text-2xl font-bold text-amber-300">MISI SELESAI!</h3>
+            <h3 id="summary-title" class="font-game text-2xl font-bold text-amber-300">MISSION COMPLETE!</h3>
             <p id="summary-subtitle" class="text-xs sm:text-sm text-slate-200"></p>
             <div id="summary-details" class="p-4 rounded-2xl bg-slate-900/90 border border-slate-700 text-left text-xs text-slate-300 space-y-1.5 max-h-52 overflow-y-auto"></div>
             <button onclick="finishPlanetSummary()" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-extrabold text-xs shadow-lg">
-                KEMBALI KE PETA GALAKSI & LANJUTKAN <i class="fa-solid fa-shuttle-space ml-1"></i>
+                RETURN TO GALAXY MAP &amp; CONTINUE <i class="fa-solid fa-shuttle-space ml-1"></i>
             </button>
         </div>
     </div>
@@ -869,8 +820,8 @@
                         <i class="fa-solid fa-trophy"></i>
                     </div>
                     <div class="text-left">
-                        <h3 class="font-game text-lg sm:text-xl font-bold text-amber-300 leading-tight">GALAXY LEADERBOARD & GOOGLE SHEETS</h3>
-                        <p class="text-[11px] text-slate-300">Papan Peringkat Kapten Antariksa — SMKN 4 Sinjai (Tersimpan Lokal & Cloud Sheet)</p>
+                        <h3 class="font-game text-lg sm:text-xl font-bold text-amber-300 leading-tight">GALAXY LEADERBOARD &amp; GOOGLE SHEETS</h3>
+                        <p class="text-[11px] text-slate-300">Space Captain Rankings (Saved Locally &amp; Cloud Sheet)</p>
                     </div>
                 </div>
                 <button onclick="closeLeaderboardModal()" class="w-8 h-8 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center border border-slate-600">
@@ -881,24 +832,24 @@
             <div class="bg-slate-900/90 border border-emerald-500/40 rounded-2xl p-3 flex flex-wrap justify-between items-center gap-2 text-xs">
                 <div class="flex items-center gap-2">
                     <span id="sheet-sync-badge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 border border-emerald-400 text-emerald-300 font-extrabold text-[10px]">
-                        📊 MODE HYBRID (LOKAL + GOOGLE SHEET)
+                        📊 HYBRID MODE (LOCAL + GOOGLE SHEET)
                     </span>
                     <span id="sheet-sync-status-text" class="text-slate-300 text-[11px]">
-                        Data otomatis tersimpan di perangkat & siap dikirim ke Google Sheet.
+                        Data is saved automatically on this device &amp; ready to sync to Google Sheet.
                     </span>
                 </div>
                 <div class="flex flex-wrap items-center gap-1.5">
                     <a href="https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 border border-teal-400/60 text-teal-200 font-bold text-[11px] transition flex items-center gap-1">
-                        <i class="fa-solid fa-table"></i> Buka Google Sheet
+                        <i class="fa-solid fa-table"></i> Open Google Sheet
                     </a>
                     <button onclick="exportLeaderboardToCSV()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-[11px] shadow transition flex items-center gap-1">
-                        <i class="fa-solid fa-file-csv"></i> Unduh File Sheet (.CSV)
+                        <i class="fa-solid fa-file-csv"></i> Download CSV
                     </button>
                     <button onclick="requestPinForAction('sheetSetup')" class="px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 border border-sky-400/50 text-sky-300 font-bold text-[11px] transition flex items-center gap-1">
-                        <i class="fa-solid fa-lock text-amber-300"></i> <i class="fa-solid fa-gear"></i> Pengaturan Cloud Sheet (PIN)
+                        <i class="fa-solid fa-lock text-amber-300"></i> <i class="fa-solid fa-gear"></i> Cloud Sheet Setup (PIN)
                     </button>
                     <button onclick="syncAllToGoogleSheet(true)" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-amber-300 font-bold text-[11px] transition flex items-center gap-1">
-                        <i class="fa-solid fa-rotate"></i> Sync Sekarang
+                        <i class="fa-solid fa-rotate"></i> Sync Now
                     </button>
                 </div>
             </div>
@@ -906,43 +857,43 @@
             <div id="sheet-setup-panel" class="hidden bg-slate-950 border border-sky-500/50 rounded-2xl p-4 space-y-3 text-left text-xs">
                 <div class="flex justify-between items-start">
                     <div>
-                        <h4 class="font-bold text-sky-300 text-sm">🔗 Koneksi Otomatis Google Sheets (Apps Script)</h4>
+                        <h4 class="font-bold text-sky-300 text-sm">🔗 Automatic Google Sheets Connection (Apps Script)</h4>
                         <p class="text-[11px] text-slate-400 mt-0.5">
-                            Target Sheet sudah disetel ke Google Sheet Anda. Ikuti 3 langkah sekali pasang berikut agar skor langsung masuk otomatis:
+                            Target Sheet is configured. Follow these 3 one-time setup steps to auto-sync student scores:
                         </p>
                     </div>
-                    <button onclick="toggleSheetSetupPanel()" class="text-slate-400 hover:text-white text-xs">Tutup ▲</button>
+                    <button onclick="toggleSheetSetupPanel()" class="text-slate-400 hover:text-white text-xs">Close ▲</button>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-2 text-[11px]">
                     <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 1: Buka Sheet Anda</span>
-                        Buka <a href="https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-sky-300 underline font-bold">Google Sheet Tujuan</a>, lalu klik menu <b>Ekstensi &gt; Apps Script</b>.
+                        <span class="font-extrabold text-amber-300 block mb-1">Step 1: Open Your Sheet</span>
+                        Open the <a href="https://docs.google.com/spreadsheets/d/1zfV53MmRnoYYctP_P8jojo1OiJQZh5AIQ_6y5IKlVTw/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-sky-300 underline font-bold">Target Google Sheet</a>, then click <b>Extensions &gt; Apps Script</b>.
                     </div>
                     <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 2: Tempel &amp; Deploy</span>
-                        Klik <b>Salin Kode Otomatis</b> di bawah, tempel di Apps Script, lalu klik <b>Terapkan (Deploy) &gt; Deployment Baru &gt; Aplikasi Web</b> (Akses: <i>Siapa saja / Anyone</i>).
+                        <span class="font-extrabold text-amber-300 block mb-1">Step 2: Paste &amp; Deploy</span>
+                        Click <b>Copy Auto Script Code</b> below, paste it in Apps Script, then click <b>Deploy &gt; New Deployment &gt; Web App</b> (Access: <i>Anyone</i>).
                     </div>
                     <div class="p-2.5 rounded-xl bg-slate-900 border border-slate-800">
-                        <span class="font-extrabold text-amber-300 block mb-1">Langkah 3: Tempel URL Web App</span>
-                        Salin URL Web App (<code>https://script.google.com/macros/s/.../exec</code>) ke kolom di bawah lalu klik <b>Simpan &amp; Hubungkan</b>.
+                        <span class="font-extrabold text-amber-300 block mb-1">Step 3: Paste Web App URL</span>
+                        Paste the Web App URL (<code>https://script.google.com/macros/s/.../exec</code>) below and click <b>Save &amp; Connect</b>.
                     </div>
                 </div>
 
                 <div class="flex flex-wrap items-center gap-2">
                     <button onclick="copyAppsScriptCode()" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-xs shadow flex items-center gap-1.5">
-                        <i class="fa-solid fa-copy"></i> Salin Kode Apps Script Pembuat Sheet Otomatis
+                        <i class="fa-solid fa-copy"></i> Copy Auto Sheet Apps Script Code
                     </button>
-                    <span id="copy-script-feedback" class="text-[11px] font-bold text-emerald-400 hidden">✅ Kode berhasil disalin!</span>
+                    <span id="copy-script-feedback" class="text-[11px] font-bold text-emerald-400 hidden">✅ Code copied successfully!</span>
                 </div>
 
                 <div class="pt-1 space-y-1.5">
-                    <label class="block text-[11px] font-bold text-sky-300">URL Google Apps Script Web App Anda:</label>
+                    <label class="block text-[11px] font-bold text-sky-300">Your Google Apps Script Web App URL:</label>
                     <div class="flex flex-col sm:flex-row gap-2">
                         <input id="input-google-sheet-url" type="url" placeholder="https://script.google.com/macros/s/AKfycb.../exec"
                                class="flex-1 px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
                         <button onclick="saveGoogleSheetUrl()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 text-slate-950 font-extrabold text-xs shadow">
-                            Simpan & Hubungkan
+                            Save &amp; Connect
                         </button>
                     </div>
                 </div>
@@ -953,11 +904,11 @@
                     <thead>
                         <tr class="bg-slate-900 text-sky-300 border-b border-slate-700 uppercase text-[10px] tracking-wider">
                             <th class="py-2.5 px-3 text-center">#</th>
-                            <th class="py-2.5 px-3">Nama Kapten</th>
-                            <th class="py-2.5 px-3">Kelas</th>
-                            <th class="py-2.5 px-3 text-center">Misi</th>
-                            <th class="py-2.5 px-3 text-right">Total Skor</th>
-                            <th class="py-2.5 px-3 text-center">Status Sheet</th>
+                            <th class="py-2.5 px-3">Captain Name</th>
+                            <th class="py-2.5 px-3">Class</th>
+                            <th class="py-2.5 px-3 text-center">Missions</th>
+                            <th class="py-2.5 px-3 text-right">Total Score</th>
+                            <th class="py-2.5 px-3 text-center">Sheet Status</th>
                         </tr>
                     </thead>
                     <tbody id="leaderboard-tbody" class="divide-y divide-slate-800/80 text-slate-200"></tbody>
@@ -966,14 +917,14 @@
 
             <div class="flex flex-wrap justify-between items-center gap-2 pt-1">
                 <span class="text-[11px] text-slate-400">
-                    <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> Skor tersimpan otomatis setiap menyelesaikan misi planet.
+                    <i class="fa-solid fa-circle-info text-sky-400 mr-1"></i> Scores are saved automatically after completing each planet mission.
                 </span>
                 <div class="flex gap-2">
                     <button onclick="clearLeaderboardData()" class="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-xs transition">
-                        <i class="fa-solid fa-trash-can mr-1"></i> Reset Data Lokal
+                        <i class="fa-solid fa-trash-can mr-1"></i> Reset Local Data
                     </button>
                     <button onclick="closeLeaderboardModal()" class="px-5 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-600 text-white font-extrabold text-xs shadow">
-                        Tutup
+                        Close
                     </button>
                 </div>
             </div>
@@ -995,45 +946,45 @@
             <div class="space-y-1">
                 <h3 class="font-game text-2xl sm:text-3xl font-bold title-3d">MISSION ACCOMPLISHED!</h3>
                 <p class="text-xs sm:text-sm text-slate-200">
-                    Selamat Kapten <span id="finale-captain-name" class="font-extrabold text-amber-300"></span> (<span id="finale-captain-class" class="text-sky-300 font-bold"></span>)!
+                    Congratulations Captain <span id="finale-captain-name" class="font-extrabold text-amber-300"></span> (<span id="finale-captain-class" class="text-sky-300 font-bold"></span>)!
                 </p>
                 <p class="text-xs text-slate-400">
-                    Pesawatmu telah berhasil berlabuh (<i>docking</i>) di Stasiun Luar Angkasa Orbital Akhir setelah menaklukkan seluruh planet misi Bahasa Inggris!
+                    Your spaceship has successfully docked at the Final Orbital Space Station after conquering all English mission planets!
                 </p>
             </div>
 
             <div class="p-4 rounded-2xl bg-slate-900/90 border border-amber-400/40 grid grid-cols-2 gap-3 text-center">
                 <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                    <div class="text-[10px] text-slate-400 uppercase font-bold">Total Skor Akhir</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Final Total Score</div>
                     <div id="finale-total-score" class="font-game text-2xl font-bold text-amber-300 mt-0.5">0</div>
                 </div>
                 <div class="p-2.5 rounded-xl bg-slate-950 border border-slate-800">
-                    <div class="text-[10px] text-slate-400 uppercase font-bold">Status Misi Galaksi</div>
-                    <div id="finale-planets-status" class="font-game text-lg font-bold text-emerald-400 mt-1">4/4 Planet ⭐</div>
+                    <div class="text-[10px] text-slate-400 uppercase font-bold">Galaxy Mission Status</div>
+                    <div id="finale-planets-status" class="font-game text-lg font-bold text-emerald-400 mt-1">4/4 Planets ⭐</div>
                 </div>
             </div>
 
             <div class="flex flex-col sm:flex-row gap-2.5 pt-2">
                 <button onclick="closeStationFinaleModal()" class="flex-1 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600">
-                    Kembali ke Peta
+                    Back to Map
                 </button>
                 <button onclick="closeStationFinaleModal(); openLeaderboardModal();" class="flex-1 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-yellow-400 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg">
-                    <i class="fa-solid fa-trophy mr-1"></i> LIHAT LEADERBOARD
+                    <i class="fa-solid fa-trophy mr-1"></i> VIEW LEADERBOARD
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL VERIFIKASI PIN AKSES GURU / ADMIN -->
+    <!-- TEACHER / ADMIN PIN VERIFICATION MODAL -->
     <div id="pin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center z-[60] p-4">
         <div class="glass-card rounded-3xl max-w-sm w-full p-6 border-2 border-amber-400 text-center space-y-4 shadow-2xl">
             <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400 mx-auto flex items-center justify-center text-2xl text-amber-300">
                 <i class="fa-solid fa-shield-halved"></i>
             </div>
             <div class="space-y-1">
-                <h3 class="font-game text-xl font-bold text-amber-300">VERIFIKASI AKSES GURU</h3>
+                <h3 class="font-game text-xl font-bold text-amber-300">TEACHER ACCESS VERIFICATION</h3>
                 <p id="pin-modal-desc" class="text-xs text-slate-300">
-                    Masukkan kode PIN Keamanan untuk mengakses fitur ini.
+                    Enter the security PIN code to access this feature.
                 </p>
             </div>
             <div>
@@ -1041,15 +992,15 @@
                        onkeydown="if(event.key==='Enter') verifySecurityPin()"
                        class="w-full px-4 py-3 rounded-xl bg-slate-950 border border-slate-700 text-center font-game tracking-[0.5em] text-xl text-amber-300 focus:outline-none focus:border-amber-400">
                 <p id="pin-error-msg" class="text-xs text-rose-400 font-bold mt-2 hidden">
-                    ❌ Kode PIN salah! Akses ditolak.
+                    ❌ Wrong PIN code! Access denied.
                 </p>
             </div>
             <div class="flex gap-2 pt-1">
                 <button onclick="closePinModal()" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs border border-slate-600">
-                    Batal
+                    Cancel
                 </button>
                 <button onclick="verifySecurityPin()" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs shadow-lg">
-                    BUKA AKSES <i class="fa-solid fa-unlock ml-1"></i>
+                    UNLOCK ACCESS <i class="fa-solid fa-unlock ml-1"></i>
                 </button>
             </div>
         </div>
@@ -1340,12 +1291,129 @@
         </div>
     </div>
 
+    <!-- MODAL STUDIO UBAH SOAL DENGAN GEMINI AI (KHUSUS GURU) -->
+    <div id="ai-question-modal" onclick="if(event.target === this) closeAiQuestionModal()" class="fixed inset-0 bg-black/85 backdrop-blur-md hidden items-center justify-center z-[130] p-3 sm:p-5">
+        <div class="glass-card rounded-3xl max-w-4xl w-full p-5 sm:p-6 border-2 border-fuchsia-400/80 shadow-[0_0_55px_rgba(232,121,249,0.3)] flex flex-col max-h-[92vh] space-y-4">
+            <!-- Header Modal -->
+            <div class="flex justify-between items-center border-b border-slate-700 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-fuchsia-500 via-purple-600 to-sky-500 flex items-center justify-center text-white text-xl shadow-lg border border-fuchsia-300/50">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    </div>
+                    <div class="text-left">
+                        <h3 class="font-game text-lg sm:text-xl font-bold text-fuchsia-300 leading-tight">
+                            STUDIO UBAH SOAL — GEMINI AI
+                        </h3>
+                        <p class="text-[11px] text-slate-300">
+                            Ubah topik, jenis soal, dan tingkat kesulitan tiap planet sewaktu-waktu dengan bantuan Gemini AI
+                        </p>
+                    </div>
+                </div>
+                <button onclick="closeAiQuestionModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center border border-slate-600 transition" title="Tutup">
+                    <i class="fa-solid fa-xmark text-base"></i>
+                </button>
+            </div>
+
+            <!-- Tab Pilih Planet -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 bg-slate-950/80 p-1.5 rounded-2xl border border-slate-800">
+                <button id="ai-tab-1" onclick="selectAiPlanetTab(1)" class="py-2 px-2.5 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow">
+                    🟣 Planet 1 (10 PG)
+                </button>
+                <button id="ai-tab-2" onclick="selectAiPlanetTab(2)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                    ☀️ Planet 2 (5 Dikte)
+                </button>
+                <button id="ai-tab-3" onclick="selectAiPlanetTab(3)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                    🌙 Planet 3 (5 Audio)
+                </button>
+                <button id="ai-tab-4" onclick="selectAiPlanetTab(4)" class="py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800">
+                    ⭐ Planet 4 (5 Bacaan)
+                </button>
+            </div>
+
+            <!-- Form Pengaturan Prompt Gemini AI -->
+            <div class="bg-slate-900/90 border border-fuchsia-500/35 rounded-2xl p-4 space-y-3 text-left text-xs">
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <div class="sm:col-span-2 space-y-1">
+                        <label for="ai-topic-input" class="block font-bold text-fuchsia-300 uppercase text-[10px]">
+                            <i class="fa-solid fa-pen-to-square mr-1"></i> Topik / Materi / Jenis Soal yang Diinginkan:
+                        </label>
+                        <input id="ai-topic-input" type="text" placeholder="Contoh: Simple Present Tense & Daily Activities di SMK Perikanan"
+                               class="w-full px-3.5 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-fuchsia-400">
+                    </div>
+                    <div class="space-y-1">
+                        <label for="ai-difficulty-select" class="block font-bold text-sky-300 uppercase text-[10px]">
+                            <i class="fa-solid fa-layer-group mr-1"></i> Tingkat Kesulitan:
+                        </label>
+                        <select id="ai-difficulty-select" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-white text-xs focus:outline-none focus:border-sky-400">
+                            <option value="Mudah (SMK Kelas X Dasar / A1-A2)">Mudah (A1-A2 Dasar)</option>
+                            <option value="Sedang (SMK Kelas X-XI / A2-B1)" selected>Sedang (A2-B1 Standar)</option>
+                            <option value="Sulit (SMK Kelas XI-XII / B1-B2)">Sulit (B1-B2 Tantangan)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Pilihan Topik Cepat (Preset Chips) -->
+                <div class="flex flex-wrap items-center gap-1.5">
+                    <span class="text-[10px] text-slate-400 font-bold mr-1">Topik Cepat:</span>
+                    <button type="button" onclick="applyAiPresetTopic('Self-Introduction, Pronouns & To Be')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Self-Introduction</button>
+                    <button type="button" onclick="applyAiPresetTopic('Simple Present Tense & Daily Routines')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Simple Present Tense</button>
+                    <button type="button" onclick="applyAiPresetTopic('Simple Past Tense & Recount Text')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Simple Past Tense</button>
+                    <button type="button" onclick="applyAiPresetTopic('Procedure Text & Equipment in Aquaculture / Fisheries')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Procedure Text Perikanan</button>
+                    <button type="button" onclick="applyAiPresetTopic('Descriptive Text about Marine Animals & Fish Ponds')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Descriptive Text</button>
+                    <button type="button" onclick="applyAiPresetTopic('Greeting, Asking & Giving Opinion')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-fuchsia-900/60 border border-slate-700 text-slate-200 text-[10px] font-semibold transition">Expressions &amp; Opinion</button>
+                </div>
+
+                <!-- Tombol Aksi Generate -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-1">
+                    <button id="btn-generate-ai-questions" onclick="generateQuestionsWithGeminiAI()" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-fuchsia-500 via-purple-500 to-sky-500 hover:from-fuchsia-400 hover:to-sky-400 text-white font-extrabold text-xs shadow-lg transition flex items-center gap-2">
+                        <i class="fa-solid fa-sparkles"></i>
+                        <span>Buat Soal Baru dengan Gemini AI</span>
+                    </button>
+                    <button type="button" onclick="resetPlanetQuestionsToDefault()" class="px-3 py-2 rounded-xl bg-rose-950/70 hover:bg-rose-900 border border-rose-500/40 text-rose-300 font-bold text-[11px] transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Soal Bawaan Planet Ini
+                    </button>
+                </div>
+
+                <!-- Status / Loading Indicator -->
+                <div id="ai-status-banner" class="hidden p-2.5 rounded-xl text-xs font-bold flex items-center gap-2"></div>
+            </div>
+
+            <!-- Area Pratinjau Soal Aktif / Hasil Generate -->
+            <div class="flex-1 overflow-y-auto pr-1 space-y-2 text-left">
+                <div class="flex justify-between items-center">
+                    <span id="ai-preview-heading" class="text-[11px] font-extrabold text-amber-300 uppercase tracking-wider">
+                        📋 Daftar Soal Planet 1 Saat Ini:
+                    </span>
+                    <span id="ai-preview-badge" class="px-2 py-0.5 rounded bg-slate-800 border border-slate-700 text-slate-300 text-[10px] font-bold">
+                        Soal Aktif
+                    </span>
+                </div>
+                <div id="ai-questions-preview-list" class="space-y-2 text-xs"></div>
+            </div>
+
+            <!-- Footer Modal -->
+            <div class="flex flex-wrap justify-between items-center gap-2 pt-2 border-t border-slate-700">
+                <span class="text-[11px] text-slate-400">
+                    <i class="fa-solid fa-floppy-disk text-emerald-400 mr-1"></i> Soal yang diterapkan otomatis tersimpan di perangkat ini.
+                </span>
+                <div class="flex gap-2">
+                    <button onclick="closeAiQuestionModal()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs border border-slate-600 transition">
+                        Tutup
+                    </button>
+                    <button id="btn-apply-ai-questions" onclick="applyGeneratedAiQuestions()" class="hidden px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-400 to-teal-500 hover:from-emerald-300 hover:to-teal-400 text-slate-950 font-extrabold text-xs shadow-lg transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-check-double"></i> Terapkan &amp; Simpan Soal ke Game
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         /* ==========================================================================
            GLOBAL STATE, DROPDOWN & SOUND ENGINE
            ========================================================================== */
-        let playerName = "Siswa SMK";
-        let playerClass = "X Agribisnis Perikanan";
+        let playerName = "SMK Student";
+        let playerClass = "X Fisheries Agribusiness";
         let currentSessionId = "sess_" + Date.now();
         let totalGold = 0;
         let isMuted = false;
@@ -1523,22 +1591,22 @@
             1: {
                 icon: '🟣',
                 title: 'PLANET 1: MILLIONAIRE PRE-TEST',
-                desc: 'Uji pemahaman dasar Pronouns & To Be dalam 10 soal tangga hadiah jutawan! Gunakan bantuan 50:50, Phone, & Audience, atau amankan skor kapan saja dengan tombol TAKE THE POINTS.'
+                desc: 'Test your Pronouns & To Be skills across 10 millionaire ladder questions! Use 50:50, Phone, & Audience lifelines, or secure your score anytime with TAKE THE POINTS.'
             },
             2: {
                 icon: '☀️',
                 title: 'PLANET 2: SPACE TYPING CHALLENGE',
-                desc: 'Dengarkan kalimat Bahasa Inggris dengan saksama, lalu ketuk/sentuh planet kata yang melayang untuk menyusun kalimat dengan tepat (+100 Poin per soal).'
+                desc: 'Listen carefully to the English sentence, then tap/click the floating word planets to arrange the sentence accurately (+100 Points per question).'
             },
             3: {
                 icon: '🌙',
                 title: 'PLANET 3: SPACE AUDIO RADAR',
-                desc: 'Putar rekaman audio perkenalan diri (Self Introduction) dan jawab 5 pertanyaan pemahaman menyimak (+100 Poin per soal).'
+                desc: 'Play the self-introduction audio recordings and answer 5 listening comprehension questions (+100 Points per question).'
             },
             4: {
                 icon: '⭐',
                 title: 'PLANET 4: FISHERIES READING',
-                desc: 'Baca atau dengarkan 5 teks kontekstual jurusan Agribisnis Perikanan SMKN 4 Sinjai dan jawab kuis pemahamannya (+100 Poin per soal).'
+                desc: 'Read or listen to 5 contextual Fisheries Agribusiness passages and answer the comprehension quiz (+100 Points per question).'
             }
         };
 
@@ -2264,9 +2332,9 @@
         function updateHeaderUI() {
             document.getElementById('header-player-name').innerText = `${playerName} — ${playerClass}`;
             document.getElementById('spaceship-captain-tag').innerText = playerName;
-            document.getElementById('global-gold').innerText = totalGold.toLocaleString('id-ID');
+            document.getElementById('global-gold').innerText = totalGold.toLocaleString('en-US');
             const doneCount = Object.values(completedPlanets).filter(Boolean).length;
-            document.getElementById('planet-progress-text').innerText = `${doneCount}/4 Planet`;
+            document.getElementById('planet-progress-text').innerText = `${doneCount}/4 Planets`;
         }
 
         function addGold(points) { totalGold += Number(points) || 0; updateHeaderUI(); syncPlayerToLeaderboard(); }
@@ -2277,9 +2345,12 @@
                 if (panel && !panel.classList.contains('hidden')) { panel.classList.add('hidden'); return; }
             }
             pendingPinAction = actionType;
-            document.getElementById('pin-modal-desc').innerText = actionType === 'lockMode'
-                ? 'Masukkan PIN Guru untuk mengubah Mode Kunci Planet.'
-                : 'Masukkan PIN Guru untuk membuka Pengaturan Cloud Sheet.';
+            const pinDescMap = {
+                lockMode: 'Enter the Teacher PIN to toggle Planet Lock Mode.',
+                sheetSetup: 'Enter the Teacher PIN to open Cloud Sheet Setup.',
+                aiQuestionEditor: 'Masukkan PIN Guru untuk membuka Studio Ubah Soal (Gemini AI).'
+            };
+            document.getElementById('pin-modal-desc').innerText = pinDescMap[actionType] || 'Enter the security PIN code to access this feature.';
             document.getElementById('input-security-pin').value = '';
             document.getElementById('pin-error-msg').classList.add('hidden');
             const modal = document.getElementById('pin-modal');
@@ -2294,6 +2365,7 @@
                 const action = pendingPinAction; closePinModal(); playSuccessSound();
                 if (action === 'lockMode') toggleLockMode();
                 else if (action === 'sheetSetup') toggleSheetSetupPanel(true);
+                else if (action === 'aiQuestionEditor') openAiQuestionModal();
             } else { document.getElementById('pin-error-msg').classList.remove('hidden'); playErrorSound(); }
         }
 
@@ -2302,8 +2374,8 @@
             const btn = document.getElementById('lock-mode-btn');
             if (btn) {
                 btn.innerHTML = progressiveLockMode
-                    ? '<i class="fa-solid fa-lock"></i> <span>Mode Bertahap: Harus Urut Planet 1-4 (PIN)</span>'
-                    : '<i class="fa-solid fa-lock-open"></i> <span>Mode Uji Coba: Semua Terbuka (PIN)</span>';
+                    ? '<i class="fa-solid fa-lock"></i> <span>Sequential Mode: Planets 1-4 in Order (PIN)</span>'
+                    : '<i class="fa-solid fa-lock-open"></i> <span>Free Trial Mode: All Unlocked (PIN)</span>';
             }
             updateMapUI();
         }
@@ -2317,18 +2389,18 @@
 
         function updateMapUI() {
             updateHeaderUI();
-            const subtitles = { 1: "Planet Awal • Terbuka", 2: "Level 2 • Terbuka", 3: "Tantangan Menengah", 4: "Planet Tata Bahasa" };
+            const subtitles = { 1: "Start Planet • Unlocked", 2: "Level 2 • Unlocked", 3: "Intermediate Challenge", 4: "Grammar & Reading Planet" };
             for (let i = 1; i <= 4; i++) {
                 const st = document.getElementById(`status-planet-${i}`);
                 if (!st) continue;
-                if (completedPlanets[i]) { st.innerText = "⭐ MISI SELESAI"; st.className = "text-[9px] text-amber-300 font-extrabold"; }
+                if (completedPlanets[i]) { st.innerText = "⭐ MISSION COMPLETE"; st.className = "text-[9px] text-amber-300 font-extrabold"; }
                 else if (isPlanetUnlocked(i)) { st.innerText = subtitles[i]; st.className = "text-[9px] text-emerald-300 font-semibold"; }
-                else { st.innerText = "🔒 Terkunci"; st.className = "text-[9px] text-rose-400 font-semibold"; }
+                else { st.innerText = "🔒 Locked"; st.className = "text-[9px] text-rose-400 font-semibold"; }
             }
             const st5 = document.getElementById('status-planet-5');
             if (st5) {
                 const allDone = completedPlanets[1] && completedPlanets[2] && completedPlanets[3] && completedPlanets[4];
-                st5.innerText = allDone ? "🏁 SIAP DOCKING (FINISH)" : isPlanetUnlocked(5) ? "🔓 Terbuka" : "🔒 Selesaikan Planet 1–4";
+                st5.innerText = allDone ? "🏁 READY TO DOCK (FINISH)" : isPlanetUnlocked(5) ? "🔓 Unlocked" : "🔒 Complete Planets 1–4";
             }
         }
 
@@ -2398,8 +2470,8 @@
 
             if (nameEl) nameEl.innerText = playerName;
             if (classEl) classEl.innerText = playerClass;
-            if (scoreEl) scoreEl.innerText = totalGold.toLocaleString('id-ID');
-            if (statusEl) statusEl.innerText = `${doneCount}/4 Planet ⭐`;
+            if (scoreEl) scoreEl.innerText = totalGold.toLocaleString('en-US');
+            if (statusEl) statusEl.innerText = `${doneCount}/4 Planets ⭐`;
 
             const modal = document.getElementById('station-finale-modal');
             if (modal) {
@@ -2462,7 +2534,7 @@
            PLANET 1: MILLIONAIRE PRE-TEST
            ========================================================================== */
         const millionaireLadder = [100, 200, 300, 500, 1000, 2000, 4000, 8000, 16000, 1000000];
-        const millionaireQuestions = [
+        let millionaireQuestions = [
             { q: "Hello! ___ name is Dika. I am a new student at SMKN 4 Sinjai.", options: ["My", "Me", "I", "Mine"], answer: 0 },
             { q: "Rina and Sari are from Sinjai. ___ study in the Fisheries Department.", options: ["Them", "They", "Their", "Theirs"], answer: 1 },
             { q: "Mr. Ahmad is our productive teacher. ___ teaches fish cultivation patiently.", options: ["He", "Him", "His", "She"], answer: 0 },
@@ -2497,7 +2569,7 @@
             for (let i = millionaireLadder.length - 1; i >= 0; i--) {
                 const stepNum = i + 1, pts = millionaireLadder[i];
                 const isReached = p1CorrectCount === stepNum, isPassed = p1CorrectCount > stepNum;
-                html += `<li class="px-3 py-1 rounded-lg flex justify-between items-center ${isReached ? 'bg-amber-400 text-slate-950 font-extrabold shadow' : isPassed ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-900/60 text-slate-400'}"><span>Level ${stepNum}</span><span>${pts.toLocaleString('id-ID')} Poin</span></li>`;
+                html += `<li class="px-3 py-1 rounded-lg flex justify-between items-center ${isReached ? 'bg-amber-400 text-slate-950 font-extrabold shadow' : isPassed ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-900/60 text-slate-400'}"><span>Level ${stepNum}</span><span>${pts.toLocaleString('en-US')} Pts</span></li>`;
             }
             ul.innerHTML = html;
             const takeBtn = document.getElementById('btn-take-points');
@@ -2508,7 +2580,7 @@
             p1Locked = false;
             renderPlanet1Ladder();
             const item = millionaireQuestions[p1Index];
-            document.getElementById('p1-question-counter').innerText = `Soal ${p1Index + 1} / ${millionaireQuestions.length}`;
+            document.getElementById('p1-question-counter').innerText = `Question ${p1Index + 1} / ${millionaireQuestions.length}`;
             document.getElementById('p1-question-text').innerText = item.q;
             document.getElementById('p1-lifeline-hint').classList.add('hidden');
             document.getElementById('p1-feedback-box').classList.add('hidden');
@@ -2535,15 +2607,15 @@
                 p1CurrentPrize = millionaireLadder[p1CorrectCount - 1];
                 document.getElementById(`p1-opt-${choiceIdx}`).className = "p-3.5 rounded-2xl bg-emerald-600 border-2 border-emerald-300 text-left font-bold text-sm text-white flex items-center gap-3";
                 fb.className = "p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
-                fb.innerHTML = `✅ BENAR! Hadiah terkunci: <b>${p1CurrentPrize.toLocaleString('id-ID')} Poin</b>.`;
-                p1Logs.push(`<div>✅ Soal ${p1Index + 1}: Benar</div>`);
+                fb.innerHTML = `✅ CORRECT! Secured prize: <b>${p1CurrentPrize.toLocaleString('en-US')} Points</b>.`;
+                p1Logs.push(`<div>✅ Question ${p1Index + 1}: Correct</div>`);
                 playSuccessSound();
             } else {
                 document.getElementById(`p1-opt-${choiceIdx}`).className = "p-3.5 rounded-2xl bg-rose-700 border-2 border-rose-300 text-left font-bold text-sm text-white flex items-center gap-3";
                 document.getElementById(`p1-opt-${item.answer}`).className = "p-3.5 rounded-2xl bg-emerald-700 border-2 border-emerald-300 text-left font-bold text-sm text-white flex items-center gap-3";
                 fb.className = "p-3.5 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
-                fb.innerHTML = `❌ SALAH! Poin tetap di <b>${p1CurrentPrize.toLocaleString('id-ID')} Poin</b>.`;
-                p1Logs.push(`<div>❌ Soal ${p1Index + 1}: Salah</div>`);
+                fb.innerHTML = `❌ WRONG! Score remains at <b>${p1CurrentPrize.toLocaleString('en-US')} Points</b>.`;
+                p1Logs.push(`<div>❌ Question ${p1Index + 1}: Wrong</div>`);
                 playErrorSound();
             }
             renderPlanet1Ladder();
@@ -2572,7 +2644,7 @@
             document.getElementById('lifeline-phone').classList.add('opacity-40');
             const item = millionaireQuestions[p1Index];
             const h = document.getElementById('p1-lifeline-hint');
-            h.classList.remove('hidden'); h.innerHTML = `📞 Saran Instruktur: Jawabannya adalah opsi <b>${['A','B','C','D'][item.answer]}</b>.`;
+            h.classList.remove('hidden'); h.innerHTML = `📞 Instructor's Tip: The correct answer is option <b>${['A','B','C','D'][item.answer]}</b>.`;
         }
         function useLifelineAudience() {
             if (p1Locked) return;
@@ -2581,13 +2653,13 @@
             document.getElementById('lifeline-audience').classList.add('opacity-40');
             const item = millionaireQuestions[p1Index];
             const h = document.getElementById('p1-lifeline-hint');
-            h.classList.remove('hidden'); h.innerHTML = `📊 Polling Penonton: 82% memilih opsi <b>${['A','B','C','D'][item.answer]}</b>.`;
+            h.classList.remove('hidden'); h.innerHTML = `📊 Audience Poll: 82% chose option <b>${['A','B','C','D'][item.answer]}</b>.`;
         }
 
         function openTakePointsModal(planetNum = 1) {
             activeTakePointsPlanet = planetNum;
             let secured = planetNum === 1 ? p1CurrentPrize : planetNum === 2 ? p2EarnedPoints : planetNum === 3 ? p3EarnedPoints : p4EarnedPoints;
-            document.getElementById('secured-points-text').innerText = secured.toLocaleString('id-ID');
+            document.getElementById('secured-points-text').innerText = secured.toLocaleString('en-US');
             const m = document.getElementById('take-points-modal');
             m.classList.remove('hidden'); m.classList.add('flex');
         }
@@ -2595,19 +2667,19 @@
         function confirmTakePoints() {
             closeTakePointsModal();
             if (activeTakePointsPlanet === 1) finishPlanet1Game("TAKE THE POINTS SUCCESS!");
-            else if (activeTakePointsPlanet === 2) { if (balloonAnimId) cancelAnimationFrame(balloonAnimId); showSummaryModal("TAKE THE POINTS PLANET 2!", `Poin: +${p2EarnedPoints}`, "", 2); }
-            else if (activeTakePointsPlanet === 3) showSummaryModal("TAKE THE POINTS PLANET 3!", `Poin: +${p3EarnedPoints}`, "", 3);
-            else if (activeTakePointsPlanet === 4) showSummaryModal("TAKE THE POINTS PLANET 4!", `Poin: +${p4EarnedPoints}`, "", 4);
+            else if (activeTakePointsPlanet === 2) { if (balloonAnimId) cancelAnimationFrame(balloonAnimId); showSummaryModal("TAKE THE POINTS — PLANET 2!", `Points Secured: +${p2EarnedPoints}`, "", 2); }
+            else if (activeTakePointsPlanet === 3) showSummaryModal("TAKE THE POINTS — PLANET 3!", `Points Secured: +${p3EarnedPoints}`, "", 3);
+            else if (activeTakePointsPlanet === 4) showSummaryModal("TAKE THE POINTS — PLANET 4!", `Points Secured: +${p4EarnedPoints}`, "", 4);
         }
         function finishPlanet1Game(reason) {
             addGold(p1CurrentPrize);
-            showSummaryModal(reason, `Hadiah Akhir: +${p1CurrentPrize.toLocaleString('id-ID')} Poin`, p1Logs.join(''), 1);
+            showSummaryModal(reason, `Final Prize: +${p1CurrentPrize.toLocaleString('en-US')} Points`, p1Logs.join(''), 1);
         }
 
         /* ==========================================================================
            PLANET 2: BOUNCING SPACE WORD CHALLENGE
            ========================================================================== */
-        const dictationSentences = [
+        let dictationSentences = [
             { text: "Good morning my teacher", showWordHints: true },
             { text: "Hello my name is Andi", showWordHints: true },
             { text: "I am from Sinjai", showWordHints: true },
@@ -2686,9 +2758,9 @@
             bwAttempts = 0; p2PickedPlanetIndices = [];
             const item = dictationSentences[p2Round];
 
-            document.getElementById('p2-round-badge').innerText = item.showWordHints ? `Soal ${p2Round + 1}/5 (Petunjuk Kata)` : `Soal ${p2Round + 1}/5 (Pure Dictation)`;
-            document.getElementById('p2-instruction-text').innerText = item.showWordHints ? `Dengarkan audio, lalu klik planet kata yang melayang!` : `Dengarkan audio, lalu ketik kalimat yang kamu dengar!`;
-            document.getElementById('p2-attempts-badge').innerText = `Kesempatan: 2x`;
+            document.getElementById('p2-round-badge').innerText = item.showWordHints ? `Question ${p2Round + 1}/5 (Word Hints)` : `Question ${p2Round + 1}/5 (Pure Dictation)`;
+            document.getElementById('p2-instruction-text').innerText = item.showWordHints ? `Listen to the audio, then tap/click the floating word planets!` : `Listen to the audio, then type the sentence you hear!`;
+            document.getElementById('p2-attempts-badge').innerText = `Attempts: 2x`;
             document.getElementById('p2-feedback-box').classList.add('hidden');
 
             const takeBtn = document.getElementById('btn-take-points-p2');
@@ -2810,7 +2882,7 @@
                 inputField.disabled = true;
                 document.getElementById('btn-take-points-p2')?.classList.remove('hidden');
                 fb.className = "p-3 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
-                fb.innerHTML = `✅ SEMPURNA! (+100 Poin)`;
+                fb.innerHTML = `✅ PERFECT! (+100 Points)`;
                 playSuccessSound(); speakEnglishText(item.text);
                 setTimeout(() => nextBalloonRound(), 2200);
             } else {
@@ -2818,11 +2890,11 @@
                 if (bwAttempts < 2) {
                     resetPlanet2Words();
                     fb.className = "p-3 rounded-xl bg-amber-500/20 border border-amber-400 text-amber-200 text-xs font-bold";
-                    fb.innerHTML = `⚠️ Belum tepat! Sisa 1 kesempatan lagi.`;
+                    fb.innerHTML = `⚠️ Not quite right! 1 attempt remaining.`;
                 } else {
                     inputField.disabled = true;
                     fb.className = "p-3 rounded-xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
-                    fb.innerHTML = `❌ Kesempatan habis! Kalimat benar: <b>"${item.text}"</b>`;
+                    fb.innerHTML = `❌ Out of attempts! Correct sentence: <b>"${item.text}"</b>`;
                     speakEnglishText(item.text);
                     setTimeout(() => nextBalloonRound(), 2800);
                 }
@@ -2834,14 +2906,14 @@
             if (p2Round < dictationSentences.length) setupBalloonRound();
             else {
                 if (balloonAnimId) cancelAnimationFrame(balloonAnimId);
-                showSummaryModal("PLANET 2 SELESAI!", `Benar: ${p2CorrectCount}/5 | Poin: +${p2EarnedPoints}`, "", 2);
+                showSummaryModal("PLANET 2 COMPLETE!", `Correct: ${p2CorrectCount}/5 | Points: +${p2EarnedPoints}`, "", 2);
             }
         }
 
         /* ==========================================================================
            PLANET 3: LISTENING STUDIO
            ========================================================================== */
-        const listeningQuestions = [
+        let listeningQuestions = [
             { topic: "Question 1: Personal Information", script: "Hello, my name is Andi. I am seventeen years old. I live in Sinjai with my parents. I am a student at a vocational high school. My favorite hobby is playing football.", question: "How old is Andi?", options: ["A. Fifteen years old", "B. Sixteen years old", "C. Seventeen years old", "D. Eighteen years old"], answer: 2 },
             { topic: "Question 2: Hometown", script: "Good morning, friends. My name is Siti. I come from Bone, but now I live in Makassar. I am in the eleventh grade. I enjoy reading books and listening to music.", question: "Where does Siti live now?", options: ["A. Bone", "B. Sinjai", "C. Makassar", "D. Bulukumba"], answer: 2 },
             { topic: "Question 3: Hobbies", script: "Hi, everyone. My name is Budi. I am sixteen years old, and I study at a vocational school. In my free time, I like playing badminton and watching movies. My favorite subject is English.", question: "What does Budi like doing in his free time?", options: ["A. Cooking and swimming", "B. Playing badminton and watching movies", "C. Reading and singing", "D. Playing football and dancing"], answer: 1 },
@@ -2880,22 +2952,22 @@
             if (choiceIdx === item.answer) {
                 p3CorrectCount++; p3EarnedPoints += 100; addGold(100);
                 fb.className = "p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
-                fb.innerHTML = `✅ BENAR! (+100 Poin)`; playSuccessSound();
+                fb.innerHTML = `✅ CORRECT! (+100 Points)`; playSuccessSound();
             } else {
                 fb.className = "p-3.5 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
-                fb.innerHTML = `❌ SALAH! Jawaban: <b>${item.options[item.answer]}</b>`; playErrorSound();
+                fb.innerHTML = `❌ WRONG! Correct answer: <b>${item.options[item.answer]}</b>`; playErrorSound();
             }
             setTimeout(() => {
                 p3Index++;
                 if (p3Index < listeningQuestions.length) renderPlanet3Question();
-                else showSummaryModal("PLANET 3 SELESAI!", `Benar: ${p3CorrectCount}/5 | Poin: +${p3EarnedPoints}`, "", 3);
+                else showSummaryModal("PLANET 3 COMPLETE!", `Correct: ${p3CorrectCount}/5 | Points: +${p3EarnedPoints}`, "", 3);
             }, 2200);
         }
 
         /* ==========================================================================
            PLANET 4: READING AGRIBISNIS PERIKANAN SMKN 4 SINJAI
            ========================================================================== */
-        const readingPassages = [
+        let readingPassages = [
             { tag: "Text 1", title: "Fisheries Department at SMKN 4 Sinjai", body: "Hello! My name is Rahmat. I am a tenth-grade student in the Fisheries Agribusiness Department at SMKN 4 Sinjai. Every morning, my classmates and I practice in the school hatchery and fish ponds. We learn how to breed Tilapia and Catfish.", question: "Where do Rahmat and his classmates practice?", options: ["A. Library", "B. Hatchery and fish ponds", "C. Computer shop", "D. Stadium"], answer: 1 },
             { tag: "Text 2", title: "Biosecurity Rules", body: "Before entering the fish hatchery at SMKN 4 Sinjai, all students must follow biosecurity procedures. First, wash hands and dip boots into the disinfectant footbath. Second, sterilize fish nets to prevent diseases.", question: "Why must students follow biosecurity procedures?", options: ["A. To swim faster", "B. To prevent fish diseases", "C. To sell nets", "D. To warm water"], answer: 1 },
             { tag: "Text 3", title: "Water Quality Management", body: "Good water quality is very important for fish cultivation. Every Tuesday, students measure temperature, pH level, and dissolved oxygen (DO).", question: "What do students measure every Tuesday?", options: ["A. Water temperature, pH, and DO", "B. Fish weight", "C. Pond depth", "D. Feed prices"], answer: 0 },
@@ -2913,7 +2985,7 @@
         function renderPlanet4Question() {
             p4Locked = false;
             const item = readingPassages[p4Index];
-            document.getElementById('p4-counter').innerText = `Teks ${p4Index + 1} / 5`;
+            document.getElementById('p4-counter').innerText = `Text ${p4Index + 1} / 5`;
             document.getElementById('p4-passage-tag').innerText = item.tag;
             document.getElementById('p4-passage-title').innerText = item.title;
             document.getElementById('p4-passage-body').innerText = item.body;
@@ -2936,15 +3008,15 @@
             if (choiceIdx === item.answer) {
                 p4CorrectCount++; p4EarnedPoints += 100; addGold(100);
                 fb.className = "p-3.5 rounded-2xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold";
-                fb.innerHTML = `✅ BENAR! (+100 Poin)`; playSuccessSound();
+                fb.innerHTML = `✅ CORRECT! (+100 Points)`; playSuccessSound();
             } else {
                 fb.className = "p-3.5 rounded-2xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold";
-                fb.innerHTML = `❌ SALAH! Jawaban: <b>${item.options[item.answer]}</b>`; playErrorSound();
+                fb.innerHTML = `❌ WRONG! Correct answer: <b>${item.options[item.answer]}</b>`; playErrorSound();
             }
             setTimeout(() => {
                 p4Index++;
                 if (p4Index < readingPassages.length) renderPlanet4Question();
-                else showSummaryModal("🎉 SEMUA MISI SELESAI!", `Kapten ${playerName} telah menyelesaikan seluruh planet!`, "", 4);
+                else showSummaryModal("🎉 ALL MISSIONS COMPLETE!", `Captain ${playerName} has conquered all planets!`, "", 4);
             }, 2300);
         }
 
@@ -2998,7 +3070,7 @@
             const statusText = document.getElementById('sheet-sync-status-text');
             if (!googleSheetWebAppUrl || !googleSheetWebAppUrl.includes('script.google.com')) {
                 if (statusText) {
-                    statusText.innerText = '⚠️ Tempel URL Web App Apps Script (/exec) pada Pengaturan Cloud Sheet (PIN: 1234) terlebih dahulu.';
+                    statusText.innerText = '⚠️ Please paste the Apps Script Web App URL (/exec) in Cloud Sheet Setup (PIN: 1234) first.';
                     statusText.className = 'text-amber-300 text-[11px] font-bold';
                 }
                 if (showNotice) playErrorSound();
@@ -3013,7 +3085,7 @@
             }
             renderLeaderboardTable();
             if (statusText) {
-                statusText.innerText = `✅ Berhasil mengirim ${sentCount} data kapten langsung ke Google Sheet!`;
+                statusText.innerText = `✅ Successfully synced ${sentCount} captain records to Google Sheet!`;
                 statusText.className = 'text-emerald-300 text-[11px] font-bold';
             }
             if (showNotice) playSuccessSound();
@@ -3052,10 +3124,10 @@
             const badge = document.getElementById('sheet-sync-badge');
             const statusText = document.getElementById('sheet-sync-status-text');
             if (badge) {
-                badge.innerText = googleSheetWebAppUrl ? "☁️ TERHUBUNG KE GOOGLE SHEET" : "💾 LOKAL + SIAP HUBUNGKAN APPS SCRIPT";
+                badge.innerText = googleSheetWebAppUrl ? "☁️ CONNECTED TO GOOGLE SHEET" : "💾 LOCAL + READY FOR APPS SCRIPT";
             }
             if (statusText && !googleSheetWebAppUrl) {
-                statusText.innerText = "Data tersimpan lokal. Hubungkan URL Apps Script dari Google Sheet Anda agar terkirim otomatis.";
+                statusText.innerText = "Data is saved locally. Connect your Apps Script URL to auto-sync to Google Sheet.";
                 statusText.className = "text-slate-300 text-[11px]";
             }
         }
@@ -3068,7 +3140,7 @@
             const statusText = document.getElementById('sheet-sync-status-text');
             if (rawUrl && !rawUrl.includes('script.google.com/macros/s/')) {
                 if (statusText) {
-                    statusText.innerText = '⚠️ Masukkan URL Web App Apps Script (berakhiran /exec), bukan tautan edit Spreadsheet.';
+                    statusText.innerText = '⚠️ Please enter a valid Apps Script Web App URL (ending with /exec), not the Spreadsheet edit link.';
                     statusText.className = 'text-rose-400 text-[11px] font-bold';
                 }
                 playErrorSound();
@@ -3082,7 +3154,7 @@
         }
         function exportLeaderboardToCSV() {
             loadLeaderboardFromStorage();
-            let csv = "\uFEFFPeringkat,Nama Kapten,Kelas,Planet,Skor,Waktu\n";
+            let csv = "\uFEFFRank,Captain Name,Class,Planets,Score,Timestamp\n";
             leaderboardRecords.forEach((r, i) => csv += `${i+1},"${r.name}","${r.className}",${r.planets}/4,${r.score},"${r.timestampText}"\n`);
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
@@ -3123,15 +3195,15 @@
         function renderLeaderboardTable() {
             const tb = document.getElementById('leaderboard-tbody');
             if (!tb) return;
-            if (leaderboardRecords.length === 0) { tb.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400 italic">Belum ada data di Leaderboard.</td></tr>`; return; }
+            if (leaderboardRecords.length === 0) { tb.innerHTML = `<tr><td colspan="6" class="py-6 text-center text-slate-400 italic">No records in the Leaderboard yet.</td></tr>`; return; }
             tb.innerHTML = leaderboardRecords.map((r, i) => `
                 <tr class="${r.id === currentSessionId ? 'bg-sky-500/20 font-bold text-white' : ''}">
                     <td class="py-2.5 px-3 text-center">${i+1 === 1 ? '🥇' : i+1 === 2 ? '🥈' : i+1 === 3 ? '🥉' : i+1}</td>
                     <td class="py-2.5 px-3">${r.name}</td>
                     <td class="py-2.5 px-3 text-amber-200">${r.className}</td>
                     <td class="py-2.5 px-3 text-center">${r.planets}/4</td>
-                    <td class="py-2.5 px-3 text-right font-extrabold text-amber-300">${Number(r.score).toLocaleString('id-ID')}</td>
-                    <td class="py-2.5 px-3 text-center">${r.synced ? '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-bold">☁️ Terkirim</span>' : '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">Lokal</span>'}</td>
+                    <td class="py-2.5 px-3 text-right font-extrabold text-amber-300">${Number(r.score).toLocaleString('en-US')}</td>
+                    <td class="py-2.5 px-3 text-center">${r.synced ? '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 text-[10px] font-bold">☁️ Synced</span>' : '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">Local</span>'}</td>
                 </tr>
             `).join('');
         }
@@ -3139,142 +3211,588 @@
         loadLeaderboardFromStorage();
 
         /* ==========================================================================
-           FULL SCREEN MODE (LAYAR PENUH TANPA SCROLL)
+           STUDIO UBAH SOAL DENGAN GEMINI AI (KHUSUS GURU)
            ========================================================================== */
-        function updateFullScreenButtonUI(isActive) {
-            const btn = document.getElementById('fullscreen-btn');
-            const icon = document.getElementById('fullscreen-icon');
-            const label = document.getElementById('fullscreen-label');
-            if (!btn || !icon || !label) return;
-            if (isActive) {
-                btn.className = "px-3 py-1.5 rounded-xl bg-amber-500/25 hover:bg-amber-500/35 border border-amber-400/70 flex items-center space-x-1.5 text-amber-300 font-bold text-xs transition shadow";
-                icon.className = "fa-solid fa-compress";
-                label.innerText = "Keluar Full";
-            } else {
-                btn.className = "px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-400/60 flex items-center space-x-1.5 text-emerald-300 font-bold text-xs transition shadow";
-                icon.className = "fa-solid fa-expand";
-                label.innerText = "Full Screen";
+        const CUSTOM_QUESTIONS_STORAGE_KEY = 'english_space_battle_custom_questions_v1';
+        const DEFAULT_QUESTION_BANKS = {
+            1: JSON.parse(JSON.stringify(millionaireQuestions)),
+            2: JSON.parse(JSON.stringify(dictationSentences)),
+            3: JSON.parse(JSON.stringify(listeningQuestions)),
+            4: JSON.parse(JSON.stringify(readingPassages))
+        };
+
+        let aiSelectedPlanet = 1;
+        let aiDraftQuestions = null;
+        let aiIsGenerating = false;
+
+        function loadCustomQuestionsFromStorage() {
+            try {
+                const raw = localStorage.getItem(CUSTOM_QUESTIONS_STORAGE_KEY);
+                if (!raw) return;
+                const saved = JSON.parse(raw);
+                if (Array.isArray(saved[1]) && saved[1].length > 0) millionaireQuestions = saved[1];
+                if (Array.isArray(saved[2]) && saved[2].length > 0) dictationSentences = saved[2];
+                if (Array.isArray(saved[3]) && saved[3].length > 0) listeningQuestions = saved[3];
+                if (Array.isArray(saved[4]) && saved[4].length > 0) readingPassages = saved[4];
+            } catch (e) {}
+        }
+
+        function saveCustomQuestionsToStorage() {
+            try {
+                const payload = {
+                    1: millionaireQuestions,
+                    2: dictationSentences,
+                    3: listeningQuestions,
+                    4: readingPassages
+                };
+                localStorage.setItem(CUSTOM_QUESTIONS_STORAGE_KEY, JSON.stringify(payload));
+            } catch (e) {}
+        }
+
+        function getActivePlanetQuestions(planetNum) {
+            if (planetNum === 1) return millionaireQuestions;
+            if (planetNum === 2) return dictationSentences;
+            if (planetNum === 3) return listeningQuestions;
+            return readingPassages;
+        }
+
+        function setAiStatusBanner(type, htmlMessage) {
+            const banner = document.getElementById('ai-status-banner');
+            if (!banner) return;
+            if (!htmlMessage) {
+                banner.classList.add('hidden');
+                return;
+            }
+            banner.classList.remove('hidden');
+            const styles = {
+                loading: 'p-2.5 rounded-xl bg-sky-500/20 border border-sky-400 text-sky-200 text-xs font-bold flex items-center gap-2',
+                success: 'p-2.5 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-200 text-xs font-bold flex items-center gap-2',
+                error: 'p-2.5 rounded-xl bg-rose-500/20 border border-rose-400 text-rose-200 text-xs font-bold flex items-center gap-2'
+            };
+            banner.className = styles[type] || styles.loading;
+            banner.innerHTML = htmlMessage;
+        }
+
+        function openAiQuestionModal() {
+            const modal = document.getElementById('ai-question-modal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            selectAiPlanetTab(aiSelectedPlanet || 1);
+        }
+
+        function closeAiQuestionModal() {
+            const modal = document.getElementById('ai-question-modal');
+            if (modal) {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
             }
         }
 
-        function syncViewportLayoutAfterFullscreen() {
+        function applyAiPresetTopic(topicText) {
+            const input = document.getElementById('ai-topic-input');
+            if (input) {
+                input.value = topicText;
+                input.focus();
+            }
+            playTone(540, 0.08, 'sine', 0.14);
+        }
+
+        function selectAiPlanetTab(planetNum) {
+            aiSelectedPlanet = planetNum;
+            aiDraftQuestions = null;
+            document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
+            setAiStatusBanner('', '');
+
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`ai-tab-${i}`);
+                if (!btn) continue;
+                if (i === planetNum) {
+                    btn.className = 'py-2 px-2.5 rounded-xl font-extrabold text-xs transition bg-gradient-to-r from-purple-600 to-fuchsia-600 text-white shadow';
+                } else {
+                    btn.className = 'py-2 px-2.5 rounded-xl font-bold text-xs transition text-slate-300 hover:bg-slate-800';
+                }
+            }
+
+            const defaultHints = {
+                1: 'Pronouns, To Be, atau Simple Present Tense (Pilihan Ganda)',
+                2: 'Kalimat Pendek Bahasa Inggris untuk Dikte Audio (4-6 kata)',
+                3: 'Dialog/Monolog Pendek Listening Comprehension Bahasa Inggris',
+                4: 'Teks Bacaan Singkat Kontekstual SMK / Agribisnis Perikanan'
+            };
+            const input = document.getElementById('ai-topic-input');
+            if (input && !input.value.trim()) {
+                input.placeholder = `Contoh: ${defaultHints[planetNum]}`;
+            }
+
+            renderAiQuestionPreview(planetNum, getActivePlanetQuestions(planetNum), false);
+        }
+
+        function renderAiQuestionPreview(planetNum, items, isDraft = false) {
+            const heading = document.getElementById('ai-preview-heading');
+            const badge = document.getElementById('ai-preview-badge');
+            const listEl = document.getElementById('ai-questions-preview-list');
+            if (!listEl) return;
+
+            const planetLabels = {
+                1: 'Planet 1 (Millionaire 10 Soal PG)',
+                2: 'Planet 2 (Space Typing 5 Kalimat Dikte)',
+                3: 'Planet 3 (Listening Radar 5 Soal Audio)',
+                4: 'Planet 4 (Reading 5 Teks Bacaan)'
+            };
+            if (heading) {
+                heading.innerText = isDraft
+                    ? `✨ Pratinjau Soal Baru Gemini AI — ${planetLabels[planetNum]}:`
+                    : `📋 Daftar Soal Aktif — ${planetLabels[planetNum]}:`;
+            }
+            if (badge) {
+                badge.innerText = isDraft ? 'Siap Diterapkan (Draft AI)' : 'Aktif di Game';
+                badge.className = isDraft
+                    ? 'px-2.5 py-0.5 rounded bg-fuchsia-500/25 border border-fuchsia-400 text-fuchsia-200 text-[10px] font-extrabold'
+                    : 'px-2.5 py-0.5 rounded bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 text-[10px] font-bold';
+            }
+
+            const labels = ['A', 'B', 'C', 'D'];
+            if (planetNum === 1) {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1">
+                        <div class="font-bold text-white">${idx + 1}. ${item.q}</div>
+                        <div class="grid grid-cols-2 gap-1 text-[11px] pt-1">
+                            ${(item.options || []).map((opt, oi) => `
+                                <div class="px-2 py-1 rounded-lg ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">
+                                    ${labels[oi] || ''}. ${opt} ${oi === item.answer ? '✅' : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            } else if (planetNum === 2) {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 flex flex-wrap justify-between items-center gap-2">
+                        <div class="font-bold text-amber-200">${idx + 1}. "${item.text}"</div>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${item.showWordHints ? 'bg-sky-500/20 text-sky-300 border border-sky-400/40' : 'bg-purple-500/20 text-purple-300 border border-purple-400/40'}">
+                            ${item.showWordHints ? 'Petunjuk Planet Kata' : 'Pure Dictation'}
+                        </span>
+                    </div>
+                `).join('');
+            } else if (planetNum === 3) {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1.5">
+                        <div class="text-[10px] font-extrabold text-emerald-300 uppercase">${item.topic || 'Audio ' + (idx + 1)}</div>
+                        <div class="italic text-slate-300 bg-slate-900/80 p-2 rounded-lg border border-slate-800">"${item.script}"</div>
+                        <div class="font-bold text-amber-200">Q: ${item.question}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
+                            ${(item.options || []).map((opt, oi) => `
+                                <div class="px-2 py-1 rounded-lg ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">
+                                    ${opt} ${oi === item.answer ? '✅' : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                listEl.innerHTML = items.map((item, idx) => `
+                    <div class="p-3 rounded-xl bg-slate-950/90 border border-slate-800 space-y-1.5">
+                        <div class="flex justify-between items-center">
+                            <span class="font-extrabold text-sky-300">${idx + 1}. ${item.title}</span>
+                            <span class="text-[10px] text-amber-300 font-bold">${item.tag || 'Text ' + (idx + 1)}</span>
+                        </div>
+                        <p class="text-slate-300 bg-slate-900/80 p-2 rounded-lg border border-slate-800 leading-relaxed">${item.body}</p>
+                        <div class="font-bold text-amber-200">Q: ${item.question}</div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px]">
+                            ${(item.options || []).map((opt, oi) => `
+                                <div class="px-2 py-1 rounded-lg ${oi === item.answer ? 'bg-emerald-500/20 border border-emerald-400/50 text-emerald-300 font-bold' : 'bg-slate-900 text-slate-300'}">
+                                    ${opt} ${oi === item.answer ? '✅' : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        async function fetchGeminiWithBackoff(payload, maxRetries = 3) {
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+            const delays = [1000, 2000, 4000];
+
+            for (let attempt = 0; attempt <= maxRetries; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) {
+                        return await response.json();
+                    }
+                    if (attempt < maxRetries && (response.status === 429 || response.status >= 500)) {
+                        await new Promise(res => setTimeout(res, delays[attempt] || 4000));
+                        continue;
+                    }
+                    throw new Error(`HTTP ${response.status}`);
+                } catch (err) {
+                    if (attempt < maxRetries) {
+                        await new Promise(res => setTimeout(res, delays[attempt] || 4000));
+                        continue;
+                    }
+                    throw err;
+                }
+            }
+        }
+
+        function buildGeminiSchemaAndPrompt(planetNum, topic, difficulty) {
+            const systemInstruction = {
+                parts: [{
+                    text: "You are an expert Indonesian SMK English teacher creating engaging, accurate, classroom-ready English quiz questions. Always return strictly valid JSON matching the requested schema. All English text must be grammatically correct and appropriate for vocational high school students."
+                }]
+            };
+
+            if (planetNum === 1) {
+                return {
+                    systemInstruction,
+                    contents: [{
+                        parts: [{
+                            text: `Create exactly 10 multiple-choice English questions for a Millionaire-style quiz game. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Each question must have 4 short options and the 0-based index (0-3) of the single correct answer.`
+                        }]
+                    }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    q: { type: "STRING" },
+                                    options: { type: "ARRAY", items: { type: "STRING" } },
+                                    answer: { type: "INTEGER" }
+                                },
+                                required: ["q", "options", "answer"]
+                            }
+                        }
+                    }
+                };
+            }
+
+            if (planetNum === 2) {
+                return {
+                    systemInstruction,
+                    contents: [{
+                        parts: [{
+                            text: `Create exactly 5 short, clear English dictation sentences (each 4 to 6 simple words, no punctuation marks like commas or periods inside) for a space word-ordering & dictation game. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Set showWordHints to true for the first 3 sentences and false for the last 2 sentences.`
+                        }]
+                    }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    text: { type: "STRING" },
+                                    showWordHints: { type: "BOOLEAN" }
+                                },
+                                required: ["text", "showWordHints"]
+                            }
+                        }
+                    }
+                };
+            }
+
+            if (planetNum === 3) {
+                return {
+                    systemInstruction,
+                    contents: [{
+                        parts: [{
+                            text: `Create exactly 5 English listening comprehension items. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Each item must have a short label topic (e.g., "Question 1: ..."), a spoken English audio script (3-4 natural sentences), one comprehension question, 4 options prefixed with "A. ", "B. ", "C. ", "D. ", and the 0-based correct answer index (0-3).`
+                        }]
+                    }],
+                    generationConfig: {
+                        responseMimeType: "application/json",
+                        responseSchema: {
+                            type: "ARRAY",
+                            items: {
+                                type: "OBJECT",
+                                properties: {
+                                    topic: { type: "STRING" },
+                                    script: { type: "STRING" },
+                                    question: { type: "STRING" },
+                                    options: { type: "ARRAY", items: { type: "STRING" } },
+                                    answer: { type: "INTEGER" }
+                                },
+                                required: ["topic", "script", "question", "options", "answer"]
+                            }
+                        }
+                    }
+                };
+            }
+
+            return {
+                systemInstruction,
+                contents: [{
+                    parts: [{
+                        text: `Create exactly 5 short English reading comprehension passages with questions. Topic/Focus: "${topic}". Difficulty: "${difficulty}". Each item must have tag (e.g. "Text 1"), title, body (3-5 clear English sentences), question, 4 options prefixed with "A. ", "B. ", "C. ", "D. ", and the 0-based correct answer index (0-3).`
+                    }]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                tag: { type: "STRING" },
+                                title: { type: "STRING" },
+                                body: { type: "STRING" },
+                                question: { type: "STRING" },
+                                options: { type: "ARRAY", items: { type: "STRING" } },
+                                answer: { type: "INTEGER" }
+                            },
+                            required: ["tag", "title", "body", "question", "options", "answer"]
+                        }
+                    }
+                }
+            };
+        }
+
+        async function generateQuestionsWithGeminiAI() {
+            if (aiIsGenerating) return;
+            const topicInput = document.getElementById('ai-topic-input');
+            const diffSelect = document.getElementById('ai-difficulty-select');
+            const genBtn = document.getElementById('btn-generate-ai-questions');
+            const applyBtn = document.getElementById('btn-apply-ai-questions');
+
+            const topic = (topicInput?.value || '').trim() || 'General Vocational English (SMK Kelas X)';
+            const difficulty = diffSelect?.value || 'Sedang (SMK Kelas X-XI / A2-B1)';
+
+            aiIsGenerating = true;
+            if (genBtn) {
+                genBtn.disabled = true;
+                genBtn.classList.add('opacity-60', 'cursor-wait');
+            }
+            if (applyBtn) applyBtn.classList.add('hidden');
+
+            setAiStatusBanner('loading', `<i class="fa-solid fa-spinner fa-spin text-sky-300"></i> <span>Gemini AI sedang menyusun soal baru untuk Planet ${aiSelectedPlanet} (Topik: "${topic}")...</span>`);
+
+            try {
+                const payload = buildGeminiSchemaAndPrompt(aiSelectedPlanet, topic, difficulty);
+                const result = await fetchGeminiWithBackoff(payload);
+                const rawText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (!rawText) throw new Error('Respon AI kosong.');
+
+                const parsed = JSON.parse(rawText);
+                if (!Array.isArray(parsed) || parsed.length === 0) {
+                    throw new Error('Format soal tidak sesuai.');
+                }
+
+                // Normalisasi data agar selalu aman dimainkan
+                const sanitized = parsed.map((item, idx) => {
+                    if (aiSelectedPlanet === 1) {
+                        const opts = Array.isArray(item.options) && item.options.length === 4 ? item.options : ['Option A', 'Option B', 'Option C', 'Option D'];
+                        const ans = Math.min(Math.max(parseInt(item.answer, 10) || 0, 0), 3);
+                        return { q: String(item.q || `Question ${idx + 1}`), options: opts.map(String), answer: ans };
+                    }
+                    if (aiSelectedPlanet === 2) {
+                        const cleanText = String(item.text || 'Good morning my friend').replace(/[^\w\s']/g, '').trim();
+                        return { text: cleanText, showWordHints: typeof item.showWordHints === 'boolean' ? item.showWordHints : idx < 3 };
+                    }
+                    if (aiSelectedPlanet === 3) {
+                        const opts = Array.isArray(item.options) && item.options.length === 4 ? item.options : ['A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'];
+                        const ans = Math.min(Math.max(parseInt(item.answer, 10) || 0, 0), 3);
+                        return {
+                            topic: String(item.topic || `Question ${idx + 1}`),
+                            script: String(item.script || ''),
+                            question: String(item.question || ''),
+                            options: opts.map(String),
+                            answer: ans
+                        };
+                    }
+                    const opts = Array.isArray(item.options) && item.options.length === 4 ? item.options : ['A. Option 1', 'B. Option 2', 'C. Option 3', 'D. Option 4'];
+                    const ans = Math.min(Math.max(parseInt(item.answer, 10) || 0, 0), 3);
+                    return {
+                        tag: String(item.tag || `Text ${idx + 1}`),
+                        title: String(item.title || `Reading Text ${idx + 1}`),
+                        body: String(item.body || ''),
+                        question: String(item.question || ''),
+                        options: opts.map(String),
+                        answer: ans
+                    };
+                });
+
+                aiDraftQuestions = sanitized;
+                renderAiQuestionPreview(aiSelectedPlanet, sanitized, true);
+                if (applyBtn) applyBtn.classList.remove('hidden');
+                setAiStatusBanner('success', `<i class="fa-solid fa-circle-check text-emerald-300"></i> <span>Berhasil! ${sanitized.length} soal baru siap ditinjau. Klik <b>"Terapkan &amp; Simpan Soal ke Game"</b> untuk mengaktifkan.</span>`);
+                playSuccessSound();
+            } catch (err) {
+                setAiStatusBanner('error', `<i class="fa-solid fa-triangle-exclamation text-rose-300"></i> <span>Gagal menghubungi Gemini AI. Periksa koneksi internet Anda lalu coba lagi.</span>`);
+                playErrorSound();
+            } finally {
+                aiIsGenerating = false;
+                if (genBtn) {
+                    genBtn.disabled = false;
+                    genBtn.classList.remove('opacity-60', 'cursor-wait');
+                }
+            }
+        }
+
+        function applyGeneratedAiQuestions() {
+            if (!aiDraftQuestions || aiDraftQuestions.length === 0) return;
+
+            if (aiSelectedPlanet === 1) {
+                millionaireQuestions = aiDraftQuestions;
+                p1Index = 0; p1CorrectCount = 0; p1CurrentPrize = 0; p1Locked = false; p1Logs = [];
+                p1Lifelines = { fifty: false, phone: false, audience: false };
+                if (!document.getElementById('planet1-screen')?.classList.contains('hidden')) renderPlanet1Question();
+            } else if (aiSelectedPlanet === 2) {
+                dictationSentences = aiDraftQuestions;
+                p2Round = 0; p2CorrectCount = 0; p2EarnedPoints = 0; bwAttempts = 0;
+                if (!document.getElementById('planet2-screen')?.classList.contains('hidden')) setupBalloonRound();
+            } else if (aiSelectedPlanet === 3) {
+                listeningQuestions = aiDraftQuestions;
+                p3Index = 0; p3CorrectCount = 0; p3EarnedPoints = 0; p3Locked = false;
+                if (!document.getElementById('planet3-screen')?.classList.contains('hidden')) renderPlanet3Question();
+            } else if (aiSelectedPlanet === 4) {
+                readingPassages = aiDraftQuestions;
+                p4Index = 0; p4CorrectCount = 0; p4EarnedPoints = 0; p4Locked = false;
+                if (!document.getElementById('planet4-screen')?.classList.contains('hidden')) renderPlanet4Question();
+            }
+
+            saveCustomQuestionsToStorage();
+            const appliedItems = aiDraftQuestions;
+            aiDraftQuestions = null;
+            document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
+            renderAiQuestionPreview(aiSelectedPlanet, appliedItems, false);
+            setAiStatusBanner('success', `<i class="fa-solid fa-floppy-disk text-emerald-300"></i> <span>Soal Planet ${aiSelectedPlanet} berhasil diperbarui dan disimpan! Siswa akan langsung memainkan soal terbaru ini.</span>`);
+            playSuccessSound();
+        }
+
+        function resetPlanetQuestionsToDefault() {
+            const defCopy = JSON.parse(JSON.stringify(DEFAULT_QUESTION_BANKS[aiSelectedPlanet]));
+            if (aiSelectedPlanet === 1) {
+                millionaireQuestions = defCopy;
+                p1Index = 0; p1CorrectCount = 0; p1CurrentPrize = 0; p1Locked = false; p1Logs = [];
+                if (!document.getElementById('planet1-screen')?.classList.contains('hidden')) renderPlanet1Question();
+            } else if (aiSelectedPlanet === 2) {
+                dictationSentences = defCopy;
+                p2Round = 0; p2CorrectCount = 0; p2EarnedPoints = 0; bwAttempts = 0;
+                if (!document.getElementById('planet2-screen')?.classList.contains('hidden')) setupBalloonRound();
+            } else if (aiSelectedPlanet === 3) {
+                listeningQuestions = defCopy;
+                p3Index = 0; p3CorrectCount = 0; p3EarnedPoints = 0; p3Locked = false;
+                if (!document.getElementById('planet3-screen')?.classList.contains('hidden')) renderPlanet3Question();
+            } else if (aiSelectedPlanet === 4) {
+                readingPassages = defCopy;
+                p4Index = 0; p4CorrectCount = 0; p4EarnedPoints = 0; p4Locked = false;
+                if (!document.getElementById('planet4-screen')?.classList.contains('hidden')) renderPlanet4Question();
+            }
+
+            saveCustomQuestionsToStorage();
+            aiDraftQuestions = null;
+            document.getElementById('btn-apply-ai-questions')?.classList.add('hidden');
+            renderAiQuestionPreview(aiSelectedPlanet, defCopy, false);
+            setAiStatusBanner('success', `<i class="fa-solid fa-rotate-left text-emerald-300"></i> <span>Soal Planet ${aiSelectedPlanet} telah dikembalikan ke soal bawaan awal.</span>`);
+            playTone(520, 0.14, 'triangle', 0.18);
+        }
+
+        loadCustomQuestionsFromStorage();
+
+        /* ==========================================================================
+           FULL SCREEN & RESPONSIVE VIEWPORT HANDLER
+           ========================================================================== */
+        let isViewportFullscreenFallback = false;
+
+        function resizePlanet2CanvasForViewport() {
+            const p2Screen = document.getElementById('planet2-screen');
+            const canvas = document.getElementById('balloon-canvas');
+            if (!p2Screen || p2Screen.classList.contains('hidden') || !canvas) return;
+            const newW = canvas.clientWidth || 680;
+            const newH = canvas.clientHeight || 240;
+            if (canvas.width !== newW || canvas.height !== newH) {
+                canvas.width = newW;
+                canvas.height = newH;
+                p2BgStars.forEach(s => {
+                    s.x = Math.min(s.x, newW);
+                    s.y = Math.min(s.y, newH);
+                });
+                balloons.forEach(b => {
+                    const topPad = b.word ? b.r + 34 : b.r + 14;
+                    const sidePad = b.r * 1.95 + 10;
+                    const bottomPad = b.r * 0.75 + 12;
+                    b.x = Math.max(sidePad, Math.min(newW - sidePad, b.x));
+                    b.y = Math.max(topPad, Math.min(newH - bottomPad, b.y));
+                });
+            }
+        }
+
+        function syncFullscreenUI() {
+            const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
+            const isActive = isNativeFs || isViewportFullscreenFallback;
+            document.body.classList.toggle('no-scroll-fullscreen', isActive);
+
+            const icon = document.getElementById('fullscreen-icon');
+            const label = document.getElementById('fullscreen-label');
+            if (icon) icon.className = isActive ? 'fa-solid fa-compress' : 'fa-solid fa-expand';
+            if (label) label.innerText = isActive ? 'Exit Full' : 'Full Screen';
+
             setTimeout(() => {
-                if (typeof resizeLivingCosmos === 'function') resizeLivingCosmos();
+                resizeLivingCosmos();
+                resizePlanet2CanvasForViewport();
                 const mapScreen = document.getElementById('map-screen');
                 if (mapScreen && !mapScreen.classList.contains('hidden')) {
                     moveSpaceshipToPlanet(currentSpaceshipPlanet, false);
                 }
-                const balloonCanvas = document.getElementById('balloon-canvas');
-                const p2Screen = document.getElementById('planet2-screen');
-                if (balloonCanvas && p2Screen && !p2Screen.classList.contains('hidden')) {
-                    const newW = balloonCanvas.clientWidth || 680;
-                    const newH = balloonCanvas.clientHeight || 220;
-                    balloonCanvas.width = newW;
-                    balloonCanvas.height = newH;
-                    // Pastikan posisi planet kata & bintang langsung menyesuaikan ukuran kanvas baru tanpa terpotong
-                    if (Array.isArray(balloons)) {
-                        balloons.forEach(b => {
-                            const topPad = b.word ? b.r + 34 : b.r + 14;
-                            const sidePad = b.r * 1.95 + 10;
-                            const bottomPad = b.r * 0.75 + 12;
-                            b.x = Math.min(Math.max(b.x, sidePad), Math.max(sidePad, newW - sidePad));
-                            b.y = Math.min(Math.max(b.y, topPad), Math.max(topPad, newH - bottomPad));
-                        });
-                    }
-                    if (Array.isArray(p2BgStars)) {
-                        p2BgStars.forEach(s => {
-                            s.x = Math.random() * newW;
-                            s.y = Math.random() * newH;
-                        });
-                    }
-                }
-            }, 180);
+            }, 120);
         }
 
-        async function toggleFullScreenMode() {
+        async function toggleFullscreen() {
             const docEl = document.documentElement;
             const isNativeFs = !!(document.fullscreenElement || document.webkitFullscreenElement);
-            const isLockActive = document.body.classList.contains('no-scroll-fullscreen');
 
-            if (!isNativeFs && !isLockActive) {
-                document.body.classList.add('no-scroll-fullscreen');
-                updateFullScreenButtonUI(true);
-                try {
-                    if (docEl.requestFullscreen) await docEl.requestFullscreen();
-                    else if (docEl.webkitRequestFullscreen) await docEl.webkitRequestFullscreen();
-                } catch (err) {}
-                playTone(660, 0.14, 'sine', 0.18);
-            } else {
-                document.body.classList.remove('no-scroll-fullscreen');
-                updateFullScreenButtonUI(false);
-                try {
-                    if (document.fullscreenElement && document.exitFullscreen) await document.exitFullscreen();
-                    else if (document.webkitFullscreenElement && document.webkitExitFullscreen) await document.webkitExitFullscreen();
-                } catch (err) {}
-                playTone(440, 0.14, 'sine', 0.16);
+            try {
+                if (isNativeFs) {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                    isViewportFullscreenFallback = false;
+                } else if (isViewportFullscreenFallback) {
+                    isViewportFullscreenFallback = false;
+                } else {
+                    if (docEl.requestFullscreen) {
+                        await docEl.requestFullscreen();
+                    } else if (docEl.webkitRequestFullscreen) {
+                        docEl.webkitRequestFullscreen();
+                    } else {
+                        isViewportFullscreenFallback = true;
+                    }
+                }
+            } catch (e) {
+                isViewportFullscreenFallback = !isViewportFullscreenFallback;
             }
-            syncViewportLayoutAfterFullscreen();
+            syncFullscreenUI();
         }
 
         document.addEventListener('fullscreenchange', () => {
-            const isFs = !!document.fullscreenElement;
-            if (isFs) {
-                document.body.classList.add('no-scroll-fullscreen');
-            } else {
-                document.body.classList.remove('no-scroll-fullscreen');
-            }
-            updateFullScreenButtonUI(isFs);
-            syncViewportLayoutAfterFullscreen();
+            if (!document.fullscreenElement) isViewportFullscreenFallback = false;
+            syncFullscreenUI();
+        });
+        document.addEventListener('webkitfullscreenchange', () => {
+            if (!document.webkitFullscreenElement) isViewportFullscreenFallback = false;
+            syncFullscreenUI();
         });
 
-        /* ==========================================================================
-           DETEKSI & PERINTAH ORIENTASI LANDSCAPE KHUSUS HP
-           ========================================================================== */
-        async function tryLockLandscape() {
-            const statusEl = document.getElementById('landscape-hint-status');
-            try {
-                const docEl = document.documentElement;
-                document.body.classList.add('no-scroll-fullscreen');
-                updateFullScreenButtonUI(true);
-                if (!document.fullscreenElement && docEl.requestFullscreen) {
-                    await docEl.requestFullscreen();
-                } else if (!document.webkitFullscreenElement && docEl.webkitRequestFullscreen) {
-                    await docEl.webkitRequestFullscreen();
-                }
-                if (screen.orientation && screen.orientation.lock) {
-                    await screen.orientation.lock('landscape');
-                    playSuccessSound();
-                    return;
-                }
-            } catch (err) {}
-            if (statusEl) {
-                statusEl.innerText = "Silakan aktifkan 'Rotasi Otomatis' di HP lalu miringkan ponsel Anda secara mendatar.";
-                statusEl.classList.remove('hidden');
+        window.addEventListener('resize', () => {
+            resizeLivingCosmos();
+            resizePlanet2CanvasForViewport();
+            const mapScreen = document.getElementById('map-screen');
+            if (mapScreen && !mapScreen.classList.contains('hidden')) {
+                moveSpaceshipToPlanet(currentSpaceshipPlanet, false);
             }
-        }
+        });
 
-        function dismissPortraitWarning() {
-            const overlay = document.getElementById('portrait-warning-overlay');
-            if (overlay) overlay.classList.add('dismissed-portrait');
-        }
-
-        function handleOrientationChange() {
-            const overlay = document.getElementById('portrait-warning-overlay');
-            if (overlay && window.innerWidth > window.innerHeight) {
-                overlay.classList.remove('dismissed-portrait');
-            }
-            setTimeout(() => {
-                if (typeof resizeLivingCosmos === 'function') resizeLivingCosmos();
-                const mapScreen = document.getElementById('map-screen');
-                if (mapScreen && !mapScreen.classList.contains('hidden')) {
-                    moveSpaceshipToPlanet(currentSpaceshipPlanet, false);
-                }
-            }, 250);
-        }
-
-        window.addEventListener('orientationchange', handleOrientationChange);
-        window.addEventListener('resize', handleOrientationChange);
-        window.addEventListener('load', initIntroAutoMusic);
+        window.onload = function() {
+            initIntroAutoMusic();
+            updateHeaderUI();
+        };
     </script>
 </body>
 </html>
